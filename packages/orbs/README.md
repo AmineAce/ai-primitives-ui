@@ -6,33 +6,38 @@ Framework-agnostic Canvas 2D loading orbs for React. Monochrome, dependency-free
 
 ```bash
 npm install @ai-primitives/ui
+# pnpm
+pnpm add @ai-primitives/ui
 ```
 
-Peer dependencies: React 18 or 19. No runtime dependencies.
+Peer dependencies: React 18 or 19. Zero runtime dependencies.
 
 ## Usage
 
 ```tsx
-import { CloningOrb } from "@ai-primitives/ui";
+import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives/ui";
 
 export function CloningIndicator() {
-  return <CloningOrb size={160} speed={1} aria-label="Cloning repository" />;
+  return (
+    <CloningOrb size={orbSizes.xl} speed={1} aria-label="Cloning repository" />
+  );
 }
 ```
 
-## Components
+## Components — 8 orbs
 
-| Component     | Represents               |
-| ------------- | ------------------------ |
-| `CloningOrb`  | Cloning a repository     |
-| `FetchingOrb` | Fetching remote changes  |
-| `PullingOrb`  | Pulling from a remote    |
-| `PushingOrb`  | Pushing local changes    |
-| `MergingOrb`  | Merging branches         |
-| `RebasingOrb` | Rebasing onto a branch   |
-| `StashingOrb` | Stashing working changes |
+| Component     | Represents                              |
+| ------------- | --------------------------------------- |
+| `CloningOrb`  | Cloning a repository                    |
+| `SyncOrb`     | Bidirectional sync — square 8×8 → globe |
+| `FetchingOrb` | Fetching remote changes                 |
+| `PullingOrb`  | Pulling from a remote                   |
+| `PushingOrb`  | Pushing local changes                   |
+| `MergingOrb`  | Merging branches                        |
+| `RebasingOrb` | Rebasing onto a branch                  |
+| `StashingOrb` | Stashing working changes                |
 
-Every component accepts the same props.
+Every component accepts the same props (`orbSizes xs 16 → 2xl 96`).
 
 ## Props
 
