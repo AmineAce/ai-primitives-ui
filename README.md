@@ -1,8 +1,8 @@
 # AI Primitives — UI primitives for AI-native interfaces
 
-A dependency-free library of monochrome UI primitives for AI-native interfaces — loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur. Every primitive ships as a small, typed React component.
+[![npm version](https://badge.fury.io/js/%40ai-primitives-ui%2Fui.svg)](https://www.npmjs.com/package/@ai-primitives-ui/ui) · **Live:** https://ai-primitives-ui.vercel.app · **Docs:** https://ai-primitives-ui.vercel.app/docs
 
-**Live:** https://ai-primitives-ui.vercel.app · **Docs:** https://ai-primitives-ui.vercel.app/docs
+A dependency-free library of monochrome UI primitives for AI-native interfaces — loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur. Every primitive ships as a small, typed React component.
 
 ![AI Primitives](public/og-image.png)
 
