@@ -12,7 +12,7 @@ A dependency-free library of monochrome UI primitives for AI-native interfaces �
 - **Thinking — 2:** `CubeOrb` (Thinking), `ScanOrb`
 - **Streaming & Cards — 8:** `StreamingText`, `ApprovalCard`, `ToolChips`, `TaskRows`, `Chat`, `RecommendationCard`, `ContextCards`, `DiffTable`
 
-Live showcase + playground at `/#playground` — 18 pills, `orbSizes xs 16 → 2xl 96`, `size / speed / paused`, Chat one-shot test.
+Live showcase + playground at `https://ai-primitives-ui.vercel.app/#playground` — 18 pills, `orbSizes xs 16 → 2xl 96`, `size / speed / paused`, Chat one-shot test.
 
 ## Install
 
@@ -54,11 +54,11 @@ Every orb accepts `size?: number | OrbSizePreset` (`orbSizes xs 16, sm 24, md 32
 
 ## Playground
 
-Try every ready primitive live at `http://localhost:3000/#playground` — orbs expose `size / speed / paused`, streaming/approval/tool-chips/task-rows/chat are testable (Chat is one-shot: _Nice, you tried it. This is only a test_).
+Try every ready primitive live at `https://ai-primitives-ui.vercel.app/#playground` — orbs expose `size / speed / paused`, streaming/approval/tool-chips/task-rows/chat are testable (Chat is one-shot: _Nice, you tried it. This is only a test_).
 
 ## Docs
 
-Full docs at `/docs` — grouped primitives (Loading State 8, Thinking 2, Streaming & Cards 8), `orbSizes`, playground link, theming 3 steps, a11y `prefers-reduced-motion`, API tables for `orbs` + `StreamingText` + `DiffTable`.
+Full docs at `https://ai-primitives-ui.vercel.app/docs` — grouped primitives (Loading State 8, Thinking 2, Streaming & Cards 8), `orbSizes`, playground link, theming 3 steps, a11y `prefers-reduced-motion`, API tables for `orbs` + `StreamingText` + `DiffTable`.
 
 ```bash
 pnpm dev      # .next-dev on :3000, Next 14
