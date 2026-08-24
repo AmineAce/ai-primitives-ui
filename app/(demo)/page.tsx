@@ -3,7 +3,7 @@ import { DemoShowcase } from "@/components/sections/demo-showcase";
 import { DemoInstall } from "@/components/sections/demo-install";
 import { DemoUsage } from "@/components/sections/demo-usage";
 import { DemoPlayground } from "@/components/sections/demo-playground";
-import { DemoFooter } from "@/components/sections/demo-footer";
+import { Footer } from "@/components/sections/footer";
 
 export default function DemoPage() {
   return (
@@ -13,7 +13,7 @@ export default function DemoPage() {
       <DemoInstall />
       <DemoUsage />
       <DemoPlayground />
-      <DemoFooter />
+      <Footer />
     </>
   );
 }
