@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   description:
     "A dependency-free library of monochrome UI primitives for AI-native interfaces: loading states, thinking traces, streaming text, tool chips, approval cards, and more. No WebGL, no dependencies.",
-  metadataBase: new URL("https://ai-primitives.example.com"),
+  metadataBase: new URL("https://ai-primitives-ui.vercel.app"),
   manifest: "/manifest.json",
   openGraph: {
     title: "AI Primitives — UI primitives for AI-native interfaces",
@@ -104,7 +104,7 @@ export default function RootLayout({
               applicationCategory: "DeveloperApplication",
               operatingSystem: "Any",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-              url: "https://ai-primitives.example.com",
+              url: "https://ai-primitives-ui.vercel.app",
               sameAs: ["https://github.com/AmineAce/ai-primitives-ui"],
             }),
           }}

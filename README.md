@@ -2,6 +2,8 @@
 
 A dependency-free library of monochrome UI primitives for AI-native interfaces — loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur. Every primitive ships as a small, typed React component.
 
+**Live:** https://ai-primitives-ui.vercel.app · **Docs:** https://ai-primitives-ui.vercel.app/docs
+
 ![AI Primitives](public/og-image.png)
 
 ## Primitives — 18 ready, More coming soon
@@ -65,9 +67,10 @@ pnpm check    # format → lint → typecheck → test → gates → build
 
 ## Links
 
-- Docs: https://ai-primitives.example.com/docs
+- Live: https://ai-primitives-ui.vercel.app
+- Docs: https://ai-primitives-ui.vercel.app/docs
 - GitHub: https://github.com/AmineAce/ai-primitives-ui
-- Playground: https://ai-primitives.example.com/#playground
+- Playground: https://ai-primitives-ui.vercel.app/#playground
 
 ## License
 
