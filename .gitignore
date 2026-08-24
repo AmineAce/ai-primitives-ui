@@ -4,4 +4,5 @@ node_modules/
 out/
 dist/
 *.tsbuildinfo
-.DS_Store
+.DS_Storeignore
+.audit-backup/
