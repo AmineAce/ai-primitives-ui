@@ -17,9 +17,9 @@ Live showcase + playground at `https://ai-primitives-ui.vercel.app/#playground` 
 ## Install
 
 ```bash
-npm install @ai-primitives/ui
+npm install @ai-primitives-ui/ui
 # pnpm
-pnpm add @ai-primitives/ui
+pnpm add @ai-primitives-ui/ui
 ```
 
 Peer dependencies: React 18 or 19. Zero runtime dependencies.
@@ -27,7 +27,7 @@ Peer dependencies: React 18 or 19. Zero runtime dependencies.
 ## Usage
 
 ```tsx
-import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives/ui";
+import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives-ui/ui";
 
 export function CloningIndicator() {
   return (

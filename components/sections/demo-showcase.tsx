@@ -19,7 +19,7 @@ import {
   CubeOrb,
   ScanOrb,
   StreamingText,
-} from "@ai-primitives/ui";
+} from "@ai-primitives-ui/ui";
 import { DemoApprovalCard } from "@/components/ui/approval-card";
 import { DemoToolChips } from "@/components/ui/tool-chips";
 import { DemoTaskRows } from "@/components/ui/task-rows";

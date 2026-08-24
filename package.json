@@ -6,17 +6,17 @@
   "scripts": {
     "predev": "node scripts/guard-dev.mjs",
     "dev": "NEXT_DIST_DIR=.next-dev next dev",
-    "prebuild": "pnpm --filter @ai-primitives/ui build",
+    "prebuild": "pnpm --filter @ai-primitives-ui/ui build",
     "build": "next build",
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "pnpm --filter @ai-primitives/ui test",
+    "test": "pnpm --filter @ai-primitives-ui/ui test",
     "check": "node scripts/check.mjs",
     "preview": "serve out -l 4173"
   },
   "dependencies": {
-    "@ai-primitives/ui": "workspace:*",
+    "@ai-primitives-ui/ui": "workspace:*",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
     "next": "14.2.25",

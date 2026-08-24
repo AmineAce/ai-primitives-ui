@@ -1,13 +1,13 @@
-# @ai-primitives/ui
+# @ai-primitives-ui/ui
 
 Framework-agnostic Canvas 2D loading orbs for React. Monochrome, dependency-free, honors reduced motion.
 
 ## Install
 
 ```bash
-npm install @ai-primitives/ui
+npm install @ai-primitives-ui/ui
 # pnpm
-pnpm add @ai-primitives/ui
+pnpm add @ai-primitives-ui/ui
 ```
 
 Peer dependencies: React 18 or 19. Zero runtime dependencies.
@@ -15,7 +15,7 @@ Peer dependencies: React 18 or 19. Zero runtime dependencies.
 ## Usage
 
 ```tsx
-import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives/ui";
+import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives-ui/ui";
 
 export function CloningIndicator() {
   return (

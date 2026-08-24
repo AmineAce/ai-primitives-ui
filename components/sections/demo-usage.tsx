@@ -8,7 +8,7 @@ export function DemoUsage() {
         <h2 className="text-lg font-medium">Usage</h2>
 
         <div className="mt-6 space-y-4">
-          <Pre>{`import { CloningOrb } from "@ai-primitives/ui";`}</Pre>
+          <Pre>{`import { CloningOrb } from "@ai-primitives-ui/ui";`}</Pre>
           <Pre>{`<CloningOrb size={64} aria-label="Cloning repository" />`}</Pre>
         </div>
       </Container>

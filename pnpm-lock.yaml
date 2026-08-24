@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@ai-primitives/ui':
+      '@ai-primitives-ui/ui':
         specifier: workspace:*
         version: link:packages/orbs
       clsx:
