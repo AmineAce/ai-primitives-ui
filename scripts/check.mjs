@@ -18,17 +18,17 @@ const STEPS = [
   {
     label: "typecheck",
     purpose: "orb types",
-    args: ["--filter", "@ai-primitives/orbs", "typecheck"],
+    args: ["--filter", "@ai-primitives/ui", "typecheck"],
   },
   {
     label: "test",
     purpose: "orb unit tests",
-    args: ["--filter", "@ai-primitives/orbs", "test"],
+    args: ["--filter", "@ai-primitives/ui", "test"],
   },
   {
     label: "gates",
     purpose: "publish readiness",
-    args: ["--filter", "@ai-primitives/orbs", "gates"],
+    args: ["--filter", "@ai-primitives/ui", "gates"],
   },
   { label: "build", purpose: "production export", args: ["build"] },
 ];

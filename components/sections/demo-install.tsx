@@ -8,7 +8,7 @@ export function DemoInstall() {
         <h2 className="text-lg font-medium">Installation</h2>
 
         <div className="mt-6 flex items-center justify-between gap-4 rounded-lg border bg-elevated p-4 font-mono text-sm text-fg">
-          <code>npm install @ai-primitives/orbs</code>
+          <code>npm install @ai-primitives/ui</code>
           <button
             type="button"
             aria-label="Copy install command"

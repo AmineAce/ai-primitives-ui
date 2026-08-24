@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useTheme } from "@/lib/theme";
-import { inkFromColor, type Ink } from "@ai-primitives/orbs";
+import { inkFromColor, type Ink } from "@ai-primitives/ui";
 
 const FALLBACK = "#8b949e";
 

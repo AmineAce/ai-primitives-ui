@@ -105,7 +105,7 @@ export default function RootLayout({
               operatingSystem: "Any",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
               url: "https://ai-primitives.example.com",
-              sameAs: ["https://github.com/ai-primitives/ai-primitives"],
+              sameAs: ["https://github.com/AmineAce/ai-primitives-ui"],
             }),
           }}
         />

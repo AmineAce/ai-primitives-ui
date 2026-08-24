@@ -17,8 +17,8 @@ import {
   CubeOrb,
   ScanOrb,
   StreamingText,
-} from "@ai-primitives/orbs";
-import { orbSizes } from "@ai-primitives/orbs";
+} from "@ai-primitives/ui";
+import { orbSizes } from "@ai-primitives/ui";
 import { ApprovalCard } from "@/components/ui/approval-card";
 import { ToolChips } from "@/components/ui/tool-chips";
 import { TaskRows } from "@/components/ui/task-rows";
@@ -350,10 +350,10 @@ export function DemoPlayground() {
       ]
         .filter(Boolean)
         .join(" ");
-      return `import { ${name} } from "@ai-primitives/orbs";\n\n<${name} ${props} />`;
+      return `import { ${name} } from "@ai-primitives/ui";\n\n<${name} ${props} />`;
     }
     const name = CapOrb(state);
-    return `import { ${name} } from "@ai-primitives/orbs";\n\n<${name} />`;
+    return `import { ${name} } from "@ai-primitives/ui";\n\n<${name} />`;
   }, [state, size, speed, paused, isOrb]);
 
   const onCopy = async () => {

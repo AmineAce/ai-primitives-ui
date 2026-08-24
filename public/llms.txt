@@ -27,7 +27,7 @@ import { CloningOrb, SyncOrb } from "@ai-primitives/orbs";
 ## Links
 
 - Docs: https://ai-primitives.example.com/docs
-- GitHub: https://github.com/ai-primitives/ai-primitives
+- GitHub: https://github.com/AmineAce/ai-primitives-ui
 - Playground: https://ai-primitives.example.com/#playground — 18 ready live, orbSizes, one-shot Chat test
 
 ## License

@@ -10,7 +10,7 @@ import { Logo } from "@/components/ui/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { cn } from "@/lib/utils";
 
-const REPO_URL = "https://github.com/ai-primitives/ai-primitives";
+const REPO_URL = "https://github.com/AmineAce/ai-primitives-ui";
 
 const NAV_ITEMS = [{ href: "/docs", label: "Docs" }];
 

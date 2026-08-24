@@ -3,13 +3,13 @@ import { ChevronLeft } from "lucide-react";
 import { Pre } from "@/components/ui/pre";
 import { primitives } from "@/lib/primitives";
 
-const INSTALL_CMD = `npm install @ai-primitives/orbs
+const INSTALL_CMD = `npm install @ai-primitives/ui
 # pnpm
-pnpm add @ai-primitives/orbs`;
+pnpm add @ai-primitives/ui`;
 
-const IMPORT_EXAMPLE = `import { CloningOrb } from "@ai-primitives/orbs";`;
+const IMPORT_EXAMPLE = `import { CloningOrb } from "@ai-primitives/ui";`;
 
-const USAGE_EXAMPLE = `import { CloningOrb } from "@ai-primitives/orbs";
+const USAGE_EXAMPLE = `import { CloningOrb } from "@ai-primitives/ui";
 
 export function CloningIndicator() {
   return (
@@ -27,7 +27,7 @@ matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
 
 /* 3 per instance — prop wins, alpha ignored */
 <CloningOrb color="#e6edf3" />
-import { orbSizes } from "@ai-primitives/orbs";
+import { orbSizes } from "@ai-primitives/ui";
 <SyncOrb size={orbSizes.xl} />`;
 
 const PROPS = [
@@ -265,7 +265,7 @@ export default function DocsPage() {
           — the component streams any conversation).
         </p>
         <div className="mt-6">
-          <Pre>{`import { orbSizes, SyncOrb } from "@ai-primitives/orbs";\n\n<SyncOrb size={orbSizes.xl} speed={1} aria-label="Sync" />`}</Pre>
+          <Pre>{`import { orbSizes, SyncOrb } from "@ai-primitives/ui";\n\n<SyncOrb size={orbSizes.xl} speed={1} aria-label="Sync" />`}</Pre>
         </div>
       </section>
 

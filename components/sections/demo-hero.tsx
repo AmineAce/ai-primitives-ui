@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/container";
 import { primitives } from "@/lib/primitives";
 import { HeroOrb } from "./hero-orb";
 
-const REPO_URL = "https://github.com/ai-primitives/ai-primitives";
+const REPO_URL = "https://github.com/AmineAce/ai-primitives-ui";
 
 export function DemoHero() {
   const readyCount = primitives.filter((p) => p.status === "ready").length;

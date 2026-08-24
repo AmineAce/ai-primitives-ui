@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/ui/logo";
 import { Text } from "@/components/ui/text";
 
-const REPO_URL = "https://github.com/ai-primitives/ai-primitives";
+const REPO_URL = "https://github.com/AmineAce/ai-primitives-ui";
 const AUTHOR_URL = "https://github.com/AmineAce";
 
 export function Footer() {

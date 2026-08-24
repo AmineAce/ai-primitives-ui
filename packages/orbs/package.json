@@ -1,5 +1,5 @@
 {
-  "name": "@ai-primitives/orbs",
+  "name": "@ai-primitives/ui",
   "version": "0.1.0",
   "description": "Framework-agnostic Canvas 2D loading orb primitives.",
   "private": true,

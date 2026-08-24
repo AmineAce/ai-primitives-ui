@@ -16,10 +16,10 @@ This file provides guidance to AI agents when working with code in this reposito
 - `pnpm check` — The full quality umbrella, via `scripts/check.mjs`. Runs
   format → lint → orb typecheck → orb test → orb gates → build, then prints a
   per-step pass/fail summary. Fails fast on the first red step.
-- `pnpm --filter @ai-primitives/orbs typecheck` — Type-check the orb library against its own tsconfig
-- `pnpm --filter @ai-primitives/orbs build` — Build the published artifact with tsup (ESM + CJS + d.ts) into `dist/`
-- `pnpm --filter @ai-primitives/orbs test` — Orb library tests (vitest, jsdom env; canvas stubbed in `src/test/setup.ts`)
-- `pnpm --filter @ai-primitives/orbs gates` — Run publish gates. Rebuilds `dist/` from current source first, then validates with `publint` + `@arethetypeswrong/cli --pack`, so it can never pass against a stale artifact.
+- `pnpm --filter @ai-primitives/ui typecheck` — Type-check the orb library against its own tsconfig
+- `pnpm --filter @ai-primitives/ui build` — Build the published artifact with tsup (ESM + CJS + d.ts) into `dist/`
+- `pnpm --filter @ai-primitives/ui test` — Orb library tests (vitest, jsdom env; canvas stubbed in `src/test/setup.ts`)
+- `pnpm --filter @ai-primitives/ui gates` — Run publish gates. Rebuilds `dist/` from current source first, then validates with `publint` + `@arethetypeswrong/cli --pack`, so it can never pass against a stale artifact.
 
 ### Code Quality
 
@@ -57,7 +57,7 @@ This file provides guidance to AI agents when working with code in this reposito
 
 ```
 packages/
-  orbs/                   # @ai-primitives/orbs — publishable orb library
+  orbs/                   # @ai-primitives/ui — publishable orb library
     src/
       index.ts            # 'use client' entry barrel — named exports only, no `export *`
       lib/
@@ -217,7 +217,7 @@ export interface Primitive {
 1. Add entry to `lib/primitives.ts` with `status: 'placeholder'`.
 2. Create component in `packages/orbs/src/loading/<Name>Orb.tsx` following the Canvas conventions above.
 3. Export the component and its props type from `packages/orbs/src/loading/index.ts` and the root barrel `packages/orbs/src/index.ts`.
-4. Wire into `components/sections/demo-showcase.tsx`, importing from `@ai-primitives/orbs`.
+4. Wire into `components/sections/demo-showcase.tsx`, importing from `@ai-primitives/ui`.
 5. Flip `status` to `'ready'` in `lib/primitives.ts`.
 6. Run `pnpm check`.
 
