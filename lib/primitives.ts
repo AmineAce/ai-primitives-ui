@@ -20,7 +20,7 @@ export const primitives: Primitive[] = [
   {
     id: "sync",
     name: "Sync",
-    description: "Bidirectional sync — local and remote converge.",
+    description: "Bidirectional sync: local and remote converge.",
     status: "ready",
     category: "Loading State",
   },
@@ -35,8 +35,7 @@ export const primitives: Primitive[] = [
   {
     id: "pulling",
     name: "Pulling",
-    description:
-      "Fetch and merge combined — remote dots flow in and integrate.",
+    description: "Fetch and merge combined: remote dots flow in and integrate.",
     status: "ready",
     category: "Loading State",
   },

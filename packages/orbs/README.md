@@ -24,12 +24,12 @@ export function CloningIndicator() {
 }
 ```
 
-## Components — 8 orbs
+## Components · 8 orbs
 
 | Component     | Represents                              |
 | ------------- | --------------------------------------- |
 | `CloningOrb`  | Cloning a repository                    |
-| `SyncOrb`     | Bidirectional sync — square 8×8 → globe |
+| `SyncOrb`     | Bidirectional sync · square 8×8 → globe |
 | `FetchingOrb` | Fetching remote changes                 |
 | `PullingOrb`  | Pulling from a remote                   |
 | `PushingOrb`  | Pushing local changes                   |
@@ -51,7 +51,7 @@ Every component accepts the same props (`orbSizes xs 16 → 2xl 96`).
 
 ## Theming
 
-Orbs render in a neutral monochrome default. Set `--orb-fg` on any ancestor to theme every orb at once, or pass `color` to a single instance — the prop wins. The `color` prop accepts any CSS color; its alpha channel is ignored.
+Orbs render in a neutral monochrome default. Set `--orb-fg` on any ancestor to theme every orb at once, or pass `color` to a single instance · the prop wins. The `color` prop accepts any CSS color; its alpha channel is ignored.
 
 ```css
 :root {

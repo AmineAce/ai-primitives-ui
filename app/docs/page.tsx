@@ -19,13 +19,13 @@ export function CloningIndicator() {
 
 const ACCESSIBILITY_EXAMPLE = `<PushingOrb size={64} aria-label="Pushing changes" />`;
 
-const THEME_EXAMPLE = `/* 1 auto system — matchMedia + inline script before hydration */
+const THEME_EXAMPLE = `/* 1 auto system: matchMedia + inline script before hydration */
 matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
 
-/* 2 global — every orb follows --orb-fg */
+/* 2 global: every orb follows --orb-fg */
 :root { --orb-fg: var(--fg-default); }
 
-/* 3 per instance — prop wins, alpha ignored */
+/* 3 per instance: prop wins, alpha ignored */
 <CloningOrb color="#e6edf3" />
 import { orbSizes } from "@ai-primitives-ui/ui";
 <SyncOrb size={orbSizes.xl} />`;
@@ -118,7 +118,7 @@ export default function DocsPage() {
         </h1>
         <p className="doc-lead">
           AI Primitives is a dependency-free library of monochrome UI primitives
-          for AI-native interfaces — loading states, thinking traces, streaming
+          for AI-native interfaces: loading states, thinking traces, streaming
           text, approval cards, tool chips, and more. Motion is drawn with the
           plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur. Every
           primitive ships as a small, typed React component.
@@ -141,7 +141,7 @@ export default function DocsPage() {
         <h2 className="doc-h2">Usage</h2>
         <p className="doc-p">
           Every primitive is a focused, typed React component. The Loading State
-          category ships as eight components today —{" "}
+          category ships as eight components today:{" "}
           <code className="doc-code">CloningOrb</code>,{" "}
           <code className="doc-code">SyncOrb</code>,{" "}
           <code className="doc-code">FetchingOrb</code>,{" "}
@@ -159,7 +159,7 @@ export default function DocsPage() {
       </section>
 
       <section id="primitives" className="scroll-mt-28">
-        <h2 className="doc-h2">Primitives — ready, More coming soon</h2>
+        <h2 className="doc-h2">Primitives · ready, More coming soon</h2>
         <p className="doc-p">
           Grouped by category. See the live showcase on the landing page for
           animated previews.
@@ -169,18 +169,18 @@ export default function DocsPage() {
           for (const p of primitives) {
             const key =
               p.category === "Loading State"
-                ? "Loading State — 8 orbs"
+                ? "Loading State · 8 orbs"
                 : p.category === "Thinking"
-                  ? "Thinking — 2"
+                  ? "Thinking · 2"
                   : p.category === "More"
                     ? "More"
-                    : "Streaming & Cards — 8";
+                    : "Streaming & Cards · 8";
             (groups[key] ??= []).push(p);
           }
           const order = [
-            "Loading State — 8 orbs",
-            "Thinking — 2",
-            "Streaming & Cards — 8",
+            "Loading State · 8 orbs",
+            "Thinking · 2",
+            "Streaming & Cards · 8",
             "More",
           ];
           return order.map(
@@ -254,15 +254,15 @@ export default function DocsPage() {
           <Link href="/#playground" className="doc-code">
             /#playground
           </Link>{" "}
-          — orbs expose <code className="doc-code">size / speed / paused</code>{" "}
+          · orbs expose <code className="doc-code">size / speed / paused</code>{" "}
           via <code className="doc-code">orbSizes</code>{" "}
           <code className="doc-code">xs 16 → 2xl 96</code>. Streaming, approval,
           tool chips, task rows, and chat are testable (chat is one-shot in the
-          playground —{" "}
+          playground:{" "}
           <code className="doc-code">
             Nice, you tried it. This is only a test
           </code>{" "}
-          — the component streams any conversation).
+          · the component streams any conversation).
         </p>
         <div className="mt-6">
           <Pre>{`import { orbSizes, SyncOrb } from "@ai-primitives-ui/ui";\n\n<SyncOrb size={orbSizes.xl} speed={1} aria-label="Sync" />`}</Pre>
@@ -276,7 +276,7 @@ export default function DocsPage() {
         </p>
         <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-relaxed text-fg-muted">
           <li>
-            <code className="doc-code">system</code> —{" "}
+            <code className="doc-code">system</code>:{" "}
             <code className="doc-code">matchMedia</code> + inline{" "}
             <code className="doc-code">THEME_INIT_SCRIPT</code> in{" "}
             <code className="doc-code">app/layout.tsx:8</code> sets{" "}
@@ -285,12 +285,12 @@ export default function DocsPage() {
           </li>
           <li>
             <code className="doc-code">--orb-fg</code> on any ancestor themes
-            every orb — demo wires{" "}
+            every orb · demo wires{" "}
             <code className="doc-code">--orb-fg: var(--fg-default)</code>.
           </li>
           <li>
             <code className="doc-code">color</code> prop wins per instance,
-            alpha ignored — orb controls alpha via{" "}
+            alpha ignored · orb controls alpha via{" "}
             <code className="doc-code">ink()</code>.
           </li>
         </ul>

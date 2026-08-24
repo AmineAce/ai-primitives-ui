@@ -261,7 +261,7 @@ function PlaygroundChat() {
       { role: "user" as const, text: input.trim() },
       {
         role: "assistant" as const,
-        text: "Nice, you tried it. This is only a test — the real component streams any conversation.",
+        text: "Nice, you tried it. This is only a test: the real component streams any conversation.",
       },
     ]);
     setInput("");
@@ -278,7 +278,7 @@ function PlaygroundChat() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && add()}
           placeholder={
-            used ? "Test used — reset to try again" : "Type a message + Enter"
+            used ? "Test used · reset to try again" : "Type a message + Enter"
           }
           disabled={used}
           className="focus:border-strong flex-1 rounded-lg border border-muted bg-background p-2.5 font-mono text-xs text-fg focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -368,7 +368,7 @@ export function DemoPlayground() {
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-lg font-medium">Playground</h2>
           <p className="font-mono text-xs text-fg-subtle">
-            {ready.length} ready — test, don&apos;t just look
+            {ready.length} ready · test, don&apos;t just look
           </p>
         </div>
 
@@ -508,7 +508,7 @@ export function DemoPlayground() {
             ) : (
               <div className="rounded-xl border bg-elevated p-5">
                 <p className="font-mono text-xs leading-relaxed text-fg-subtle">
-                  Test it — edit the content below, hit the controls. Orbs use{" "}
+                  Test it · edit the content below, hit the controls. Orbs use{" "}
                   <code className="doc-code">size / speed / paused</code>, these
                   use their own props.
                 </p>

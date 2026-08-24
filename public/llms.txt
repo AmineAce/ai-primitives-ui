@@ -1,12 +1,12 @@
 # AI Primitives
 
-> A dependency-free library of monochrome UI primitives for AI-native interfaces — loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur.
+> A dependency-free library of monochrome UI primitives for AI-native interfaces · loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur.
 
-## Primitives — 18 ready
+## Primitives · 18 ready
 
-- Loading State — 8 orbs: CloningOrb, SyncOrb, FetchingOrb, PullingOrb, PushingOrb, MergingOrb, RebasingOrb, StashingOrb — Canvas 2D, monochrome, `size` `orbSizes xs 16 → 2xl 96`, `speed`, `paused`, `aria-label`
-- Thinking — 2: CubeOrb (Thinking), ScanOrb (Scan)
-- Streaming & Cards — 8: StreamingText, ApprovalCard, ToolChips, TaskRows, Chat, RecommendationCard, ContextCards, DiffTable
+- Loading State · 8 orbs: CloningOrb, SyncOrb, FetchingOrb, PullingOrb, PushingOrb, MergingOrb, RebasingOrb, StashingOrb · Canvas 2D, monochrome, `size` `orbSizes xs 16 → 2xl 96`, `speed`, `paused`, `aria-label`
+- Thinking · 2: CubeOrb (Thinking), ScanOrb (Scan)
+- Streaming & Cards · 8: StreamingText, ApprovalCard, ToolChips, TaskRows, Chat, RecommendationCard, ContextCards, DiffTable
 
 SyncOrb: square 8×8 flat → diagonal shimmer → supernova suck → globe with 3-ring flash (each plane), clipped flash inside sphere, perfect loop 3.6s.
 
@@ -29,8 +29,8 @@ import { CloningOrb, SyncOrb } from "@ai-primitives/orbs";
 - Live: https://ai-primitives-ui.vercel.app
 - Docs: https://ai-primitives-ui.vercel.app/docs
 - GitHub: https://github.com/AmineAce/ai-primitives-ui
-- Playground: https://ai-primitives-ui.vercel.app/#playground — 18 ready live, orbSizes, one-shot Chat test
+- Playground: https://ai-primitives-ui.vercel.app/#playground · 18 ready live, orbSizes, one-shot Chat test
 
 ## License
 
-MIT — Built by AmineAce
+MIT · Built by AmineAce

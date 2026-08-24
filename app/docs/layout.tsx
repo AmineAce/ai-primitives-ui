@@ -5,9 +5,9 @@ import { DocsNav, MobileDocsNav } from "@/components/docs/nav";
 export const metadata: Metadata = {
   title: "Docs",
   description:
-    "Documentation for AI Primitives — getting started, installation, usage, primitives, theming, accessibility, and API reference.",
+    "Documentation for AI Primitives · getting started, installation, usage, primitives, theming, accessibility, and API reference.",
   openGraph: {
-    title: "AI Primitives — UI primitives for AI-native interfaces",
+    title: "AI Primitives · UI primitives for AI-native interfaces",
     description:
       "Monochrome UI primitives for AI-native interfaces. Zero dependencies.",
     type: "website",

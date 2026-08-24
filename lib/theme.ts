@@ -28,7 +28,7 @@ export function setStoredTheme(theme: Theme): void {
   try {
     window.localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
-    /* storage unavailable — theme still applies for this session */
+    /* storage unavailable · theme still applies for this session */
   }
 }
 

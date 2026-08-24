@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "AI Primitives — UI primitives for AI-native interfaces",
+    default: "AI Primitives · UI primitives for AI-native interfaces",
     template: "%s · AI Primitives",
   },
   description:
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ai-primitives-ui.vercel.app"),
   manifest: "/manifest.json",
   openGraph: {
-    title: "AI Primitives — UI primitives for AI-native interfaces",
+    title: "AI Primitives · UI primitives for AI-native interfaces",
     description:
       "Monochrome UI primitives for AI-native interfaces. Zero dependencies.",
     type: "website",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Primitives — UI primitives for AI-native interfaces",
+    title: "AI Primitives · UI primitives for AI-native interfaces",
     description:
       "Monochrome UI primitives for AI-native interfaces. Zero dependencies.",
     images: ["/og-image.png"],
@@ -100,7 +100,7 @@ export default function RootLayout({
               "@type": "SoftwareApplication",
               name: "AI Primitives",
               description:
-                "A dependency-free library of monochrome UI primitives for AI-native interfaces — loading states, thinking traces, streaming text, approval cards, tool chips, and more. No WebGL, no dependencies.",
+                "A dependency-free library of monochrome UI primitives for AI-native interfaces: loading states, thinking traces, streaming text, approval cards, tool chips, and more. No WebGL, no dependencies.",
               applicationCategory: "DeveloperApplication",
               operatingSystem: "Any",
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

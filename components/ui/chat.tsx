@@ -505,13 +505,13 @@ const DEMO_TURNS: ChatTurn[] = [
   { role: "user", text: "why is my build failing?" },
   {
     role: "assistant",
-    text: "Your .next cache is stale — the manifest points at chunks that no longer exist.",
+    text: "Your .next cache is stale: the manifest points at chunks that no longer exist.",
     tools: ["read_file"],
   },
   { role: "user", text: "fix it" },
   {
     role: "assistant",
-    text: "Deleted the cache. Rerunning now — should pass clean.",
+    text: "Deleted the cache. Rerunning now, should pass clean.",
   },
 ];
 

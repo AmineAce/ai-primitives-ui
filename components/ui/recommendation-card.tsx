@@ -166,7 +166,7 @@ export function RecommendationCard({
         >
           {active.title}
           {active.description ? (
-            <span className="text-fg-muted"> — {active.description}</span>
+            <span className="text-fg-muted"> · {active.description}</span>
           ) : null}
         </p>
       </div>

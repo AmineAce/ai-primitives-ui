@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Crafted UI primitives for AI-native interfaces. A monochrome, open-source library.",
   openGraph: {
-    title: "AI Primitives — UI primitives for AI-native interfaces",
+    title: "AI Primitives · UI primitives for AI-native interfaces",
     description:
       "Monochrome UI primitives for AI-native interfaces. Zero dependencies.",
     type: "website",
