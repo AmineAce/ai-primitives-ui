@@ -1,0 +1,273 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ------------------------------------------------------------------
+   * Monochrome palette — GitHub Primer grayscale, refined for premium.
+   * Dark first; light is the inverse. No accent colors. Emphasis is
+   * achieved with fg-default at varying opacities.
+   * ------------------------------------------------------------------ */
+  :root {
+    --bg-base: #ffffff;
+    --bg-elevated: #f6f8fa;
+    --bg-inset: #ffffff;
+    --border-default: #d0d7de;
+    --border-muted: #e6edf3;
+    --fg-default: #1f2328;
+    --fg-muted: #656d76;
+    --fg-subtle: #616a73;
+    --fg-on-emphasis: #ffffff;
+    --orb-fg: var(--fg-default);
+    --dot-alpha: 18%;
+  }
+
+  .dark,
+  [data-theme="dark"] {
+    --bg-base: #0d1117;
+    --bg-elevated: #161b22;
+    --bg-inset: #010409;
+    --border-default: #30363d;
+    --border-muted: #21262d;
+    --fg-default: #f0f6fc;
+    --fg-muted: #8b949e;
+    --fg-subtle: #8b949e;
+    --fg-on-emphasis: #ffffff;
+    --orb-fg: var(--fg-default);
+    --dot-alpha: 10%;
+  }
+
+  /* ------------------------------------------------------------------
+   * Semantic aliases. Mapped onto the palette above so components can
+   * consume intent (surface, foreground, muted) rather than raw tokens.
+   * Emphasis is achieved with fg-default at low opacities (e.g. 5%).
+   * ------------------------------------------------------------------ */
+  :root {
+    --background: var(--bg-base);
+    --surface: var(--bg-elevated);
+    --inset: var(--bg-inset);
+    --foreground: var(--fg-default);
+    --secondary: var(--fg-muted);
+    --faint: var(--fg-subtle);
+    --border: var(--border-muted);
+    --border-strong: var(--border-default);
+    --ring: var(--fg-default);
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--background);
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--fg-default) var(--dot-alpha), transparent) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--ring);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--border-strong) 60%, transparent);
+    border-radius: 8px;
+    border: 3px solid var(--background);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .doc-h2 {
+    @apply mt-14 scroll-mt-28 text-2xl font-semibold tracking-tight;
+  }
+
+  .doc-h3 {
+    @apply mt-8 text-base font-medium;
+  }
+
+  .doc-p {
+    @apply mt-4 max-w-prose leading-relaxed text-secondary;
+  }
+
+  .doc-code {
+    @apply rounded-md border border-border bg-surface px-1.5 py-0.5 font-mono text-[13px] text-foreground;
+  }
+
+  .doc-li {
+    @apply mt-2.5 flex items-start gap-3 text-secondary;
+  }
+
+  .doc-lead {
+    @apply mt-5 max-w-2xl text-lg leading-relaxed text-secondary;
+  }
+}
+
+@layer utilities {
+  @keyframes bounce-soft {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(8px);
+    }
+  }
+
+  .animate-bounce-soft {
+    animation: bounce-soft 2.4s ease-in-out infinite;
+  }
+
+  @keyframes comet-travel {
+    from {
+      top: -2px;
+      opacity: 1;
+    }
+    to {
+      top: calc(100% - 2px);
+      opacity: 0;
+    }
+  }
+
+  .animate-comet {
+    animation: comet-travel 280ms ease-in forwards;
+  }
+
+  @keyframes caret-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  .animate-caret {
+    animation: caret-blink 900ms ease-in-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    from {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 480ms ease-out forwards;
+  }
+
+  @keyframes liftoff {
+    from {
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-24px);
+    }
+  }
+
+  .animate-liftoff {
+    animation: liftoff 700ms ease-out forwards;
+  }
+
+  @keyframes rail-flash {
+    from {
+      left: -2rem;
+      opacity: 1;
+    }
+    to {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+
+  .animate-rail-flash {
+    animation: rail-flash 700ms ease-in-out forwards;
+  }
+
+  @keyframes ring-breathe {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  .animate-ring-breathe {
+    animation: ring-breathe 1.4s ease-in-out;
+  }
+
+  @keyframes scroll-dot {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(44px);
+      opacity: 0;
+    }
+  }
+
+  .animate-scroll-dot {
+    animation: scroll-dot 2.4s ease-in-out infinite;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

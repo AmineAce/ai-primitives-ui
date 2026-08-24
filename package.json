@@ -1,0 +1,42 @@
+{
+  "name": "ai-primitives",
+  "version": "0.1.0",
+  "description": "A dependency-free library of monochrome UI primitives for AI-native interfaces.",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/guard-dev.mjs",
+    "dev": "NEXT_DIST_DIR=.next-dev next dev",
+    "prebuild": "pnpm --filter @ai-primitives/orbs build",
+    "build": "next build",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm --filter @ai-primitives/orbs test",
+    "check": "node scripts/check.mjs",
+    "preview": "serve out -l 4173"
+  },
+  "dependencies": {
+    "@ai-primitives/orbs": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "next": "14.2.25",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "web-vitals": "^6.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.25",
+    "postcss": "^8.4.49",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "serve": "^14.2.4",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
+}

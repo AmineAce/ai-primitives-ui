@@ -1,0 +1,17 @@
+{
+  "name": "AI Primitives — UI primitives for AI-native interfaces",
+  "short_name": "AI Primitives",
+  "description": "Monochrome UI primitives for AI-native interfaces. Zero dependencies.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
