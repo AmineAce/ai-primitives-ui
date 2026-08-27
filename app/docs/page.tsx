@@ -324,8 +324,8 @@ export default function DocsPage() {
       <section id="performance" className="scroll-mt-28">
         <h2 className="doc-h2">Performance</h2>
         <p className="doc-p">
-          Orbs are tuned for 60fps with 14 concurrent canvases. v2.0.2 ships 6
-          phases of surgical fixes (0.2.0 → 2.0.2 to clear{" "}
+          Orbs are tuned for 60fps with 14 concurrent canvases. v2.0.3 ships 6
+          phases of surgical fixes (0.2.0 → 2.0.3 to clear{" "}
           <code className="doc-code">latest</code> 2.0.1): see{" "}
           <code className="doc-code">plans/perf-optimization-phases.md</code>{" "}
           and <code className="doc-code">audit/baseline.json</code>.

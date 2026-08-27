@@ -99,7 +99,7 @@ Every orb accepts `size?: number | OrbSizePreset` (`orbSizes`: `xs 16`, `sm 24`,
 - **Heavy-hitter fixes** · `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`, `Stashing` foam `>0.08`
 - **Bundle** · `optimizePackageImports`, `dynamic(ssr:false)` showcase orbs, `preconnect` + `lazy` for `picsum 600×300`
 
-> **v2.0.2** ships 6-phase perf (0.2.0 → 2.0.2 to clear `latest` 2.0.1). See `plans/perf-optimization-phases.md` and `audit/baseline.json` (`FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` baseline).
+> **v2.0.3** ships 6-phase perf (0.2.0 → 2.0.3 to clear `latest` 2.0.1) + synced npm README. See `plans/perf-optimization-phases.md` and `audit/baseline.json` (`FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` baseline).
 
 ## 🎮 Playground
 
