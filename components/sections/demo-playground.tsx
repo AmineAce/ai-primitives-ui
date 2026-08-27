@@ -401,7 +401,6 @@ export function DemoPlayground() {
             >
               {isOrb && OrbComp ? (
                 <OrbComp
-                  key={`${state}-${size}`}
                   size={size}
                   speed={speed}
                   paused={paused}

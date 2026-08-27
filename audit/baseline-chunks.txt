@@ -1,0 +1,41 @@
+Baseline chunks — on-disk (pnpm build 2026-08-27, commit bfb21e1)
+Generated via du + ls -lh (.next + out/_next + packages/orbs/dist)
+
+.next size: 57M
+out size: 1.5M
+out/_next size: 1.2M
+
+.next/static/chunks/*.js (uncompressed resourceSize vs transfer in performanc.json):
+  5b0e2c6e-c2d2146dc7774363.js  172834 B  (54 KB transfer) — framework chunk (React + shared)
+  356-e51b2634cd88a93f.js       123774 B  (32 KB transfer) — app shared
+  783-22f247226ff27b6e.js       41723 B   (14 KB transfer)
+  framework-6e06c675866dc992.js 139981 B
+  main-ec4d3aa097beca4b.js      111070 B
+  polyfills-42372ed130431b0a.js 112594 B
+  webpack-1a40bb87a70b4150.js   3557 B
+  main-app-2eb78feeb9d87885.js 462 B
+
+out/_next/static/chunks/*.js — identical (static export copies .next)
+
+app route (next build output):
+  /        27 kB   First Load 128 kB
+  /docs    926 B   First Load 102 kB
+  First Load shared 87.6 kB (356 31.8k + 5b0e2c 53.8k + other 1.88k)
+  Note: chunks 356 + 5b0e2c dominate bootup — 539ms + 387ms bootup time (performanc.json:402-412), page chunk 2767ms total / 1992ms scripting
+
+packages/orbs/dist (tsup 8.5.1, entry src/index.ts):
+  index.mjs   79311 B (77.45 KB) + map 159 KB
+  index.cjs   81401 B (79.49 KB) + map 160 KB
+  index.d.ts  4269 B
+  index.d.cts 4269 B
+  format: esm+cjs, dts, splitting:false, ext react external (tsup.config.ts:1-14)
+
+Network lighthouse transfer vs resource (performanc.json:540-756):
+  page-e17d54ec32b5d0cd.js  28 KB transfer / 100 KB resource  (1992ms scripting — 72% of bootup)
+  356-e51b2634...js         32 KB / 123 KB  (491ms scripting)
+  5b0e2c6e...js             54 KB / 172 KB  (163ms scripting)
+  fonts: e4af27...woff2 48KB + bb3ef...woff2 40KB
+  css 0d7781...css 7KB / 26KB
+  picsum 600/300 59KB image + 302 redirect (266 B) — rtt 0.145ms
+
+Baseline fingerprint: .next 57M, out 1.5M, totalByteWeight 316550 (performanc.json:451), numRequests 17, numScripts 9, numTasks 3778, tasksOver50ms 1

@@ -1,8 +1,9 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine } from "../canvas/easing";
-import { fitRadius, makeSphereDots, project } from "../canvas/sphere";
+import { fitRadius, makeSphereDots, projectWithTrig } from "../canvas/sphere";
 import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
 import type { Dot } from "../canvas/types";
@@ -41,7 +42,12 @@ export function ScanOrb({
   const unit = size / 64;
   const dotSize = 1.7 * unit;
 
-  const sphereDots = makeSphereDots(count, radius);
+  const sphereDots = useMemo(
+    () => makeSphereDots(count, radius),
+    [count, radius],
+  );
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const envelope = (
     phaseStart: number,
@@ -63,9 +69,18 @@ export function ScanOrb({
   ) => {
     const tiltY = reduced ? 0.15 : TILT_Y;
     const cyc = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     ctx.clearRect(0, 0, size, size);
-
-    const dots: Dot[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
 
     for (const dot of sphereDots) {
       const theta = Math.atan2(dot.z, dot.x);
@@ -89,7 +104,7 @@ export function ScanOrb({
       }
 
       const b = FLOOR + (PEAK - FLOOR) * intensity;
-      const p = project(dot, cx, cy, TILT_X, tiltY);
+      const p = projectWithTrig(dot, cx, cy, cosX, sinX, cosY, sinY);
       dots.push({
         x: p.x,
         y: p.y,
@@ -99,10 +114,10 @@ export function ScanOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
       if (d.alpha <= 0.004) continue;
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();

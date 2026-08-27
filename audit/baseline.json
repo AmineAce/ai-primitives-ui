@@ -1,0 +1,270 @@
+{
+  "meta": {
+    "generatedAt": "2026-08-27T15:11:42.256820Z",
+    "fetchTime_original": "2026-08-24T14:26:53.681Z",
+    "lighthouseVersion": "13.4.0",
+    "gitCommit": "bfb21e1",
+    "gitBranch": "main",
+    "buildCommand": "pnpm build (next 14.2.25, output:export)",
+    "nodeVersion": "v26.7.0",
+    "pnpmVersion": "11.3.0"
+  },
+  "lighthouse_snapshot": {
+    "requestedUrl": "http://localhost:4173/",
+    "environment": {
+      "networkUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Mobile Safari/537.36",
+      "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "benchmarkIndex": 1359.5,
+      "credits": {}
+    },
+    "scores": {
+      "FCP": {
+        "value": 1061.1480000000001,
+        "score": 1,
+        "display": "1.1\u00a0s"
+      },
+      "LCP": {
+        "value": 2579.4320000000002,
+        "score": 0.88,
+        "display": "2.6\u00a0s"
+      },
+      "SpeedIndex": {
+        "value": 1086.529483976573,
+        "score": 1,
+        "display": "1.1\u00a0s"
+      },
+      "CLS": {
+        "value": 0,
+        "score": 1
+      },
+      "TBT": {
+        "value": 116,
+        "score": 0.97,
+        "display": "120\u00a0ms"
+      },
+      "MaxPotentialFID": {
+        "value": 114,
+        "score": 0.93
+      },
+      "TTI": {
+        "value": 2693.432,
+        "score": 0.97,
+        "display": "2.7\u00a0s"
+      }
+    },
+    "diagnostics": {
+      "numRequests": 17,
+      "numScripts": 9,
+      "numFonts": 2,
+      "numTasks": 3778,
+      "numTasksOver50ms": 1,
+      "totalByteWeight": 316550,
+      "totalTaskTime": 1246.8519999999908
+    },
+    "mainThread": {
+      "Script Evaluation": 2704.6119999998878,
+      "Other": 1067.2479999999396,
+      "Style & Layout": 689.256,
+      "Rendering": 403.26399999999563,
+      "Script Parsing & Compilation": 58.52000000000002,
+      "Garbage Collection": 36.90399999999998,
+      "Parse HTML & CSS": 27.603999999999996
+    },
+    "bootup": {
+      "page-e17d54ec32b5d0cd.js": {
+        "total": 2767.3879999999695,
+        "scripting": 1992.9239999999693,
+        "parse": 11.32
+      },
+      "": {
+        "total": 909.5680000000008,
+        "scripting": 18.647999999999985,
+        "parse": 6.584
+      },
+      "356-e51b2634cd88a93f.js": {
+        "total": 539.7359999999994,
+        "scripting": 491.03199999999936,
+        "parse": 12.475999999999999
+      },
+      "5b0e2c6e-c2d2146dc7774363.js": {
+        "total": 387.55200000000144,
+        "scripting": 163.24000000000137,
+        "parse": 16.844
+      },
+      "Unattributable": {
+        "total": 322.8640000000031,
+        "scripting": 6.555999999999999,
+        "parse": 0
+      }
+    },
+    "networkRequests": [
+      {
+        "url": "http://localhost:4173/",
+        "transfer": 10629,
+        "resource": 64671
+      },
+      {
+        "url": "http://localhost:4173/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+        "transfer": 48724,
+        "resource": 48432
+      },
+      {
+        "url": "https://picsum.photos/seed/orbs/600/300",
+        "transfer": 266,
+        "resource": 0
+      },
+      {
+        "url": "http://localhost:4173/_next/static/css/0d7781fbad020118.css",
+        "transfer": 7077,
+        "resource": 26690
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/webpack-1a40bb87a70b4150.js",
+        "transfer": 2054,
+        "resource": 3557
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/5b0e2c6e-c2d2146dc7774363.js",
+        "transfer": 54349,
+        "resource": 172834
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/356-e51b2634cd88a93f.js",
+        "transfer": 32483,
+        "resource": 123774
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/main-app-2eb78feeb9d87885.js",
+        "transfer": 804,
+        "resource": 462
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/783-22f247226ff27b6e.js",
+        "transfer": 14347,
+        "resource": 41723
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/app/(demo)/page-e17d54ec32b5d0cd.js",
+        "transfer": 28410,
+        "resource": 100038
+      },
+      {
+        "url": "http://localhost:4173/_next/static/chunks/app/layout-31cd7003ca54f3b8.js",
+        "transfer": 6668,
+        "resource": 16626
+      },
+      {
+        "url": "http://localhost:4173/_next/static/media/bb3ef058b751a6ad-s.woff2",
+        "transfer": 40770,
+        "resource": 40480
+      }
+    ]
+  },
+  "onDisk": {
+    "nextBuild": {
+      ".next_size": "57M",
+      "out_size": "1.5M",
+      "out_next_size": "1.2M"
+    },
+    "chunks": {
+      ".next/static/chunks/main-ec4d3aa097beca4b.js": 111070,
+      ".next/static/chunks/main-app-2eb78feeb9d87885.js": 462,
+      ".next/static/chunks/webpack-1a40bb87a70b4150.js": 3557,
+      ".next/static/chunks/framework-6e06c675866dc992.js": 139981,
+      ".next/static/chunks/5b0e2c6e-c2d2146dc7774363.js": 172834,
+      ".next/static/chunks/783-22f247226ff27b6e.js": 41723,
+      ".next/static/chunks/356-e51b2634cd88a93f.js": 123774,
+      ".next/static/chunks/polyfills-42372ed130431b0a.js": 112594,
+      "out/_next/static/chunks/356-e51b2634cd88a93f.js": 123774,
+      "out/_next/static/chunks/5b0e2c6e-c2d2146dc7774363.js": 172834,
+      "out/_next/static/chunks/783-22f247226ff27b6e.js": 41723,
+      "out/_next/static/chunks/framework-6e06c675866dc992.js": 139981,
+      "out/_next/static/chunks/main-app-2eb78feeb9d87885.js": 462,
+      "out/_next/static/chunks/main-ec4d3aa097beca4b.js": 111070,
+      "out/_next/static/chunks/webpack-1a40bb87a70b4150.js": 3557,
+      "out/_next/static/chunks/polyfills-42372ed130431b0a.js": 112594
+    },
+    "orbsDist": {
+      "index.mjs": 79311,
+      "index.cjs": 81401,
+      "index.d.ts": 4269
+    },
+    "routes": {
+      "/": "27 kB (First Load 128 kB)",
+      "/docs": "926 B (First Load 102 kB)",
+      "firstLoadShared": "87.6 kB (chunks 356 31.8k + 5b0e2c 53.8k + other 1.88k)"
+    }
+  },
+  "canvasAudit": {
+    "concurrentLoops": 14,
+    "breakdown": "HeroOrb 1 (128px) + Showcase 12 (10x64 + StreamingText 320x96 + ComingSoonOrb 64) + Playground 1 (64)",
+    "primitivesTotal": 19,
+    "primitivesReady": 18,
+    "dprCap": 2,
+    "orbsMountedOnLoad": [
+      "CloningOrb",
+      "SyncOrb",
+      "FetchingOrb",
+      "PullingOrb",
+      "PushingOrb",
+      "MergingOrb",
+      "RebasingOrb",
+      "StashingOrb",
+      "CubeOrb",
+      "ScanOrb",
+      "StreamingText",
+      "ComingSoonOrb",
+      "HeroOrb",
+      "PlaygroundOrb"
+    ],
+    "hooks": {
+      "useOrbAnimation": "packages/orbs/src/canvas/useOrbAnimation.ts:1-146",
+      "useInView_exists_unused": "hooks/useInView.ts:1-46"
+    }
+  },
+  "hypotheses_Ranked": [
+    {
+      "rank": 1,
+      "hypothesis": "GC snap from per-frame Dot/Halo + ink string concat (~880 strings/frame x60 = 52k/s)",
+      "evidence": "performanc.json GC 36ms, mainThread 5.0s, every orb dots=[] halos=[] busy=Set per frame + toFixed",
+      "fixPhase": 2
+    },
+    {
+      "rank": 2,
+      "hypothesis": "14 rAF loops offscreen burn CPU, no IntersectionObserver pause",
+      "evidence": "0 uses of hooks/useInView.ts, showcase 12 loops below fold still rAF",
+      "fixPhase": 3
+    },
+    {
+      "rank": 3,
+      "hypothesis": "StreamingText measureText per frame (20 calls/frame x60 =1200/s) blocks main thread",
+      "evidence": "StreamingText.tsx:115,117 wrapLines + measureText per frame",
+      "fixPhase": 4
+    },
+    {
+      "rank": 4,
+      "hypothesis": "Trig thrash: project() recomputes cos/sin per dot (80x/frame)",
+      "evidence": "sphere.ts:20-40 no hoist, paths.ts lerp3 alloc",
+      "fixPhase": 1
+    },
+    {
+      "rank": 5,
+      "hypothesis": "Bundle single chunk: page-e17d54ec 100KB (1992ms scripting) eager imports all orbs",
+      "evidence": "demo-showcase.tsx:10-22 static imports, Next build 128k First Load",
+      "fixPhase": 5
+    },
+    {
+      "rank": 6,
+      "hypothesis": "DPR/zoom/theme snap: sizing effect deps [size,height] only, MutationObserver scratch canvas per flip",
+      "evidence": "useOrbAnimation.ts:69-84,86-116, colors.ts:55",
+      "fixPhase": 6
+    },
+    {
+      "rank": 7,
+      "hypothesis": "SyncOrb double-speed bug + elapsedRef phase jump on size remount",
+      "evidence": "SyncOrb.tsx:76 t*speed, demo-playground.tsx:404 key state-size",
+      "fixPhase": 1
+    }
+  ],
+  "freshLighthouseStatus": "reuse 2026-08-24 snapshot; fresh run required on :4173 after pnpm preview if lighthouse CLI available"
+}

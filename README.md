@@ -21,6 +21,7 @@
 - **Accessible** · `aria-label` support, `prefers-reduced-motion` renders a static frame
 - **Typed** · full TypeScript surface, `publint` + `attw` publish gates
 - **Theme-aware** · system `matchMedia`, global `--orb-fg`, or per-instance `color`
+- **Performance-tuned** · pooled allocations, `IntersectionObserver` pause offscreen, DPR-aware, `requestAnimationFrame`-only
 
 ## 📦 Install
 
@@ -89,6 +90,16 @@ Every orb accepts `size?: number | OrbSizePreset` (`orbSizes`: `xs 16`, `sm 24`,
 ```tsx
 <CloningOrb color="#e6edf3" />
 ```
+
+## ⚡ Performance
+
+- **Frame GC surgery** · `Dot`/`Halo` pools + 21-bucket `ink` LUT (`880 → 21` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
+- **Offscreen governance** · `IntersectionObserver` (`100px` margin) + `document.hidden` pauses `rAF` when not visible; `paused` skips `clearRect`/`project`/`sort`
+- **DPR resilience** · `ResizeObserver`/`matchMedia` watches `devicePixelRatio` (cap 2) — zoom and display moves stay crisp without remount
+- **Heavy-hitter fixes** · `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`, `Stashing` foam `>0.08`
+- **Bundle** · `optimizePackageImports`, `dynamic(ssr:false)` showcase orbs, `preconnect` + `lazy` for `picsum 600×300`
+
+See `plans/perf-optimization-phases.md` (6 phases) and `audit/baseline.json` (`FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` baseline).
 
 ## 🎮 Playground
 

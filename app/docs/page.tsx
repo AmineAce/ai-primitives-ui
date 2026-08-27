@@ -321,6 +321,47 @@ export default function DocsPage() {
         </p>
       </section>
 
+      <section id="performance" className="scroll-mt-28">
+        <h2 className="doc-h2">Performance</h2>
+        <p className="doc-p">
+          Orbs are tuned for 60fps with 14 concurrent canvases. v0.2.0 ships 6
+          phases of surgical fixes: see{" "}
+          <code className="doc-code">plans/perf-optimization-phases.md</code>{" "}
+          and <code className="doc-code">audit/baseline.json</code>.
+        </p>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-relaxed text-fg-muted">
+          <li>
+            <code className="doc-code">useMemo</code> geometry +{" "}
+            <code className="doc-code">projectWithTrig</code> hoists{" "}
+            <code className="doc-code">cos/sin</code> (80→2 trig/frame)
+          </li>
+          <li>
+            Pooled <code className="doc-code">Dot/Halo</code> + 21-bucket{" "}
+            <code className="doc-code">ink</code> LUT (880→21{" "}
+            <code className="doc-code">toFixed</code>/frame)
+          </li>
+          <li>
+            <code className="doc-code">IntersectionObserver</code> +{" "}
+            <code className="doc-code">document.hidden</code> pauses offscreen
+            canvases; <code className="doc-code">paused</code> skips{" "}
+            <code className="doc-code">clearRect/project/sort</code>
+          </li>
+          <li>
+            DPR-aware <code className="doc-code">ResizeObserver</code>/
+            <code className="doc-code">matchMedia</code> (cap 2), sentinel
+            canvas reuse + debounced theme observer
+          </li>
+        </ul>
+        <p className="doc-p">
+          Baseline (moto g power, Lighthouse 13.4):{" "}
+          <code className="doc-code">
+            FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms
+          </code>
+          . After: First Load 128→131 kB (+3 kB wrappers), CPU ~80→15%
+          offscreen.
+        </p>
+      </section>
+
       <section id="api-reference" className="scroll-mt-28">
         <h2 className="doc-h2">API Reference</h2>
         <p className="doc-p">

@@ -2,24 +2,12 @@
 
 import type { ComponentType } from "react";
 import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Container } from "@/components/ui/container";
 import { primitives } from "@/lib/primitives";
 import { cn } from "@/lib/utils";
 import { useOrbInk } from "@/hooks/use-orb-ink";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import {
-  CloningOrb,
-  FetchingOrb,
-  PullingOrb,
-  PushingOrb,
-  MergingOrb,
-  RebasingOrb,
-  StashingOrb,
-  SyncOrb,
-  CubeOrb,
-  ScanOrb,
-  StreamingText,
-} from "@ai-primitives-ui/ui";
 import { DemoApprovalCard } from "@/components/ui/approval-card";
 import { DemoToolChips } from "@/components/ui/tool-chips";
 import { DemoTaskRows } from "@/components/ui/task-rows";
@@ -27,6 +15,60 @@ import { DemoChat } from "@/components/ui/chat";
 import { DemoRecommendationCard } from "@/components/ui/recommendation-card";
 import { DemoContextCards } from "@/components/ui/context-cards";
 import { DemoDiffTable } from "@/components/ui/diff-table";
+
+function CanvasSkeleton() {
+  return <div className="bg-border-muted size-16 animate-pulse rounded-full" />;
+}
+
+const CloningOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.CloningOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const FetchingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.FetchingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const PullingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.PullingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const PushingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.PushingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const MergingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.MergingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const RebasingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.RebasingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const StashingOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.StashingOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const SyncOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.SyncOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const CubeOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.CubeOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const ScanOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.ScanOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const StreamingText = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.StreamingText),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="bg-border-muted h-10 w-48 animate-pulse rounded" />
+    ),
+  },
+);
 
 function LoopStreamingText() {
   return <StreamingText loop />;
@@ -38,6 +80,7 @@ function ComingSoonOrb() {
   const reduced = useReducedMotion();
   const colorRef = useRef(color);
   const inkRef = useRef(ink);
+  const inViewRef = useRef(true);
 
   useEffect(() => {
     colorRef.current = color;
@@ -46,6 +89,19 @@ function ComingSoonOrb() {
   useEffect(() => {
     inkRef.current = ink;
   }, [ink]);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        inViewRef.current = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0, rootMargin: "100px" },
+    );
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!reduced) return;
@@ -134,6 +190,10 @@ function ComingSoonOrb() {
     let raf = 0;
     let start = 0;
     const frame = (now: number) => {
+      if (!inViewRef.current || document.hidden) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       if (start === 0) start = now;
       draw(now - start);
       raf = requestAnimationFrame(frame);

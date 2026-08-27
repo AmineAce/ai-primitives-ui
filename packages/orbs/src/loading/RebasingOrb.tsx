@@ -1,11 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine, easeOutCubic } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   spherePoint,
   type Point3D,
 } from "../canvas/sphere";
@@ -63,29 +64,34 @@ export function RebasingOrb({
   const dotSize = 2.2 * unit;
   const commSize = 2 * unit;
 
-  const sphereDots = makeSphereDots(count, radius);
-
-  const rings: Ring[] = RING_PHIS.map((phi, idx) => {
-    const theta: number[] = [];
-    const spawnTheta: number[] = [];
-    const pts: Point3D[] = [];
-    const spawn: Point3D[] = [];
-    for (let i = 0; i < N; i++) {
-      const t = Math.PI + 0.15 + (2 * Math.PI * i) / N;
-      const st = Math.PI + 0.25 + i / (N - 1);
-      theta.push(t);
-      spawnTheta.push(st);
-      pts.push(spherePoint(t, phi, radius));
-      const s = spherePoint(st, phi, radius);
-      spawn.push({
-        x: s.x * HOVER_LIFT,
-        y: s.y * HOVER_LIFT,
-        z: s.z * HOVER_LIFT,
-      });
-    }
-    return { phi, offset: RING_OFFS[idx], theta, spawnTheta, pts, spawn };
-  });
-  const tip = spherePoint(Math.PI + 2 * Math.PI - 0.12, Math.PI / 2, radius);
+  const { sphereDots, rings, tip } = useMemo(() => {
+    const dots = makeSphereDots(count, radius);
+    const rgs: Ring[] = RING_PHIS.map((phi, idx) => {
+      const theta: number[] = [];
+      const spawnTheta: number[] = [];
+      const pts: Point3D[] = [];
+      const spawn: Point3D[] = [];
+      for (let i = 0; i < N; i++) {
+        const t = Math.PI + 0.15 + (2 * Math.PI * i) / N;
+        const st = Math.PI + 0.25 + i / (N - 1);
+        theta.push(t);
+        spawnTheta.push(st);
+        pts.push(spherePoint(t, phi, radius));
+        const s = spherePoint(st, phi, radius);
+        spawn.push({
+          x: s.x * HOVER_LIFT,
+          y: s.y * HOVER_LIFT,
+          z: s.z * HOVER_LIFT,
+        });
+      }
+      return { phi, offset: RING_OFFS[idx], theta, spawnTheta, pts, spawn };
+    });
+    const tp = spherePoint(Math.PI + 2 * Math.PI - 0.12, Math.PI / 2, radius);
+    return { sphereDots: dots, rings: rgs, tip: tp };
+  }, [count, radius]);
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const halosPool = useMemo<Halo[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const commitPos = (ring: Ring, i: number, tt: number): Point3D => {
     const rep = clamp(
@@ -111,28 +117,29 @@ export function RebasingOrb({
     };
   };
 
-  const projectP = (p: Point3D, tiltY: number) =>
-    project(p, cx, cy, TILT_X, tiltY);
-
   const pointOnRail = (pts2d: Point2D[], f: number): Point2D => {
-    const lens: number[] = [0];
+    let total = 0;
     for (let i = 1; i < pts2d.length; i++) {
-      lens.push(
-        lens[i - 1] +
-          Math.hypot(pts2d[i].x - pts2d[i - 1].x, pts2d[i].y - pts2d[i - 1].y),
+      total += Math.hypot(
+        pts2d[i].x - pts2d[i - 1].x,
+        pts2d[i].y - pts2d[i - 1].y,
       );
     }
-    const total = lens[lens.length - 1];
     const target = clamp(f, 0, 1) * total;
+    let acc = 0;
     for (let i = 1; i < pts2d.length; i++) {
-      if (lens[i] >= target) {
-        const seg = lens[i] - lens[i - 1] || 1;
-        const u = (target - lens[i - 1]) / seg;
+      const seg = Math.hypot(
+        pts2d[i].x - pts2d[i - 1].x,
+        pts2d[i].y - pts2d[i - 1].y,
+      );
+      if (acc + seg >= target) {
+        const u = seg === 0 ? 0 : (target - acc) / seg;
         return {
           x: pts2d[i - 1].x + (pts2d[i].x - pts2d[i - 1].x) * u,
           y: pts2d[i - 1].y + (pts2d[i].y - pts2d[i - 1].y) * u,
         };
       }
+      acc += seg;
     }
     return pts2d[pts2d.length - 1];
   };
@@ -145,11 +152,17 @@ export function RebasingOrb({
     ink: (a: number) => number,
   ) => {
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
+    const projectP = (p: Point3D) =>
+      projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);
     ctx.clearRect(0, 0, size, size);
 
     if (reduced) {
       for (const dot of sphereDots) {
-        const p = projectP(dot, tiltY);
+        const p = projectP(dot);
         ctx.fillStyle =
           colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
@@ -161,19 +174,19 @@ export function RebasingOrb({
       for (let r = 0; r < rings.length; r++) {
         ctx.beginPath();
         for (let i = 0; i < N; i++) {
-          const p = projectP(rings[r].pts[i], tiltY);
+          const p = projectP(rings[r].pts[i]);
           if (i === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
         }
         if (r === EQUATOR) {
-          const tp = projectP(tip, tiltY);
+          const tp = projectP(tip);
           ctx.lineTo(tp.x, tp.y);
         }
         ctx.stroke();
       }
       for (const ring of rings) {
         for (let i = 0; i < N; i++) {
-          const p = projectP(ring.pts[i], tiltY);
+          const p = projectP(ring.pts[i]);
           ctx.fillStyle =
             colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
           ctx.beginPath();
@@ -181,7 +194,7 @@ export function RebasingOrb({
           ctx.fill();
         }
       }
-      const tp = projectP(tip, tiltY);
+      const tp = projectP(tip);
       ctx.fillStyle = colorPrefix + ink(0.8).toFixed(3) + ")";
       ctx.beginPath();
       ctx.arc(tp.x, tp.y, commSize * 1.2 * tp.scale, 0, 2 * Math.PI);
@@ -190,6 +203,11 @@ export function RebasingOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
     const settling = cycle >= CROSS_START;
     const q = settling ? clamp((cycle - CROSS_START) / CROSS_DUR, 0, 1) : 0;
@@ -202,9 +220,9 @@ export function RebasingOrb({
         : 0;
 
     const rings2d: Point2D[][] = rings.map((ring) =>
-      ring.pts.map((p) => projectP(p, tiltY)),
+      ring.pts.map((p) => projectP(p)),
     );
-    const tip2d = projectP(tip, tiltY);
+    const tip2d = projectP(tip);
     rings2d[EQUATOR].push({ x: tip2d.x, y: tip2d.y });
 
     const plantedCount: number[] = [];
@@ -236,8 +254,10 @@ export function RebasingOrb({
       ctx.stroke();
     }
 
-    const dots: Dot[] = [];
-    const halos: Halo[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
 
     for (let r = 0; r < rings.length; r++) {
       const ring = rings[r];
@@ -250,7 +270,7 @@ export function RebasingOrb({
 
         if (settling) {
           if (rep >= 1) {
-            const rp = projectP(ring.pts[i], tiltY);
+            const rp = projectP(ring.pts[i]);
             dots.push({
               x: rp.x,
               y: rp.y,
@@ -262,7 +282,7 @@ export function RebasingOrb({
           continue;
         }
 
-        const p = projectP(commitPos(ring, i, cycle), tiltY);
+        const p = projectP(commitPos(ring, i, cycle));
         const flying = rep > 0 && rep < 1;
         const vis = clamp(
           (cycle - (launch - ACTIVATE_LEN)) / ACTIVATE_LEN,
@@ -276,7 +296,7 @@ export function RebasingOrb({
             const tt = cycle - k * 0.03;
             const repK = clamp((tt - launch) / FLIGHT_DUR, 0, 1);
             if (repK <= 0 || repK >= 1) break;
-            const tp = projectP(commitPos(ring, i, tt), tiltY);
+            const tp = projectP(commitPos(ring, i, tt));
             if (prev) {
               ctx.strokeStyle =
                 colorPrefix + ink(0.18 * (1 - k / 5)).toFixed(3) + ")";
@@ -350,7 +370,7 @@ export function RebasingOrb({
     }
 
     for (let i = 0; i < count; i++) {
-      const p = projectP(sphereDots[i], tiltY);
+      const p = projectP(sphereDots[i]);
       dots.push({
         x: p.x,
         y: p.y,
@@ -360,16 +380,16 @@ export function RebasingOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
     }
 
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.alpha);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();

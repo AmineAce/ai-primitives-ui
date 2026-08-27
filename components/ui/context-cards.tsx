@@ -192,6 +192,10 @@ function ContextCard({
                     key={i}
                     src={block.src}
                     alt={block.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={600}
+                    height={300}
                     className="w-full rounded-lg border border-muted object-cover"
                   />
                 );

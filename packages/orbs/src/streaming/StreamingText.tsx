@@ -1,9 +1,10 @@
 "use client";
 
+import { useMemo, useRef } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
 import { easeInOutSine, easeOutCubic } from "../canvas/easing";
-import { makeSphereDots, project } from "../canvas/sphere";
+import { makeSphereDots, projectWithTrig } from "../canvas/sphere";
 import { clamp } from "../lib/math";
 
 export interface StreamingTextProps {
@@ -69,7 +70,8 @@ export function StreamingText({
   const textW = size - PAD * 2;
   const streamTime = text.length / CPS;
   const loopTotal = streamTime + HOLD + FADE;
-  const orbShape = makeSphereDots(ORB_DOTS, 1);
+  const orbShape = useMemo(() => makeSphereDots(ORB_DOTS, 1), []);
+  const finalLinesCache = useRef<{ key: string; lines: string[] } | null>(null);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -81,6 +83,11 @@ export function StreamingText({
     ctx.clearRect(0, 0, size, height);
     ctx.font = `${font}px "JetBrains Mono", ui-monospace, Menlo, monospace`;
     ctx.textBaseline = "alphabetic";
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
     const t = reduced ? streamTime : loop ? elapsed % loopTotal : elapsed;
 
@@ -112,11 +119,20 @@ export function StreamingText({
       breath = 1 + 0.06 * Math.sin(elapsed * ((2 * Math.PI) / 3));
     }
 
-    const finalLines = wrapLines(text, ctx, textW);
+    const cacheKey = `${text}|${font}|${textW}`;
+    let finalLines: string[];
+    if (finalLinesCache.current?.key === cacheKey) {
+      finalLines = finalLinesCache.current.lines;
+    } else {
+      finalLines = wrapLines(text, ctx, textW);
+      finalLinesCache.current = { key: cacheKey, lines: finalLines };
+    }
     const startY = (height - finalLines.length * lineH) / 2 + font;
-    const lines = wrapLines(text.slice(0, revealed), ctx, textW);
+    const lines = reduced
+      ? finalLines
+      : wrapLines(text.slice(0, revealed), ctx, textW);
 
-    ctx.fillStyle = colorPrefix + ink(alphaText * 0.95).toFixed(3) + ")";
+    ctx.fillStyle = fillFor(alphaText * 0.95);
     for (let i = 0; i < lines.length; i++) {
       const lw = ctx.measureText(lines[i]).width;
       let x = PAD;
@@ -138,21 +154,27 @@ export function StreamingText({
       const orbY = baseline - font * 0.35;
       const cs = Math.cos(spin);
       const sn = Math.sin(spin);
+      const orbCosX = Math.cos(0);
+      const orbSinX = Math.sin(0);
+      const orbCosY = Math.cos(0.25);
+      const orbSinY = Math.sin(0.25);
       for (let i = 0; i < orbShape.length; i++) {
         const d = orbShape[i];
         const r = orbR * breath;
         const x3 = (d.x * cs - d.z * sn) * r;
         const y3 = d.y * r;
         const z3 = (d.x * sn + d.z * cs) * r;
-        const p = project(
+        const p = projectWithTrig(
           { x: x3, y: y3, z: z3 },
           cx + orbR + font * 0.45,
           orbY,
-          0,
-          0.25,
+          orbCosX,
+          orbSinX,
+          orbCosY,
+          orbSinY,
         );
         const alpha = orbAlpha * (z3 > 0 ? 0.35 : 1);
-        ctx.fillStyle = colorPrefix + ink(alpha).toFixed(3) + ")";
+        ctx.fillStyle = fillFor(alpha);
         ctx.beginPath();
         ctx.arc(
           p.x,

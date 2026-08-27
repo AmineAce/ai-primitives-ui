@@ -1,16 +1,16 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeOutCubic, easeOutExpo } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
 import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
-import { lerp3 } from "../canvas/paths";
 import type { Dot } from "../canvas/types";
 
 export interface CloningOrbProps {
@@ -66,16 +66,22 @@ export function CloningOrb({
   const dotSize = (2.2 * size) / 64;
   const entrance = radius * ENTRY_FACTOR;
 
-  const targets = makeSphereDots(count, radius);
-  const entries: Point3D[] = [];
-  for (let i = 0; i < count; i++) {
-    const dir = goldenDir(i, count);
-    entries.push({
-      x: dir.x * entrance,
-      y: dir.y * entrance,
-      z: dir.z * entrance,
-    });
-  }
+  const { targets, entries } = useMemo(() => {
+    const t = makeSphereDots(count, radius);
+    const e: Point3D[] = [];
+    for (let i = 0; i < count; i++) {
+      const dir = goldenDir(i, count);
+      e.push({
+        x: dir.x * entrance,
+        y: dir.y * entrance,
+        z: dir.z * entrance,
+      });
+    }
+    return { targets: t, entries: e };
+  }, [count, radius, entrance]);
+
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -86,6 +92,10 @@ export function CloningOrb({
   ) => {
     const tiltX = 0.3;
     const tiltY = reduced ? 0.2 : t * 0.12;
+    const cosX = Math.cos(tiltX);
+    const sinX = Math.sin(tiltX);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     ctx.clearRect(0, 0, size, size);
 
     const lats = [-55, -30, 0, 30, 55];
@@ -99,12 +109,14 @@ export function CloningOrb({
       ctx.beginPath();
       for (let s = 0; s <= samples; s++) {
         const a = (s / samples) * 2 * Math.PI;
-        const p = project(
+        const p = projectWithTrig(
           { x: rr * Math.cos(a), y: yy, z: rr * Math.sin(a) },
           cx,
           cy,
-          tiltX,
-          tiltY,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
         );
         if (s === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
@@ -114,7 +126,7 @@ export function CloningOrb({
 
     if (reduced) {
       for (const target of targets) {
-        const p = project(target, cx, cy, tiltX, tiltY);
+        const p = projectWithTrig(target, cx, cy, cosX, sinX, cosY, sinY);
         ctx.fillStyle = colorPrefix + ink(p.z > 0 ? 0.35 : 1).toFixed(3) + ")";
         ctx.beginPath();
         ctx.arc(p.x, p.y, dotSize * p.scale, 0, 2 * Math.PI);
@@ -124,10 +136,16 @@ export function CloningOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
     const resetP = cycle >= FILL + HOLD ? (cycle - (FILL + HOLD)) / RESET : 0;
     const fade = 1 - easeOutCubic(clamp(resetP, 0, 1));
 
-    const dots: Dot[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
     for (let i = 0; i < count; i++) {
       const start = (i / count) * FILL;
       const sinceStart = cycle - start;
@@ -136,8 +154,14 @@ export function CloningOrb({
       const travelP = clamp(sinceStart / TRAVEL, 0, 1);
       const eased = easeOutExpo(travelP);
       const pos3d =
-        eased >= 1 ? targets[i] : lerp3(entries[i], targets[i], eased);
-      const p = project(pos3d, cx, cy, tiltX, tiltY);
+        eased >= 1
+          ? targets[i]
+          : {
+              x: entries[i].x + (targets[i].x - entries[i].x) * eased,
+              y: entries[i].y + (targets[i].y - entries[i].y) * eased,
+              z: entries[i].z + (targets[i].z - entries[i].z) * eased,
+            };
+      const p = projectWithTrig(pos3d, cx, cy, cosX, sinX, cosY, sinY);
 
       dots.push({
         x: p.x,
@@ -148,11 +172,10 @@ export function CloningOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
       if (d.alpha <= 0) continue;
-      ctx.fillStyle =
-        colorPrefix + ink(d.alpha * (d.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha * (d.z > 0 ? 0.35 : 1));
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();

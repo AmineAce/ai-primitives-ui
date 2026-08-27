@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import {
   easeInOutSine,
@@ -10,7 +11,7 @@ import {
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
 import { clamp } from "../lib/math";
@@ -42,28 +43,43 @@ export function SyncOrb({
   const unit = size / 64;
   const dotR = 1.6 * unit;
 
-  const sphereDots = makeSphereDots(COUNT, radius);
-
-  const square: Point3D[] = [];
-  const half = radius * 0.68;
-  const step = (half * 2) / (GRID - 1);
-  const start = -half;
-  for (let y = 0; y < GRID; y++) {
-    for (let x = 0; x < GRID; x++) {
-      square.push({
-        x: start + x * step,
-        y: start + y * step,
-        z: 0,
-      });
-    }
-  }
-  const sqOrder = square
-    .map((p, i) => ({ p, i, d: Math.hypot(p.x, p.y) }))
-    .sort((a, b) => b.d - a.d)
-    .map((o) => o.i);
-  const squareSorted = sqOrder.map((i) => square[i]);
-  const sphereSorted = [...sphereDots].sort(
-    (a, b) => Math.hypot(a.x, a.y) - Math.hypot(b.x, b.y),
+  const { sphereDots, square, sqOrder, squareSorted, sphereSorted, half } =
+    useMemo(() => {
+      const dots = makeSphereDots(COUNT, radius);
+      const sq: Point3D[] = [];
+      const h = radius * 0.68;
+      const st = (h * 2) / (GRID - 1);
+      const s = -h;
+      for (let y = 0; y < GRID; y++)
+        for (let x = 0; x < GRID; x++)
+          sq.push({ x: s + x * st, y: s + y * st, z: 0 });
+      const order = sq
+        .map((p, i) => ({ p, i, d: Math.hypot(p.x, p.y) }))
+        .sort((a, b) => b.d - a.d)
+        .map((o) => o.i);
+      const sqSorted = order.map((i) => sq[i]);
+      const spSorted = [...dots].sort(
+        (a, b) => Math.hypot(a.x, a.y) - Math.hypot(b.x, b.y),
+      );
+      return {
+        sphereDots: dots,
+        square: sq,
+        sqOrder: order,
+        squareSorted: sqSorted,
+        sphereSorted: spSorted,
+        half: h,
+      };
+    }, [radius]);
+  const dotsPool = useMemo<
+    { x: number; y: number; r: number; z: number; a: number }[]
+  >(() => [], []);
+  const halosPool = useMemo<{ x: number; y: number; r: number; a: number }[]>(
+    () => [],
+    [],
+  );
+  const cmp = useMemo(
+    () => (a: { z: number }, b: { z: number }) => a.z - b.z,
+    [],
   );
 
   const render = (
@@ -73,7 +89,12 @@ export function SyncOrb({
     colorPrefix: string,
     ink: (a: number) => number,
   ) => {
-    const cycle = (t * speed) % DURATION;
+    const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
     const tiltBaseX = 0.42;
     const tiltBaseY = 0.32 + Math.sin(t * 0.35) * 0.12;
@@ -95,11 +116,19 @@ export function SyncOrb({
     }
     const rtX = reduced ? 0.12 : tiltX;
     const rtY = reduced ? 0.1 : tiltY;
+    const cosX = Math.cos(rtX);
+    const sinX = Math.sin(rtX);
+    const cosY = Math.cos(rtY);
+    const sinY = Math.sin(rtY);
+    const fCosX = Math.cos(0.18);
+    const fSinX = Math.sin(0.18);
+    const fCosY = Math.cos(0.14);
+    const fSinY = Math.sin(0.14);
     ctx.clearRect(0, 0, size, size);
 
     if (reduced) {
       for (const p of square) {
-        const pr = project(p, cx, cy, rtX, rtY);
+        const pr = projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);
         ctx.fillStyle = colorPrefix + ink(0.65).toFixed(3) + ")";
         ctx.beginPath();
         ctx.arc(pr.x, pr.y, dotR * pr.scale, 0, 2 * Math.PI);
@@ -127,9 +156,10 @@ export function SyncOrb({
       waveB = diag - eased * diag * 2;
     }
 
-    const dots: { x: number; y: number; r: number; z: number; a: number }[] =
-      [];
-    const halos: { x: number; y: number; r: number; a: number }[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
 
     // supernova suck-in before morph
     const suckT = clamp((cycle - 1.38) / 0.12, 0, 1);
@@ -172,7 +202,7 @@ export function SyncOrb({
         pos = lerp3(sp, sq, e);
       }
 
-      const pr = project(pos, cx, cy, rtX, rtY);
+      const pr = projectWithTrig(pos, cx, cy, cosX, sinX, cosY, sinY);
 
       let a = 0.68;
       let doHalo = false;
@@ -224,15 +254,15 @@ export function SyncOrb({
       }
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.a).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.a);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();
     }
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.a).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.a);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
@@ -257,12 +287,14 @@ export function SyncOrb({
       ctx.beginPath();
       for (let s = 0; s <= 48; s++) {
         const a = (s / 48) * 2 * Math.PI;
-        const p = project(
+        const p = projectWithTrig(
           { x: er1 * Math.cos(a), y: 0, z: er1 * Math.sin(a) },
           cx,
           cy,
-          0.18,
-          0.14,
+          fCosX,
+          fSinX,
+          fCosY,
+          fSinY,
         );
         if (s === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
@@ -277,7 +309,7 @@ export function SyncOrb({
         ctx.beginPath();
         for (let s = 0; s <= 48; s++) {
           const a = (s / 48) * 2 * Math.PI;
-          const p = project(
+          const p = projectWithTrig(
             {
               x: er2 * Math.cos(a),
               y: er2 * Math.sin(a) * c45,
@@ -285,8 +317,10 @@ export function SyncOrb({
             },
             cx,
             cy,
-            0.18,
-            0.14,
+            fCosX,
+            fSinX,
+            fCosY,
+            fSinY,
           );
           if (s === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);
@@ -302,7 +336,7 @@ export function SyncOrb({
         ctx.beginPath();
         for (let s = 0; s <= 48; s++) {
           const a = (s / 48) * 2 * Math.PI;
-          const p = project(
+          const p = projectWithTrig(
             {
               x: er3 * Math.sin(a) * s45,
               y: er3 * Math.sin(a) * c45,
@@ -310,8 +344,10 @@ export function SyncOrb({
             },
             cx,
             cy,
-            0.18,
-            0.14,
+            fCosX,
+            fSinX,
+            fCosY,
+            fSinY,
           );
           if (s === 0) ctx.moveTo(p.x, p.y);
           else ctx.lineTo(p.x, p.y);

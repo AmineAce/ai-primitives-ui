@@ -1,16 +1,16 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
 import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
-import { lerp3, quad } from "../canvas/paths";
 import type { Dot, Halo, Point2D } from "../canvas/types";
 
 export interface StashingOrbProps {
@@ -78,8 +78,16 @@ export function StashingOrb({
   const dotSize = 2.2 * unit;
   const commSize = 2.3 * unit;
 
-  const sphereDots = makeSphereDots(count, radius);
-  const wip = makeSphereDots(N, radius);
+  const { sphereDots, wip } = useMemo(
+    () => ({
+      sphereDots: makeSphereDots(count, radius),
+      wip: makeSphereDots(N, radius),
+    }),
+    [count, radius],
+  );
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const halosPool = useMemo<Halo[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
   const order = (i: number) => (i * 5) % N;
 
   const container = { x: 0, y: 0, z: radius * 0.2 };
@@ -93,16 +101,21 @@ export function StashingOrb({
     const b = container;
     const mid = dir === 1 ? a : b;
     const end = dir === 1 ? b : a;
-    const ctrl: Point3D = {
-      x: (a.x + b.x) / 2 + a.x * 0.15,
-      y: (a.y + b.y) / 2 + a.y * 0.15,
-      z: (a.z + b.z) / 2 - 0.3 * radius,
+    const cx0 = (a.x + b.x) / 2 + a.x * 0.15;
+    const cy0 = (a.y + b.y) / 2 + a.y * 0.15;
+    const cz0 = (a.z + b.z) / 2 - 0.3 * radius;
+    const acx = mid.x + (cx0 - mid.x) * f;
+    const acy = mid.y + (cy0 - mid.y) * f;
+    const acz = mid.z + (cz0 - mid.z) * f;
+    const cbx = cx0 + (end.x - cx0) * f;
+    const cby = cy0 + (end.y - cy0) * f;
+    const cbz = cz0 + (end.z - cz0) * f;
+    return {
+      x: acx + (cbx - acx) * f,
+      y: acy + (cby - acy) * f,
+      z: acz + (cbz - acz) * f,
     };
-    return quad(mid, ctrl, end, f);
   };
-
-  const projectP = (p: Point3D, tiltY: number) =>
-    project(p, cx, cy, TILT_X, tiltY);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -112,11 +125,17 @@ export function StashingOrb({
     ink: (a: number) => number,
   ) => {
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
+    const projectP = (p: Point3D) =>
+      projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);
     ctx.clearRect(0, 0, size, size);
 
     const drawThread = (spot: Point3D, alpha: number) => {
       if (alpha <= 0.004) return;
-      const p = projectP(spot, tiltY);
+      const p = projectP(spot);
       ctx.strokeStyle = colorPrefix + ink(alpha).toFixed(3) + ")";
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -148,7 +167,7 @@ export function StashingOrb({
 
     if (reduced) {
       for (const dot of sphereDots) {
-        const p = projectP(dot, tiltY);
+        const p = projectP(dot);
         ctx.fillStyle =
           colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
@@ -157,7 +176,7 @@ export function StashingOrb({
       }
       for (const spot of wip) drawThread(spot, 0.12);
       for (const spot of wip) {
-        const p = projectP(spot, tiltY);
+        const p = projectP(spot);
         ctx.fillStyle =
           colorPrefix + ink(0.9 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
@@ -169,12 +188,19 @@ export function StashingOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
-    const dots: Dot[] = [];
-    const halos: Halo[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
 
     for (const dot of sphereDots) {
-      const p = projectP(dot, tiltY);
+      const p = projectP(dot);
       dots.push({
         x: p.x,
         y: p.y,
@@ -198,7 +224,7 @@ export function StashingOrb({
     if (sealed) pouchAlpha += 0.1 * sealQ;
     pouchAlpha = Math.min(pouchAlpha, 0.85);
 
-    if (pouchAlpha > 0.005) {
+    if (pouchAlpha > 0.08) {
       const grow = 0.45 + 0.55 * fill;
       const tight = sealed ? 1 - sealQ * 0.12 : 1;
       drawFoam(pouchR, grow, tight, pouchAlpha, cycle);
@@ -214,7 +240,7 @@ export function StashingOrb({
 
       if (v <= 0) {
         drawThread(wip[i], 0.09);
-        const spot = projectP(wip[i], tiltY);
+        const spot = projectP(wip[i]);
         const bob = Math.sin(cycle * 5 + i * 1.7) * 0.01 * radius;
         dots.push({
           x: spot.x,
@@ -224,7 +250,7 @@ export function StashingOrb({
           alpha: 0.9 * (spot.z > 0 ? 0.35 : 1),
         });
       } else if (v < 1) {
-        const fp = projectP(pathOf(i, easeInOutSine(v), 1), tiltY);
+        const fp = projectP(pathOf(i, easeInOutSine(v), 1));
         let prev: Point2D | null = null;
         for (let k = 1; k <= 3; k++) {
           const vk = clamp(
@@ -233,7 +259,7 @@ export function StashingOrb({
             1,
           );
           if (vk <= 0 || vk >= 1) break;
-          const tp = projectP(pathOf(i, easeInOutSine(vk), 1), tiltY);
+          const tp = projectP(pathOf(i, easeInOutSine(vk), 1));
           if (prev) {
             ctx.strokeStyle =
               colorPrefix + ink(0.16 * (1 - k / 4)).toFixed(3) + ")";
@@ -254,12 +280,12 @@ export function StashingOrb({
         });
       } else if (cycle >= leave(i)) {
         if (o < 1) {
-          const fp = projectP(pathOf(i, easeInOutSine(o), -1), tiltY);
+          const fp = projectP(pathOf(i, easeInOutSine(o), -1));
           let prev: Point2D | null = null;
           for (let k = 1; k <= 3; k++) {
             const ok = clamp((cycle - k * 0.03 - leave(i)) / OUT_FLIGHT, 0, 1);
             if (ok <= 0 || ok >= 1) break;
-            const tp = projectP(pathOf(i, easeInOutSine(ok), -1), tiltY);
+            const tp = projectP(pathOf(i, easeInOutSine(ok), -1));
             if (prev) {
               ctx.strokeStyle =
                 colorPrefix + ink(0.16 * (1 - k / 4)).toFixed(3) + ")";
@@ -280,7 +306,7 @@ export function StashingOrb({
           });
         } else {
           drawThread(wip[i], 0.09);
-          const spot = projectP(wip[i], tiltY);
+          const spot = projectP(wip[i]);
           const bob = Math.sin(cycle * 5 + i * 1.7) * 0.01 * radius;
           dots.push({
             x: spot.x,
@@ -326,16 +352,16 @@ export function StashingOrb({
       }
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
     }
 
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.alpha);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();

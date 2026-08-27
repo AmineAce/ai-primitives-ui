@@ -26,16 +26,25 @@ export function project(
 ): ProjectedPoint {
   const cosX = Math.cos(tiltX);
   const sinX = Math.sin(tiltX);
-  const rotatedY1 = p.y * cosX - p.z * sinX;
-  const rotatedZ1 = p.y * sinX + p.z * cosX;
-
   const cosY = Math.cos(tiltY);
   const sinY = Math.sin(tiltY);
+  return projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);
+}
+
+export function projectWithTrig(
+  p: Point3D,
+  cx: number,
+  cy: number,
+  cosX: number,
+  sinX: number,
+  cosY: number,
+  sinY: number,
+): ProjectedPoint {
+  const rotatedY1 = p.y * cosX - p.z * sinX;
+  const rotatedZ1 = p.y * sinX + p.z * cosX;
   const x2 = p.x * cosY + rotatedZ1 * sinY;
   const z2 = -p.x * sinY + rotatedZ1 * cosY;
-
   const scale = 1 / (1 + z2 * 0.0035);
-
   return { x: cx + x2 * scale, y: cy - rotatedY1 * scale, z: z2, scale };
 }
 

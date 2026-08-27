@@ -35,34 +35,60 @@ export function toColorPrefix(color: RgbColor): string {
 const SENTINEL = "rgb(0, 1, 0)";
 const RGB_RE = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)$/;
 
+let sentinelCtx: CanvasRenderingContext2D | null | undefined;
+function getSentinelCtx(): CanvasRenderingContext2D | null {
+  if (sentinelCtx !== undefined) return sentinelCtx;
+  if (typeof document === "undefined") {
+    sentinelCtx = null;
+    return sentinelCtx;
+  }
+  const canvas = document.createElement("canvas");
+  sentinelCtx = canvas.getContext("2d");
+  return sentinelCtx;
+}
+
+const colorCache = new Map<string, RgbColor | null>();
+
 export function parseColor(value: string): RgbColor | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
+  const cached = colorCache.get(trimmed);
+  if (cached !== undefined) return cached;
+  let result: RgbColor | null = null;
   if (trimmed[0] === "#") {
     const hex = trimmed.slice(1);
     const full =
       hex.length === 3
         ? hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
         : hex;
-    if (full.length !== 6) return null;
-    const r = parseInt(full.slice(0, 2), 16);
-    const g = parseInt(full.slice(2, 4), 16);
-    const b = parseInt(full.slice(4, 6), 16);
-    if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) return null;
-    return { r, g, b };
+    if (full.length === 6) {
+      const r = parseInt(full.slice(0, 2), 16);
+      const g = parseInt(full.slice(2, 4), 16);
+      const b = parseInt(full.slice(4, 6), 16);
+      if (!Number.isNaN(r) && !Number.isNaN(g) && !Number.isNaN(b)) {
+        result = { r, g, b };
+      }
+    }
+  } else {
+    const ctx = getSentinelCtx();
+    if (ctx) {
+      ctx.fillStyle = SENTINEL;
+      ctx.fillStyle = trimmed;
+      const normalized = ctx.fillStyle;
+      if (normalized !== SENTINEL) {
+        const match = RGB_RE.exec(normalized);
+        if (match) {
+          result = {
+            r: parseInt(match[1], 10),
+            g: parseInt(match[2], 10),
+            b: parseInt(match[3], 10),
+          };
+        }
+      }
+    }
   }
-  if (typeof document === "undefined") return null;
-  const ctx = document.createElement("canvas").getContext("2d");
-  if (!ctx) return null;
-  ctx.fillStyle = SENTINEL;
-  ctx.fillStyle = trimmed;
-  const normalized = ctx.fillStyle;
-  if (normalized === SENTINEL) return null;
-  const match = RGB_RE.exec(normalized);
-  if (!match) return null;
-  return {
-    r: parseInt(match[1], 10),
-    g: parseInt(match[2], 10),
-    b: parseInt(match[3], 10),
-  };
+  // Cache up to 64 entries to avoid unbounded growth
+  if (colorCache.size >= 64) colorCache.clear();
+  colorCache.set(trimmed, result);
+  return result;
 }

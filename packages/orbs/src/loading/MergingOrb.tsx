@@ -1,11 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine, easeOutCubic } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   spherePoint,
   type Point3D,
 } from "../canvas/sphere";
@@ -38,7 +39,7 @@ const THETA0_A = 0;
 const THETA0_B = Math.PI;
 const SPARKS = 10;
 const SPARK_EXT = 0.42;
-const TRAIL_STEPS = 6;
+const TRAIL_STEPS = 4;
 
 const ORIGIN: Point3D = { x: 0, y: 0, z: 0 };
 
@@ -57,7 +58,12 @@ export function MergingOrb({
   const dotSize = 2.2 * unit;
   const orbSize = 2.2 * unit;
 
-  const sphereDots = makeSphereDots(count, radius);
+  const sphereDots = useMemo(
+    () => makeSphereDots(count, radius),
+    [count, radius],
+  );
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const spiralPos = (isB: boolean, tt: number): Point3D => {
     if (tt <= 0) return ORIGIN;
@@ -72,9 +78,6 @@ export function MergingOrb({
     return lerp3(eq, ORIGIN, easeInOutSine(tz));
   };
 
-  const projectP = (p: Point3D, tiltY: number) =>
-    project(p, cx, cy, TILT_X, tiltY);
-
   const render = (
     ctx: CanvasRenderingContext2D,
     t: number,
@@ -83,19 +86,25 @@ export function MergingOrb({
     ink: (a: number) => number,
   ) => {
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
+    const projectP = (p: Point3D) =>
+      projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);
     ctx.clearRect(0, 0, size, size);
 
     if (reduced) {
       for (const dot of sphereDots) {
-        const p = projectP(dot, tiltY);
+        const p = projectP(dot);
         ctx.fillStyle =
           colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
         ctx.arc(p.x, p.y, dotSize * p.scale, 0, 2 * Math.PI);
         ctx.fill();
       }
-      const pa = projectP(spherePoint(THETA0_A, PHI_N, radius), tiltY);
-      const pb = projectP(spherePoint(THETA0_B, PHI_S, radius), tiltY);
+      const pa = projectP(spherePoint(THETA0_A, PHI_N, radius));
+      const pb = projectP(spherePoint(THETA0_B, PHI_S, radius));
       ctx.fillStyle = colorPrefix + ink(0.8).toFixed(3) + ")";
       ctx.beginPath();
       ctx.arc(pa.x, pa.y, orbSize * pa.scale, 0, 2 * Math.PI);
@@ -105,13 +114,18 @@ export function MergingOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
     const drawTrail = (isB: boolean) => {
       let prev: { x: number; y: number } | null = null;
       for (let k = 1; k <= TRAIL_STEPS; k++) {
         const tt = cycle - k * 0.045;
         if (tt <= 0 || tt >= EXPLODE_START) break;
-        const p = projectP(spiralPos(isB, tt), tiltY);
+        const p = projectP(spiralPos(isB, tt));
         if (prev) {
           ctx.strokeStyle =
             colorPrefix +
@@ -130,10 +144,11 @@ export function MergingOrb({
     drawTrail(false);
     drawTrail(true);
 
-    const dots: Dot[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
 
     for (const dot of sphereDots) {
-      const p = projectP(dot, tiltY);
+      const p = projectP(dot);
       const flashEnv =
         cycle >= EXPLODE_START
           ? easeOutCubic(clamp((cycle - EXPLODE_START) / EXPLODE_DUR, 0, 1)) *
@@ -150,8 +165,8 @@ export function MergingOrb({
 
     if (cycle < EXPLODE_START) {
       const fadeIn = clamp(cycle / 0.25, 0, 1);
-      const pa = projectP(spiralPos(false, cycle), tiltY);
-      const pb = projectP(spiralPos(true, cycle), tiltY);
+      const pa = projectP(spiralPos(false, cycle));
+      const pb = projectP(spiralPos(true, cycle));
       dots.push({
         x: pa.x,
         y: pa.y,
@@ -172,7 +187,7 @@ export function MergingOrb({
       const t3 = clamp((cycle - EXPLODE_START) / EXPLODE_DUR, 0, 1);
       const e3 = easeOutCubic(t3);
       const decay = 1 - t3;
-      const core = projectP(ORIGIN, tiltY);
+      const core = projectP(ORIGIN);
       if (t3 > 0 && t3 < 1) {
         ctx.fillStyle = colorPrefix + ink(0.22 * decay).toFixed(3) + ")";
         ctx.beginPath();
@@ -188,10 +203,7 @@ export function MergingOrb({
       });
       for (let i = 0; i < 5; i++) {
         const theta = (i / 5) * 2 * Math.PI;
-        const spark = projectP(
-          spherePoint(theta, HALF_PI, radius * 0.45 * e3),
-          tiltY,
-        );
+        const spark = projectP(spherePoint(theta, HALF_PI, radius * 0.45 * e3));
         dots.push({
           x: spark.x,
           y: spark.y,
@@ -202,10 +214,7 @@ export function MergingOrb({
       }
       for (let i = 0; i < SPARKS; i++) {
         const theta = (((i + 1) * Math.PI) / SPARKS) * 2 + 0.3;
-        const spark = projectP(
-          spherePoint(theta, HALF_PI, radius * 0.85 * e3),
-          tiltY,
-        );
+        const spark = projectP(spherePoint(theta, HALF_PI, radius * 0.85 * e3));
         dots.push({
           x: spark.x,
           y: spark.y,
@@ -228,9 +237,9 @@ export function MergingOrb({
       }
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();

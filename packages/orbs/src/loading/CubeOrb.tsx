@@ -1,14 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine } from "../canvas/easing";
 import { lerp3 } from "../canvas/paths";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
+import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
 import type { Dot } from "../canvas/types";
 
@@ -83,59 +86,78 @@ export function CubeOrb({
   const cy = size / 2;
   const unit = size / 64;
   const dotSize = 1.8 * unit;
-  const s = radius / (1.5 * Math.sqrt(3));
-
-  const offsets = [-1.5, -0.5, 0.5, 1.5];
-  const base: Point3D[] = [];
-  for (let i = 0; i < N; i++) {
-    for (let j = 0; j < N; j++) {
-      for (let k = 0; k < N; k++) {
-        if (i > 0 && i < N - 1 && j > 0 && j < N - 1 && k > 0 && k < N - 1) {
-          continue;
+  const { base, turnSpecs, turns, events, finalPos, sphereDots } =
+    useMemo(() => {
+      const s = radius / (1.5 * Math.sqrt(3));
+      const offs = [-1.5, -0.5, 0.5, 1.5];
+      const b: Point3D[] = [];
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          for (let k = 0; k < N; k++) {
+            if (
+              i > 0 &&
+              i < N - 1 &&
+              j > 0 &&
+              j < N - 1 &&
+              k > 0 &&
+              k < N - 1
+            ) {
+              continue;
+            }
+            b.push({ x: offs[i] * s, y: offs[j] * s, z: offs[k] * s });
+          }
         }
-        base.push({ x: offsets[i] * s, y: offsets[j] * s, z: offsets[k] * s });
       }
-    }
-  }
 
-  const turnSpecs: {
-    axis: "x" | "y" | "z";
-    layer: number;
-    theta: number;
-  }[] = [
-    { axis: "y", layer: 1.5 * s, theta: Math.PI / 2 },
-    { axis: "z", layer: 1.5 * s, theta: Math.PI / 2 },
-    { axis: "x", layer: 1.5 * s, theta: -Math.PI / 2 },
-    { axis: "y", layer: -1.5 * s, theta: -Math.PI / 2 },
-    { axis: "z", layer: -1.5 * s, theta: -Math.PI / 2 },
-  ];
-  const turns = turnSpecs.map((turn, idx) => ({
-    ...turn,
-    t0: idx * (TURN_DUR + PAUSE),
-    t1: idx * (TURN_DUR + PAUSE) + TURN_DUR,
-  }));
+      const specs: {
+        axis: "x" | "y" | "z";
+        layer: number;
+        theta: number;
+      }[] = [
+        { axis: "y", layer: 1.5 * s, theta: Math.PI / 2 },
+        { axis: "z", layer: 1.5 * s, theta: Math.PI / 2 },
+        { axis: "x", layer: 1.5 * s, theta: -Math.PI / 2 },
+        { axis: "y", layer: -1.5 * s, theta: -Math.PI / 2 },
+        { axis: "z", layer: -1.5 * s, theta: -Math.PI / 2 },
+      ];
+      const tns = specs.map((turn, idx) => ({
+        ...turn,
+        t0: idx * (TURN_DUR + PAUSE),
+        t1: idx * (TURN_DUR + PAUSE) + TURN_DUR,
+      }));
 
-  const events: TurnEvent[][] = base.map(() => []);
-  const pos = base.slice();
-  for (const turn of turns) {
-    for (let i = 0; i < pos.length; i++) {
-      const p = pos[i];
-      const v = turn.axis === "y" ? p.y : turn.axis === "x" ? p.x : p.z;
-      if (Math.abs(v - turn.layer) < 0.001) {
-        const to =
-          turn.axis === "y"
-            ? rotY(p, turn.theta)
-            : turn.axis === "x"
-              ? rotX(p, turn.theta)
-              : rotZ(p, turn.theta);
-        events[i].push({ t0: turn.t0, t1: turn.t1, from: p, to });
-        pos[i] = to;
+      const evts: TurnEvent[][] = b.map(() => []);
+      const p = b.slice();
+      for (const turn of tns) {
+        for (let i = 0; i < p.length; i++) {
+          const pt = p[i];
+          const v = turn.axis === "y" ? pt.y : turn.axis === "x" ? pt.x : pt.z;
+          if (Math.abs(v - turn.layer) < 0.001) {
+            const to =
+              turn.axis === "y"
+                ? rotY(pt, turn.theta)
+                : turn.axis === "x"
+                  ? rotX(pt, turn.theta)
+                  : rotZ(pt, turn.theta);
+            evts[i].push({ t0: turn.t0, t1: turn.t1, from: pt, to });
+            p[i] = to;
+          }
+        }
       }
-    }
-  }
-  const finalPos = pos;
+      const f = p;
 
-  const sphereDots = makeSphereDots(base.length, radius);
+      const sph = makeSphereDots(b.length, radius);
+      return {
+        base: b,
+        turnSpecs: specs,
+        turns: tns,
+        events: evts,
+        finalPos: f,
+        sphereDots: sph,
+      };
+    }, [radius]);
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const cubePos = (i: number, cyc: number): Point3D => {
     let cur = base[i];
@@ -161,10 +183,20 @@ export function CubeOrb({
     ink: (a: number) => number,
   ) => {
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     const cyc = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
     ctx.clearRect(0, 0, size, size);
 
-    const dots: Dot[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
 
     for (let i = 0; i < base.length; i++) {
       let p3: Point3D;
@@ -184,7 +216,7 @@ export function CubeOrb({
         p3 = base[i];
       }
 
-      const p = project(p3, cx, cy, TILT_X, tiltY);
+      const p = projectWithTrig(p3, cx, cy, cosX, sinX, cosY, sinY);
       dots.push({
         x: p.x,
         y: p.y,
@@ -194,9 +226,9 @@ export function CubeOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();

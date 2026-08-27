@@ -1,16 +1,16 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeInOutSine, easeOutBack, easeOutCubic } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
 import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
-import { lerp3 } from "../canvas/paths";
 import { mulberry32 } from "../canvas/random";
 import type { Dot, Halo } from "../canvas/types";
 
@@ -57,21 +57,29 @@ export function FetchingOrb({
   const arcAmp = 8 * unit;
   const origin: Point3D = { x: 0, y: 0, z: 0 };
 
-  const sphereDots = makeSphereDots(count, radius);
-  const rand = mulberry32(20260817);
-  const order = Array.from({ length: count }, (_, i) => i);
-  for (let i = count - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    const tmp = order[i];
-    order[i] = order[j];
-    order[j] = tmp;
-  }
-  const packetCount = Math.min(PACKETS, count);
-  const packets: Packet[] = Array.from({ length: packetCount }, (_, i) => ({
-    index: order[i],
-    target: sphereDots[order[i]],
-    spawn: SPAWN_WINDOW * (1 - Math.pow(1 - i / packetCount, 2)),
-  }));
+  const { sphereDots, packets } = useMemo(() => {
+    const dots = makeSphereDots(count, radius);
+    const rand = mulberry32(20260817);
+    const order = Array.from({ length: count }, (_, i) => i);
+    for (let i = count - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      const tmp = order[i];
+      order[i] = order[j];
+      order[j] = tmp;
+    }
+    const packetCount = Math.min(PACKETS, count);
+    const pkts: Packet[] = Array.from({ length: packetCount }, (_, i) => ({
+      index: order[i],
+      target: dots[order[i]],
+      spawn: SPAWN_WINDOW * (1 - Math.pow(1 - i / packetCount, 2)),
+    }));
+    return { sphereDots: dots, packets: pkts };
+  }, [count, radius]);
+
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const halosPool = useMemo<Halo[]>(() => [], []);
+  const busySet = useMemo(() => new Set<number>(), []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -82,13 +90,17 @@ export function FetchingOrb({
   ) => {
     const tiltX = 0.3;
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(tiltX);
+    const sinX = Math.sin(tiltX);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     ctx.clearRect(0, 0, size, size);
 
-    const op = project(origin, cx, cy, tiltX, tiltY);
+    const op = projectWithTrig(origin, cx, cy, cosX, sinX, cosY, sinY);
 
     if (reduced) {
       for (const dot of sphereDots) {
-        const p = project(dot, cx, cy, tiltX, tiltY);
+        const p = projectWithTrig(dot, cx, cy, cosX, sinX, cosY, sinY);
         ctx.fillStyle =
           colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
@@ -99,10 +111,18 @@ export function FetchingOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
-    const dots: Dot[] = [];
-    const halos: Halo[] = [];
-    const busy = new Set<number>();
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
+    const busy = busySet;
+    busy.clear();
 
     let newestActive: Packet | undefined;
     for (const packet of packets) {
@@ -114,9 +134,21 @@ export function FetchingOrb({
       if (tIn < FALL) {
         const travelP = tIn / FALL;
         const eased = easeInOutSine(travelP);
-        const pos3d = lerp3(origin, packet.target, eased);
-        const p = project(pos3d, cx, cy, tiltX, tiltY);
-        const tp = project(packet.target, cx, cy, tiltX, tiltY);
+        const pos3d = {
+          x: origin.x + (packet.target.x - origin.x) * eased,
+          y: origin.y + (packet.target.y - origin.y) * eased,
+          z: origin.z + (packet.target.z - origin.z) * eased,
+        };
+        const p = projectWithTrig(pos3d, cx, cy, cosX, sinX, cosY, sinY);
+        const tp = projectWithTrig(
+          packet.target,
+          cx,
+          cy,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
+        );
         let dx = tp.x - op.x;
         let dy = tp.y - op.y;
         const len = Math.hypot(dx, dy) || 1;
@@ -133,7 +165,15 @@ export function FetchingOrb({
         });
       } else if (tIn < SETTLE_END) {
         const post = tIn - FALL;
-        const p = project(packet.target, cx, cy, tiltX, tiltY);
+        const p = projectWithTrig(
+          packet.target,
+          cx,
+          cy,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
+        );
         if (post < SNAP) {
           const snapP = post / SNAP;
           dots.push({
@@ -170,9 +210,21 @@ export function FetchingOrb({
       } else {
         const reverseP = clamp((tIn - SETTLE_END) / RET_FALL, 0, 1);
         const road = 1 - easeInOutSine(reverseP);
-        const pos3d = lerp3(origin, packet.target, road);
-        const p = project(pos3d, cx, cy, tiltX, tiltY);
-        const tp = project(packet.target, cx, cy, tiltX, tiltY);
+        const pos3d = {
+          x: origin.x + (packet.target.x - origin.x) * road,
+          y: origin.y + (packet.target.y - origin.y) * road,
+          z: origin.z + (packet.target.z - origin.z) * road,
+        };
+        const p = projectWithTrig(pos3d, cx, cy, cosX, sinX, cosY, sinY);
+        const tp = projectWithTrig(
+          packet.target,
+          cx,
+          cy,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
+        );
         let dx = tp.x - op.x;
         let dy = tp.y - op.y;
         const len = Math.hypot(dx, dy) || 1;
@@ -194,7 +246,15 @@ export function FetchingOrb({
     }
 
     if (newestActive) {
-      const tp = project(newestActive.target, cx, cy, tiltX, tiltY);
+      const tp = projectWithTrig(
+        newestActive.target,
+        cx,
+        cy,
+        cosX,
+        sinX,
+        cosY,
+        sinY,
+      );
       ctx.strokeStyle =
         colorPrefix + ink(0.04 + 0.03 * Math.sin(t * 4)).toFixed(3) + ")";
       ctx.lineWidth = 1;
@@ -206,7 +266,7 @@ export function FetchingOrb({
 
     for (let i = 0; i < count; i++) {
       if (busy.has(i)) continue;
-      const p = project(sphereDots[i], cx, cy, tiltX, tiltY);
+      const p = projectWithTrig(sphereDots[i], cx, cy, cosX, sinX, cosY, sinY);
       dots.push({
         x: p.x,
         y: p.y,
@@ -216,16 +276,16 @@ export function FetchingOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
     }
 
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.alpha);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();

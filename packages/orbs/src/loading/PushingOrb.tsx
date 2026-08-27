@@ -1,11 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import { easeOutCubic } from "../canvas/easing";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   type Point3D,
 } from "../canvas/sphere";
 import { clamp } from "../lib/math";
@@ -54,23 +55,30 @@ export function PushingOrb({
   const packetSize = 2 * unit;
   const rimR = radius * RIM;
 
-  const sphereDots = makeSphereDots(count, radius);
-  const rand = mulberry32(20260818);
-  const order = Array.from({ length: count }, (_, i) => i);
-  for (let i = count - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    const tmp = order[i];
-    order[i] = order[j];
-    order[j] = tmp;
-  }
-  const picked = order
-    .slice(0, Math.min(PUSH_COUNT, count))
-    .sort((a, b) => sphereDots[b].y - sphereDots[a].y);
-  const packets: Packet[] = picked.map((idx, i) => ({
-    index: idx,
-    target: sphereDots[idx],
-    selectSpawn: SELECT_START + SELECT_WINDOW * (i / picked.length),
-  }));
+  const { sphereDots, packets } = useMemo(() => {
+    const dots = makeSphereDots(count, radius);
+    const rand = mulberry32(20260818);
+    const order = Array.from({ length: count }, (_, i) => i);
+    for (let i = count - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      const tmp = order[i];
+      order[i] = order[j];
+      order[j] = tmp;
+    }
+    const picked = order
+      .slice(0, Math.min(PUSH_COUNT, count))
+      .sort((a, b) => dots[b].y - dots[a].y);
+    const pkts: Packet[] = picked.map((idx, i) => ({
+      index: idx,
+      target: dots[idx],
+      selectSpawn: SELECT_START + SELECT_WINDOW * (i / picked.length),
+    }));
+    return { sphereDots: dots, packets: pkts };
+  }, [count, radius]);
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const halosPool = useMemo<Halo[]>(() => [], []);
+  const busySet = useMemo(() => new Set<number>(), []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -81,11 +89,15 @@ export function PushingOrb({
   ) => {
     const tiltX = TILT_X;
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(tiltX);
+    const sinX = Math.sin(tiltX);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     ctx.clearRect(0, 0, size, size);
 
     if (reduced) {
       for (const dot of sphereDots) {
-        const p = project(dot, cx, cy, tiltX, tiltY);
+        const p = projectWithTrig(dot, cx, cy, cosX, sinX, cosY, sinY);
         ctx.fillStyle =
           colorPrefix + ink(0.5 * (p.z > 0 ? 0.35 : 1)).toFixed(3) + ")";
         ctx.beginPath();
@@ -96,21 +108,29 @@ export function PushingOrb({
     }
 
     const cycle = t % DURATION;
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
     const waveP =
       cycle >= BLAST_START
         ? easeOutCubic(clamp((cycle - BLAST_START) / BLAST, 0, 1))
         : 0;
     const ringR = rimR * waveP;
 
-    const dots: Dot[] = [];
-    const halos: Halo[] = [];
-    const busy = new Set<number>();
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
+    const busy = busySet;
+    busy.clear();
 
     for (const packet of packets) {
       const sIn = cycle - packet.selectSpawn;
       if (sIn <= 0) continue;
 
-      const p = project(packet.target, cx, cy, tiltX, tiltY);
+      const p = projectWithTrig(packet.target, cx, cy, cosX, sinX, cosY, sinY);
       const d = Math.hypot(p.x - cx, p.y - cy);
       busy.add(packet.index);
 
@@ -143,7 +163,7 @@ export function PushingOrb({
 
     for (let i = 0; i < count; i++) {
       if (busy.has(i)) continue;
-      const p = project(sphereDots[i], cx, cy, tiltX, tiltY);
+      const p = projectWithTrig(sphereDots[i], cx, cy, cosX, sinX, cosY, sinY);
       dots.push({
         x: p.x,
         y: p.y,
@@ -153,16 +173,16 @@ export function PushingOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
     }
 
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.alpha);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();

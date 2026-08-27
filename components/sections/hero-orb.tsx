@@ -57,6 +57,7 @@ export function HeroOrb() {
   const reduced = useReducedMotion();
   const colorRef = useRef(color);
   const inkRef = useRef(ink);
+  const inViewRef = useRef(true);
 
   useEffect(() => {
     colorRef.current = color;
@@ -65,6 +66,19 @@ export function HeroOrb() {
   useEffect(() => {
     inkRef.current = ink;
   }, [ink]);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        inViewRef.current = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0, rootMargin: "100px" },
+    );
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!reduced) return;
@@ -194,6 +208,10 @@ export function HeroOrb() {
     let start = 0;
     const trail: TrailPoint[] = [];
     const frame = (now: number) => {
+      if (!inViewRef.current || document.hidden) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       if (start === 0) start = now;
       const t = now - start;
       ctx.clearRect(0, 0, curSize, curSize);

@@ -41,6 +41,7 @@ export interface UseOrbAnimationOptions {
     colorPrefix: string,
     ink: Ink,
   ) => void;
+  pauseWhenHidden?: boolean;
 }
 
 export function useOrbAnimation({
@@ -50,6 +51,7 @@ export function useOrbAnimation({
   paused,
   color,
   render,
+  pauseWhenHidden = true,
 }: UseOrbAnimationOptions) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const elapsedRef = useRef(0);
@@ -65,6 +67,10 @@ export function useOrbAnimation({
 
   const optsRef = useRef({ speed, paused, render });
   optsRef.current = { speed, paused, render };
+
+  const inViewRef = useRef(true);
+  const pauseWhenHiddenRef = useRef(pauseWhenHidden);
+  pauseWhenHiddenRef.current = pauseWhenHidden;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -84,6 +90,66 @@ export function useOrbAnimation({
   }, [size, height]);
 
   useEffect(() => {
+    if (!pauseWhenHiddenRef.current) {
+      inViewRef.current = true;
+      return;
+    }
+    const canvas = canvasRef.current;
+    if (!canvas || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        inViewRef.current = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0, rootMargin: "100px" },
+    );
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, [size, height]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const update = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const w = Math.round(size * dpr);
+      const h = Math.round((height ?? size) * dpr);
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.scale(dpr, dpr);
+        }
+      }
+    };
+    window.addEventListener("resize", update);
+    let mql: MediaQueryList | null = null;
+    let cleanup: (() => void) | null = null;
+    const watchDpr = () => {
+      try {
+        const dpr = window.devicePixelRatio || 1;
+        mql = window.matchMedia(`(resolution: ${dpr}dppx)`);
+        const handler = () => {
+          update();
+          mql?.removeEventListener("change", handler);
+          watchDpr();
+        };
+        mql.addEventListener("change", handler);
+        cleanup = () => mql?.removeEventListener("change", handler);
+      } catch {
+        // ignore
+      }
+    };
+    watchDpr();
+    return () => {
+      window.removeEventListener("resize", update);
+      cleanup?.();
+    };
+  }, [size, height]);
+
+  useEffect(() => {
+    let raf = 0;
     const resolve = () => {
       const canvas = canvasRef.current;
       let rgb = DEFAULT_DOT_RGB;
@@ -104,15 +170,23 @@ export function useOrbAnimation({
         optsRef.current.render(ctx, 0, true, colorRef.current, inkRef.current);
     };
 
+    const debounced = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(resolve);
+    };
+
     resolve();
 
     if (color || typeof MutationObserver === "undefined") return;
-    const observer = new MutationObserver(resolve);
+    const observer = new MutationObserver(debounced);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["data-theme", "class"],
     });
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
   }, [color]);
 
   useEffect(() => {
@@ -130,16 +204,32 @@ export function useOrbAnimation({
     let last = performance.now();
 
     const loop = (now: number) => {
+      const { paused, speed, render } = optsRef.current;
+      const shouldPause =
+        paused ||
+        (pauseWhenHiddenRef.current && !inViewRef.current) ||
+        (typeof document !== "undefined" && document.hidden);
+      if (shouldPause) {
+        last = now;
+        raf = requestAnimationFrame(loop);
+        return;
+      }
       const dt = Math.min((now - last) / 1000, 0.1);
       last = now;
-      const { speed, paused, render } = optsRef.current;
-      if (!paused) elapsedRef.current += dt * speed;
+      elapsedRef.current += dt * speed;
       render(ctx, elapsedRef.current, false, colorRef.current, inkRef.current);
       raf = requestAnimationFrame(loop);
     };
 
     raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    const handleVisibility = () => {
+      if (!document.hidden) last = performance.now();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [reduceMotion, size, height]);
 
   return { canvasRef, reduceMotion };

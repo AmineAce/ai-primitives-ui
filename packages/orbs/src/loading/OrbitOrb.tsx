@@ -1,12 +1,14 @@
 "use client";
 
+import { useMemo } from "react";
 import { CanvasContainer } from "../canvas/CanvasContainer";
 import {
   fitRadius,
   makeSphereDots,
-  project,
+  projectWithTrig,
   spherePoint,
 } from "../canvas/sphere";
+import { clamp } from "../lib/math";
 import { useOrbAnimation } from "../canvas/useOrbAnimation";
 import type { Dot, Halo } from "../canvas/types";
 
@@ -68,7 +70,13 @@ export function OrbitOrb({
   const unit = size / 64;
   const dotSize = 1.7 * unit;
 
-  const sphereDots = makeSphereDots(count, radius);
+  const sphereDots = useMemo(
+    () => makeSphereDots(count, radius),
+    [count, radius],
+  );
+  const dotsPool = useMemo<Dot[]>(() => [], []);
+  const halosPool = useMemo<Halo[]>(() => [], []);
+  const cmp = useMemo(() => (a: Dot, b: Dot) => a.z - b.z, []);
 
   const render = (
     ctx: CanvasRenderingContext2D,
@@ -78,13 +86,24 @@ export function OrbitOrb({
     ink: (a: number) => number,
   ) => {
     const tiltY = reduced ? 0.15 : t * 0.1;
+    const cosX = Math.cos(TILT_X);
+    const sinX = Math.sin(TILT_X);
+    const cosY = Math.cos(tiltY);
+    const sinY = Math.sin(tiltY);
     ctx.clearRect(0, 0, size, size);
+    const fills: string[] = [];
+    for (let i = 0; i <= 20; i++)
+      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + ")";
+    const fillFor = (alpha: number) =>
+      fills[Math.round(clamp(alpha, 0, 1) * 20)];
 
-    const dots: Dot[] = [];
-    const halos: Halo[] = [];
+    const dots = dotsPool;
+    dots.length = 0;
+    const halos = halosPool;
+    halos.length = 0;
 
     for (const dot of sphereDots) {
-      const p = project(dot, cx, cy, TILT_X, tiltY);
+      const p = projectWithTrig(dot, cx, cy, cosX, sinX, cosY, sinY);
       dots.push({
         x: p.x,
         y: p.y,
@@ -100,12 +119,14 @@ export function OrbitOrb({
       ctx.beginPath();
       for (let s = 0; s <= 64; s++) {
         const th = (s / 64) * 2 * Math.PI;
-        const p = project(
+        const p = projectWithTrig(
           spherePoint(th, comet.phi, radius),
           cx,
           cy,
-          TILT_X,
-          tiltY,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
         );
         if (s === 0) ctx.moveTo(p.x, p.y);
         else ctx.lineTo(p.x, p.y);
@@ -118,19 +139,23 @@ export function OrbitOrb({
       for (let k = steps; k >= 1; k--) {
         const ths = comet.phase + (tt - k * TRAIL_DT) * comet.omega;
         const the = comet.phase + (tt - (k - 1) * TRAIL_DT) * comet.omega;
-        const ps = project(
+        const ps = projectWithTrig(
           spherePoint(ths, comet.phi, radius),
           cx,
           cy,
-          TILT_X,
-          tiltY,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
         );
-        const pe = project(
+        const pe = projectWithTrig(
           spherePoint(the, comet.phi, radius),
           cx,
           cy,
-          TILT_X,
-          tiltY,
+          cosX,
+          sinX,
+          cosY,
+          sinY,
         );
         const f = reduced ? 1 : 1 - k / (TRAIL_STEPS + 1);
         const alpha = comet.trailA * f * f;
@@ -143,12 +168,14 @@ export function OrbitOrb({
         ctx.stroke();
       }
 
-      const head = project(
+      const head = projectWithTrig(
         spherePoint(comet.phase + tt * comet.omega, comet.phi, radius),
         cx,
         cy,
-        TILT_X,
-        tiltY,
+        cosX,
+        sinX,
+        cosY,
+        sinY,
       );
       dots.push({
         x: head.x,
@@ -165,16 +192,16 @@ export function OrbitOrb({
       });
     }
 
-    dots.sort((a, b) => a.z - b.z);
+    dots.sort(cmp);
     for (const d of dots) {
-      ctx.fillStyle = colorPrefix + ink(d.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(d.alpha);
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
       ctx.fill();
     }
 
     for (const h of halos) {
-      ctx.fillStyle = colorPrefix + ink(h.alpha).toFixed(3) + ")";
+      ctx.fillStyle = fillFor(h.alpha);
       ctx.beginPath();
       ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI);
       ctx.fill();
