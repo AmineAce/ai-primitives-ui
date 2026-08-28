@@ -1,30 +1,30 @@
 <div align="center">
 
-<img src="public/og-image.png" alt="AI Primitives · UI primitives for AI-native interfaces" width="720" />
+<img src="https://ai-primitives-ui.vercel.app/og-image.png" alt="AI Primitives · UI primitives for AI-native interfaces" width="720" />
 
 [![npm version](https://img.shields.io/npm/v/@ai-primitives-ui/ui?label=npm%20package)](https://www.npmjs.com/package/@ai-primitives-ui/ui)
 [![npm downloads](https://img.shields.io/npm/dm/@ai-primitives-ui/ui)](https://www.npmjs.com/package/@ai-primitives-ui/ui)
 [![Live](https://img.shields.io/badge/Live-ai--primitives--ui.vercel.app-1f2328)](https://ai-primitives-ui.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-6e7781)](https://github.com/AmineAce/ai-primitives-ui)
 
-**UI primitives for AI-native interfaces · drawn in monochrome, Canvas 2D only.**
+**UI primitives for AI-native interfaces · monochrome, Canvas 2D only.**
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
-- **18 ready primitives** across Loading State, Thinking, Streaming, and Cards · one more coming soon
-- **Zero runtime dependencies** · peer deps are React 18/19 only
-- **Plain HTML5 Canvas 2D** · no WebGL, no SVG filters, no `ctx.filter`, no blur
-- **Monochrome by design** · GitHub Primer grayscale, themed via CSS variables
-- **Accessible** · `aria-label` support, `prefers-reduced-motion` renders a static frame
-- **Typed** · full TypeScript surface, `publint` + `attw` publish gates
-- **Theme-aware** · system `matchMedia`, global `--orb-fg`, or per-instance `color`
-- **Performance-tuned** · pooled allocations, `IntersectionObserver` pause offscreen, DPR-aware, `requestAnimationFrame`-only
+- **18 ready primitives** — Loading (8 orbs), Thinking (2), Streaming & Cards (8) + 1 coming soon
+- **Zero runtime deps** — peer `react 18/19` only, `sideEffects: false`
+- **Canvas 2D only** — no WebGL, SVG filters, or `ctx.filter`
+- **Monochrome** — GitHub Primer grayscale via CSS variables (`--orb-fg`)
+- **Accessible** — `aria-label`, `prefers-reduced-motion` static frame
+- **Typed** — `publint` + `attw` gates, full `d.ts`
+- **Theme-aware** — system `matchMedia`, global `--orb-fg`, or per-instance `color`
+- **Performance-tuned** — pooled `Dot/Halo`, `IntersectionObserver` pause, DPR-aware
 
-## 📦 Install
+## Install
 
 ```bash
 npm install @ai-primitives-ui/ui
@@ -32,9 +32,10 @@ npm install @ai-primitives-ui/ui
 pnpm add @ai-primitives-ui/ui
 ```
 
-Peer dependencies: React 18 or 19. Zero runtime dependencies.
+> [!NOTE]
+> Peer dependencies: `react ^18 || ^19` and `react-dom`. Zero runtime dependencies.
 
-## 🚀 Usage
+## Usage
 
 ```tsx
 import { CloningOrb, SyncOrb, orbSizes } from "@ai-primitives-ui/ui";
@@ -50,22 +51,25 @@ export function SyncIndicator() {
 }
 ```
 
-Every orb accepts `size?: number | OrbSizePreset` (`orbSizes`: `xs 16`, `sm 24`, `md 32`, `lg 48`, `xl 64`, `2xl 96`), `speed?: number` (default `1`), `paused?: boolean`, `color?: string`, `aria-label?: string`.
+Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96`), `speed` (`1`), `paused`, `color`, `aria-label`.
 
-## 🧩 Primitives
+> [!TIP]
+> `size` is the canvas logical size. Backing store uses `Math.min(devicePixelRatio, 2)` and `fitRadius(size)` so the orb always fits as a full circle — never use raw `R`.
+
+## Primitives
 
 ### Loading State · 8 orbs
 
-| Component     | What it shows                                                        |
-| ------------- | -------------------------------------------------------------------- |
-| `CloningOrb`  | Dots spiral onto an empty sphere, filling it layer by layer          |
-| `SyncOrb`     | Square panel → waves → supernova into a globe with a contained flash |
-| `FetchingOrb` | Packets pulse outward, snap onto the surface, peel back in           |
-| `PullingOrb`  | Fetch + merge combined · remote dots flow in and integrate           |
-| `PushingOrb`  | Local commits detach and launch outward to the remote                |
-| `MergingOrb`  | Two branches converge at a junction and continue as one              |
-| `RebasingOrb` | Orbs replay onto three equator rings, filling the globe              |
-| `StashingOrb` | Scattered dots converge into a core, flash shut, then reapply        |
+| Component     | What it shows                                     |
+| ------------- | ------------------------------------------------- |
+| `CloningOrb`  | Dots spiral onto a sphere, filling layer by layer |
+| `SyncOrb`     | Square 8×8 → waves → supernova into globe + flash |
+| `FetchingOrb` | Packets pulse, snap, peel back                    |
+| `PullingOrb`  | Fetch + merge — remote dots integrate             |
+| `PushingOrb`  | Local commits detach and launch                   |
+| `MergingOrb`  | Two branches converge at a junction               |
+| `RebasingOrb` | Orbs replay onto three rings                      |
+| `StashingOrb` | Dots converge, flash, reapply                     |
 
 ### Thinking · 2
 
@@ -75,44 +79,47 @@ Every orb accepts `size?: number | OrbSizePreset` (`orbSizes`: `xs 16`, `sm 24`,
 
 `StreamingText` · `ApprovalCard` · `ToolChips` · `TaskRows` · `Chat` · `RecommendationCard` · `ContextCards` · `DiffTable`
 
-## 🎨 Theming
+## Theming
 
-1. **System** · `matchMedia("(prefers-color-scheme: light)")` + an inline script sets `data-theme` before hydration (no FOUC); follows the OS when no stored choice
-2. **Global** · `--orb-fg` on any ancestor themes every orb:
+1. **System** — `matchMedia("(prefers-color-scheme: light)")` + inline `THEME_INIT_SCRIPT` in `app/layout.tsx` sets `data-theme` before hydration (no FOUC)
+2. **Global** — `--orb-fg` on any ancestor themes every orb:
+   ```css
+   :root {
+     --orb-fg: var(--fg-default);
+   }
+   ```
+3. **Per instance** — `color` wins, alpha is orb-controlled:
+   ```tsx
+   <CloningOrb color="#e6edf3" />
+   ```
 
-```css
-:root {
-  --orb-fg: var(--fg-default);
-}
-```
+> [!NOTE]
+> Orbs resolve color as `color prop → --orb-fg → --fg-default → DEFAULT_DOT_RGB`. An explicit `color` is static and does not follow theme flips.
 
-3. **Per instance** · `color` wins, alpha is orb-controlled:
+## Performance
 
-```tsx
-<CloningOrb color="#e6edf3" />
-```
+> [!TIP]
+> Tuned for 60 fps with 14 concurrent canvases. See `plans/perf-optimization-phases.md` and `audit/baseline.json`.
 
-## ⚡ Performance
+- **Frame GC** — `Dot/Halo` pools + 21-bucket `ink` LUT (`880 → 21` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
+- **Offscreen** — `IntersectionObserver` (`100px`) + `document.hidden` pauses `rAF`; `paused` skips `clearRect/project/sort`
+- **DPR** — `ResizeObserver`/`matchMedia` watches `devicePixelRatio` (cap 2)
+- **Heavy hitters** — `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`
+- **Bundle** — `optimizePackageImports`, `dynamic(ssr:false)` showcase, `preconnect` + `lazy` for `picsum`
 
-- **Frame GC surgery** · `Dot`/`Halo` pools + 21-bucket `ink` LUT (`880 → 21` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
-- **Offscreen governance** · `IntersectionObserver` (`100px` margin) + `document.hidden` pauses `rAF` when not visible; `paused` skips `clearRect`/`project`/`sort`
-- **DPR resilience** · `ResizeObserver`/`matchMedia` watches `devicePixelRatio` (cap 2) — zoom and display moves stay crisp without remount
-- **Heavy-hitter fixes** · `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`, `Stashing` foam `>0.08`
-- **Bundle** · `optimizePackageImports`, `dynamic(ssr:false)` showcase orbs, `preconnect` + `lazy` for `picsum 600×300`
+Baseline (moto g power, Lighthouse 13.4): `FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` → `First Load 128→131 kB`.
 
-> **v2.0.3** ships 6-phase perf (0.2.0 → 2.0.3 to clear `latest` 2.0.1) + synced npm README. See `plans/perf-optimization-phases.md` and `audit/baseline.json` (`FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` baseline).
+## Playground
 
-## 🎮 Playground
-
-Try every ready primitive live · orbs expose `size / speed / paused`; streaming, approval, tool chips, task rows, and chat are testable.
+Try every ready primitive live — orbs expose `size / speed / paused`.
 
 **→ https://ai-primitives-ui.vercel.app/#playground**
 
-## 📚 Docs
+## Docs
 
-Full documentation at **https://ai-primitives-ui.vercel.app/docs** · grouped primitives, `orbSizes`, playground, theming, accessibility, and API tables.
+Full docs at **https://ai-primitives-ui.vercel.app/docs** — primitives, `orbSizes`, playground, theming, accessibility, API tables.
 
-## 🛠️ Development
+## Development
 
 ```bash
 pnpm install
@@ -120,9 +127,8 @@ pnpm dev      # .next-dev on :3000, Next 14
 pnpm check    # format → lint → typecheck → test → gates → build
 ```
 
-## 🔗 Links
+## Links
 
 - **Live** · https://ai-primitives-ui.vercel.app
 - **Docs** · https://ai-primitives-ui.vercel.app/docs
-- **Playground** · https://ai-primitives-ui.vercel.app/#playground
 - **npm** · https://www.npmjs.com/package/@ai-primitives-ui/ui
