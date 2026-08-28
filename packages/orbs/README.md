@@ -3,6 +3,7 @@
 <img src="public/og-image.png" alt="AI Primitives · UI primitives for AI-native interfaces" width="720" />
 
 [![npm version](https://badge.fury.io/js/%40ai-primitives-ui%2Fui.svg)](https://www.npmjs.com/package/@ai-primitives-ui/ui)
+[![npm downloads](https://img.shields.io/npm/dm/@ai-primitives-ui/ui)](https://www.npmjs.com/package/@ai-primitives-ui/ui)
 [![Live](https://img.shields.io/badge/Live-ai--primitives--ui.vercel.app-1f2328)](https://ai-primitives-ui.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-6e7781)](https://github.com/AmineAce/ai-primitives-ui)
 
