@@ -13,6 +13,16 @@
 
 ---
 
+## Why
+
+Most AI interfaces still rely on generic spinners and plain text. These primitives are purpose-built for the states that actually happen when working with models — thinking, streaming tokens, tool use, diffs, approvals, and long-running operations. Monochrome, Canvas 2D, zero dependencies.
+
+## Preview
+
+<p align="center">
+  <img src="https://ai-primitives-ui.vercel.app/readme/preview.gif" width="720" alt="AI Primitives — 9 components preview" />
+</p>
+
 ## Features
 
 - **18 ready primitives** — Loading (8 orbs), Thinking (2), Streaming & Cards (8) + 1 coming soon
@@ -23,6 +33,9 @@
 - **Typed** — `publint` + `attw` gates, full `d.ts`
 - **Theme-aware** — system `matchMedia`, global `--orb-fg`, or per-instance `color`
 - **Performance-tuned** — pooled `Dot/Halo`, `IntersectionObserver` pause, DPR-aware
+
+> [!TIP]
+> **Try it live → [Playground](https://ai-primitives-ui.vercel.app/#playground) · [Docs](https://ai-primitives-ui.vercel.app/docs)** — every ready primitive, with `size / speed / paused` controls.
 
 ## Install
 
@@ -73,11 +86,23 @@ Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48`
 
 ### Thinking · 2
 
-`CubeOrb` (Thinking) · `ScanOrb` (Scan)
+| Component | What it shows                                  |
+| --------- | ---------------------------------------------- |
+| `CubeOrb` | Cube twists a few turns, then blooms into orb  |
+| `ScanOrb` | Wavefront sweeps the surface, brightening dots |
 
 ### Streaming & Cards · 8
 
-`StreamingText` · `ApprovalCard` · `ToolChips` · `TaskRows` · `Chat` · `RecommendationCard` · `ContextCards` · `DiffTable`
+| Component            | What it shows                                     |
+| -------------------- | ------------------------------------------------- |
+| `StreamingText`      | Tokens appear in sequence as text streams         |
+| `ApprovalCard`       | Compact card to confirm or dismiss an action      |
+| `ToolChips`          | Chips surfacing which tools the model invoked     |
+| `TaskRows`           | Progress rows for multi-step agentic runs         |
+| `Chat`               | Message layout for streaming, multi-turn chat     |
+| `RecommendationCard` | Inline suggestions and follow-ups after an answer |
+| `ContextCards`       | Sources and references the model drew on          |
+| `DiffTable`          | Line-by-line code changes in a diff view          |
 
 ## Theming
 
@@ -126,6 +151,14 @@ pnpm install
 pnpm dev      # .next-dev on :3000, Next 14
 pnpm check    # format → lint → typecheck → test → gates → build
 ```
+
+## License
+
+MIT © AmineAce — see [LICENSE](./LICENSE).
+
+## Contributing
+
+Issues and PRs welcome. Run `pnpm check` before pushing — it covers format, lint, typecheck, tests, gates, and build.
 
 ## Links
 
