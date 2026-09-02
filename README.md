@@ -166,8 +166,13 @@ MIT © AmineAce: see [LICENSE](./LICENSE).
 
 Issues and PRs welcome. Run `pnpm check` before pushing: it covers format, lint, typecheck, tests, gates, and build.
 
+## Changelog
+
+See **[CHANGELOG.md](./CHANGELOG.md)** — human-friendly release notes for every version (`2.1.0` → 6 new orbs).
+
 ## Links
 
 - **Live** · https://ai-primitives-ui.vercel.app
 - **Docs** · https://ai-primitives-ui.vercel.app/docs
 - **npm** · https://www.npmjs.com/package/@ai-primitives-ui/ui
+- **Changelog** · ./CHANGELOG.md
