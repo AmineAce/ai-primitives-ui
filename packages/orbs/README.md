@@ -130,8 +130,13 @@ pnpm dev      # .next-dev on :3000, Next 14
 pnpm check    # format → lint → typecheck → test → gates → build
 ```
 
+## Changelog
+
+See **[CHANGELOG.md](https://github.com/AmineAce/ai-primitives-ui/blob/main/CHANGELOG.md)** — human-friendly release notes for every version (`2.1.0` → 6 new orbs).
+
 ## Links
 
 - **Live** · https://ai-primitives-ui.vercel.app
 - **Docs** · https://ai-primitives-ui.vercel.app/docs
 - **npm** · https://www.npmjs.com/package/@ai-primitives-ui/ui
+- **Changelog** · https://github.com/AmineAce/ai-primitives-ui/blob/main/CHANGELOG.md
