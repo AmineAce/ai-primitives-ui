@@ -16,6 +16,12 @@ import {
   SyncOrb,
   CubeOrb,
   ScanOrb,
+  DownloadOrb,
+  ErrorOrb,
+  ProgressOrb,
+  DnaOrb,
+  VerifyOrb,
+  GraphOrb,
   StreamingText,
 } from "@ai-primitives-ui/ui";
 import { orbSizes } from "@ai-primitives-ui/ui";
@@ -39,6 +45,12 @@ function CapOrb(id: string) {
     stashing: "StashingOrb",
     thinking: "CubeOrb",
     scan: "ScanOrb",
+    download: "DownloadOrb",
+    failed: "ErrorOrb",
+    progress: "ProgressOrb",
+    dna: "DnaOrb",
+    verify: "VerifyOrb",
+    graph: "GraphOrb",
   };
   return m[id] ?? id;
 }
@@ -54,6 +66,12 @@ const ORB_IDS = new Set([
   "stashing",
   "thinking",
   "scan",
+  "download",
+  "failed",
+  "progress",
+  "dna",
+  "verify",
+  "graph",
 ]);
 
 const ORB_MAP: Record<string, React.ComponentType<any>> = {
@@ -67,6 +85,12 @@ const ORB_MAP: Record<string, React.ComponentType<any>> = {
   stashing: StashingOrb,
   thinking: CubeOrb,
   scan: ScanOrb,
+  download: DownloadOrb,
+  failed: ErrorOrb,
+  progress: ProgressOrb,
+  dna: DnaOrb,
+  verify: VerifyOrb,
+  graph: GraphOrb,
 };
 
 const SIZE_PRESETS = [

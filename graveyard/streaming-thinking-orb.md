@@ -1,10 +1,10 @@
-# Thinking Orb — the scattered-dots animation
+# Thinking Orb: the scattered-dots animation
 
 Archived 2026-08-19. Removed from `StreamingText` (now text-only) because the bulb
 avatar pulled attention from the streamed text. Saved because the user loves it.
 
 **Concept:** a swarm of ~30 dots swirls, gathers into a dense orb, breathes while
-"thinking", then scatters back out and re-gathers — the loop is seamless.
+"thinking", then scatters back out and re-gathers: the loop is seamless.
 
 To restore: place as `packages/orbs/src/loading/ThinkingOrb.tsx`, add to
 `packages/orbs/src/loading/index.ts` and the root barrel, then `pnpm check`.

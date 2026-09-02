@@ -15,14 +15,14 @@
 
 ## Features
 
-- **18 ready primitives** — Loading (8 orbs), Thinking (2), Streaming & Cards (8) + 1 coming soon
-- **Zero runtime deps** — peer `react 18/19` only, `sideEffects: false`
-- **Canvas 2D only** — no WebGL, SVG filters, or `ctx.filter`
-- **Monochrome** — GitHub Primer grayscale via CSS variables (`--orb-fg`)
-- **Accessible** — `aria-label`, `prefers-reduced-motion` static frame
-- **Typed** — `publint` + `attw` gates, full `d.ts`
-- **Theme-aware** — system `matchMedia`, global `--orb-fg`, or per-instance `color`
-- **Performance-tuned** — pooled `Dot/Halo`, `IntersectionObserver` pause, DPR-aware
+- **24 ready primitives**: Loading State (11), Thinking (5), Streaming & Cards (8) + 1 coming soon
+- **Zero runtime deps**: peer `react 18/19` only, `sideEffects: false`
+- **Canvas 2D only**: no WebGL, SVG filters, or `ctx.filter`
+- **Monochrome**: GitHub Primer grayscale via CSS variables (`--orb-fg`)
+- **Accessible**: `aria-label`, `prefers-reduced-motion` static frame
+- **Typed**: `publint` + `attw` gates, full `d.ts`
+- **Theme-aware**: system `matchMedia`, global `--orb-fg`, or per-instance `color`
+- **Performance-tuned**: pooled `Dot/Halo`, `IntersectionObserver` pause, DPR-aware
 
 ## Install
 
@@ -51,29 +51,32 @@ export function SyncIndicator() {
 }
 ```
 
-Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96`), `speed` (`1`), `paused`, `color`, `aria-label`.
+Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96`), `speed` (`1`), `paused`, `color`, `aria-label`. `ProgressOrb` also accepts `value` `0–1` for controlled progress.
 
 > [!TIP]
-> `size` is the canvas logical size. Backing store uses `Math.min(devicePixelRatio, 2)` and `fitRadius(size)` so the orb always fits as a full circle — never use raw `R`.
+> `size` is the canvas logical size. Backing store uses `Math.min(devicePixelRatio, 2)` and `fitRadius(size)` so the orb always fits as a full circle: never use raw `R`.
 
 ## Primitives
 
-### Loading State · 8 orbs
+### Loading State · 11 orbs
 
-| Component     | What it shows                                     |
-| ------------- | ------------------------------------------------- |
-| `CloningOrb`  | Dots spiral onto a sphere, filling layer by layer |
-| `SyncOrb`     | Square 8×8 → waves → supernova into globe + flash |
-| `FetchingOrb` | Packets pulse, snap, peel back                    |
-| `PullingOrb`  | Fetch + merge — remote dots integrate             |
-| `PushingOrb`  | Local commits detach and launch                   |
-| `MergingOrb`  | Two branches converge at a junction               |
-| `RebasingOrb` | Orbs replay onto three rings                      |
-| `StashingOrb` | Dots converge, flash, reapply                     |
+| Component | What it shows |
+$1
+| `DownloadOrb` | A file assembles dot by dot, seals with a folded corner, and steadies for handoff |
+| `ErrorOrb` | Digital glitch tears, then a `!` holds: honest failure |
+| `ProgressOrb` | Ring sweeps around a still globe: 0→100% at a glance |
+| `CloningOrb` | Dots spiral onto a sphere, filling layer by layer |
+| `SyncOrb` | Square 8×8 → waves → supernova into globe + flash |
+| `FetchingOrb` | Packets pulse, snap, peel back |
+| `PullingOrb` | Fetch + merge: remote dots integrate |
+| `PushingOrb` | Local commits detach and launch |
+| `MergingOrb` | Two branches converge at a junction |
+| `RebasingOrb` | Orbs replay onto three rings |
+| `StashingOrb` | Dots converge, flash, reapply |
 
-### Thinking · 2
+### Thinking · 5
 
-`CubeOrb` (Thinking) · `ScanOrb` (Scan)
+`DnaOrb` (DNA) · `VerifyOrb` (Verify) · `GraphOrb` (Graph) · `CubeOrb` (Thinking) · `ScanOrb` (Scan)
 
 ### Streaming & Cards · 8
 
@@ -81,14 +84,14 @@ Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48`
 
 ## Theming
 
-1. **System** — `matchMedia("(prefers-color-scheme: light)")` + inline `THEME_INIT_SCRIPT` in `app/layout.tsx` sets `data-theme` before hydration (no FOUC)
-2. **Global** — `--orb-fg` on any ancestor themes every orb:
+1. **System**: `matchMedia("(prefers-color-scheme: light)")` + inline `THEME_INIT_SCRIPT` in `app/layout.tsx` sets `data-theme` before hydration (no FOUC)
+2. **Global**: `--orb-fg` on any ancestor themes every orb:
    ```css
    :root {
      --orb-fg: var(--fg-default);
    }
    ```
-3. **Per instance** — `color` wins, alpha is orb-controlled:
+3. **Per instance**: `color` wins, alpha is orb-controlled:
    ```tsx
    <CloningOrb color="#e6edf3" />
    ```
@@ -99,25 +102,25 @@ Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48`
 ## Performance
 
 > [!TIP]
-> Tuned for 60 fps with 14 concurrent canvases. See `plans/perf-optimization-phases.md` and `audit/baseline.json`.
+> Tuned for 60 fps with ~20 concurrent canvases. See `plans/perf-optimization-phases.md` and `audit/baseline.json`.
 
-- **Frame GC** — `Dot/Halo` pools + 21-bucket `ink` LUT (`880 → 21` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
-- **Offscreen** — `IntersectionObserver` (`100px`) + `document.hidden` pauses `rAF`; `paused` skips `clearRect/project/sort`
-- **DPR** — `ResizeObserver`/`matchMedia` watches `devicePixelRatio` (cap 2)
-- **Heavy hitters** — `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`
-- **Bundle** — `optimizePackageImports`, `dynamic(ssr:false)` showcase, `preconnect` + `lazy` for `picsum`
+- **Frame GC**: `Dot/Halo` pools + 64-bucket `ink` LUT (`880 → 64` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
+- **Offscreen**: `IntersectionObserver` (`100px`) + `document.hidden` pauses `rAF`; `paused` skips `clearRect/project/sort`
+- **DPR**: `ResizeObserver`/`matchMedia` watches `devicePixelRatio` (cap 2)
+- **Heavy hitters**: `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`
+- **Bundle**: `optimizePackageImports`, `dynamic(ssr:false)` showcase, `preconnect` + `lazy` for `picsum`
 
 Baseline (moto g power, Lighthouse 13.4): `FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` → `First Load 128→131 kB`.
 
 ## Playground
 
-Try every ready primitive live — orbs expose `size / speed / paused`.
+Try every ready primitive live: orbs expose `size / speed / paused`.
 
 **→ https://ai-primitives-ui.vercel.app/#playground**
 
 ## Docs
 
-Full docs at **https://ai-primitives-ui.vercel.app/docs** — primitives, `orbSizes`, playground, theming, accessibility, API tables.
+Full docs at **https://ai-primitives-ui.vercel.app/docs**: primitives, `orbSizes`, playground, theming, accessibility, API tables.
 
 ## Development
 

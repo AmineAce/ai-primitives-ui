@@ -346,6 +346,7 @@ export function StashingOrb({
         halos.push({
           x: pc.x,
           y: pc.y,
+          z: radius * 0.2,
           r: pouchR * (1.3 + q * 0.5),
           alpha: 0.5 * Math.pow(1 - q, 2),
         });

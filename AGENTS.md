@@ -1,4 +1,4 @@
-# AGENTS.md — AI Primitives
+# AGENTS.md: AI Primitives
 
 This file provides guidance to AI agents when working with code in this repository.
 
@@ -6,26 +6,26 @@ This file provides guidance to AI agents when working with code in this reposito
 
 ### Setup
 
-- `pnpm install` — Install dependencies
-- `pnpm dev` — Start Next.js dev server on :3000 (clears `.next` for a clean manifest; no orb lib build)
-- `pnpm build` — Build for production. ALWAYS run this after finishing work.
-- `pnpm lint` — Check linting and type-checking
-- `pnpm format` — Reformat the repo with Prettier (Tailwind-aware)
-- `pnpm format:check` — Verify formatting without rewriting
-- `pnpm test` — Run the orb library unit tests (vitest)
-- `pnpm check` — The full quality umbrella, via `scripts/check.mjs`. Runs
+- `pnpm install`: Install dependencies
+- `pnpm dev`: Start Next.js dev server on :3000 (clears `.next` for a clean manifest; no orb lib build)
+- `pnpm build`: Build for production. ALWAYS run this after finishing work.
+- `pnpm lint`: Check linting and type-checking
+- `pnpm format`: Reformat the repo with Prettier (Tailwind-aware)
+- `pnpm format:check`: Verify formatting without rewriting
+- `pnpm test`: Run the orb library unit tests (vitest)
+- `pnpm check`: The full quality umbrella, via `scripts/check.mjs`. Runs
   format → lint → orb typecheck → orb test → orb gates → build, then prints a
   per-step pass/fail summary. Fails fast on the first red step.
-- `pnpm --filter @ai-primitives-ui/ui typecheck` — Type-check the orb library against its own tsconfig
-- `pnpm --filter @ai-primitives-ui/ui build` — Build the published artifact with tsup (ESM + CJS + d.ts) into `dist/`
-- `pnpm --filter @ai-primitives-ui/ui test` — Orb library tests (vitest, jsdom env; canvas stubbed in `src/test/setup.ts`)
-- `pnpm --filter @ai-primitives-ui/ui gates` — Run publish gates. Rebuilds `dist/` from current source first, then validates with `publint` + `@arethetypeswrong/cli --pack`, so it can never pass against a stale artifact.
+- `pnpm --filter @ai-primitives-ui/ui typecheck`: Type-check the orb library against its own tsconfig
+- `pnpm --filter @ai-primitives-ui/ui build`: Build the published artifact with tsup (ESM + CJS + d.ts) into `dist/`
+- `pnpm --filter @ai-primitives-ui/ui test`: Orb library tests (vitest, jsdom env; canvas stubbed in `src/test/setup.ts`)
+- `pnpm --filter @ai-primitives-ui/ui gates`: Run publish gates. Rebuilds `dist/` from current source first, then validates with `publint` + `@arethetypeswrong/cli --pack`, so it can never pass against a stale artifact.
 
 ### Code Quality
 
-- ALWAYS run `pnpm check` before declaring work complete — it covers formatting, lint, orb typecheck + tests, publish gates, and the production build in one fast-fail pass.
-- Dev/prod split on the package `exports` map: `next dev` resolves `src/` via the `development` condition (instant HMR — the app never reads stale dist while iterating). `pnpm build` and consumers resolve `dist/`, and the package `gates` script rebuilds `dist/` from source before validating — so a stale `dist/` can never pass a gate in production. In the worst case a direct `next build` would type-check against a stale artifact, so stick to `pnpm build`.
-- Dev workflow: `predev` runs `scripts/guard-dev.mjs` (aborts if anything is on :3000, then clears `.next-dev`) and the webpack dev cache is disabled in `next.config.js`, so HMR and hard reloads are safe — stale chunk 404s are impossible.
+- ALWAYS run `pnpm check` before declaring work complete: it covers formatting, lint, orb typecheck + tests, publish gates, and the production build in one fast-fail pass.
+- Dev/prod split on the package `exports` map: `next dev` resolves `src/` via the `development` condition (instant HMR: the app never reads stale dist while iterating). `pnpm build` and consumers resolve `dist/`, and the package `gates` script rebuilds `dist/` from source before validating: so a stale `dist/` can never pass a gate in production. In the worst case a direct `next build` would type-check against a stale artifact, so stick to `pnpm build`.
+- Dev workflow: `predev` runs `scripts/guard-dev.mjs` (aborts if anything is on :3000, then clears `.next-dev`) and the webpack dev cache is disabled in `next.config.js`, so HMR and hard reloads are safe: stale chunk 404s are impossible.
 
 ## Next.js Dev / Build Isolation (mandatory)
 
@@ -33,11 +33,11 @@ This file provides guidance to AI agents when working with code in this reposito
 - `pnpm build` and `pnpm check` use the default `.next` + `out/`.
 - A live `next dev` (or anything on port 3000) blocks both a second `pnpm dev` and `pnpm check`.
 - Preview runs on port 4173 (`pnpm preview`) so it can never collide with the dev server.
-- Never run `next build` or `pnpm exec next build` while a dev server is alive — the documented paths already prevent this.
+- Never run `next build` or `pnpm exec next build` while a dev server is alive: the documented paths already prevent this.
 - NEVER use `@/` aliases inside `packages/`. The library must resolve on its own; the app tsconfig `paths` only masks stray aliases.
 - NEVER use `any` or `as any`. Use `unknown` if necessary.
 - This repository always uses 2 spaces for indentation.
-- Keep everything short and concise — comments, docs, commit messages. Say a thing once, at the level of detail a reader needs to act on it.
+- Keep everything short and concise: comments, docs, commit messages. Say a thing once, at the level of detail a reader needs to act on it.
 
 ## Technology Stack
 
@@ -57,9 +57,9 @@ This file provides guidance to AI agents when working with code in this reposito
 
 ```
 packages/
-  orbs/                   # @ai-primitives-ui/ui — publishable orb library
+  orbs/                   # @ai-primitives-ui/ui: publishable orb library
     src/
-      index.ts            # 'use client' entry barrel — named exports only, no `export *`
+      index.ts            # 'use client' entry barrel: named exports only, no `export *`
       lib/
         math.ts           # clamp()
       canvas/             # Shared canvas core (internal)
@@ -80,7 +80,7 @@ packages/
         RebasingOrb.tsx
         StashingOrb.tsx
         index.ts
-    dist/                 # tsup build output (ESM + CJS + d.ts) — app consumes this
+    dist/                 # tsup build output (ESM + CJS + d.ts): app consumes this
     tsup.config.ts        # dual ESM/CJS build, react external, per-file 'use client' preserved
     package.json
     tsconfig.json
@@ -111,7 +111,7 @@ public/
   manifest.json
 
 scripts/
-  check.mjs             # pnpm check orchestrator — sequential steps, final summary
+  check.mjs             # pnpm check orchestrator: sequential steps, final summary
 ```
 
 ## Design System
@@ -134,7 +134,7 @@ Monochrome only. NEVER add colors.
 **Rules:**
 
 - NEVER use raw hex values in component code.
-- NEVER use `opacity` on text for dimming — use the correct token.
+- NEVER use `opacity` on text for dimming: use the correct token.
 - Gradients are limited to the dot-grid background in `globals.css`.
 
 ### Typography
@@ -155,11 +155,11 @@ Fonts: Inter for UI, JetBrains Mono for code.
 
 Canvas primitives use shared math from `packages/orbs/src/canvas/`:
 
-- `sphere.ts` — 3D sphere projection (`project()`, `spherePoint()`, `R`, `fitRadius()`), golden-angle distribution
-- `easing.ts` — `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`
-- `CanvasContainer.tsx` — presentational canvas wrapper; sizing lives in the hook
-- `useOrbAnimation.ts` — the loop hook: DPR-cap-2 sizing, rAF + elapsed, `paused`/`speed` via refs, reduced-motion static frame, cleanup
-- `types.ts` — `Dot`, `Halo`, `Point2D`; `paths.ts` — `lerp3`, `quad`; `colors.ts` — `DEFAULT_DOT_RGB`, `ORB_FG_VAR`, `FG_FALLBACK_VAR`, `toColorPrefix`, `parseColor`, `makeInk`, `inkFromColor`, `Ink`; `random.ts` — `mulberry32`; `lib/math.ts` — `clamp`
+- `sphere.ts`: 3D sphere projection (`project()`, `spherePoint()`, `R`, `fitRadius()`), golden-angle distribution
+- `easing.ts`: `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`
+- `CanvasContainer.tsx`: presentational canvas wrapper; sizing lives in the hook
+- `useOrbAnimation.ts`: the loop hook: DPR-cap-2 sizing, rAF + elapsed, `paused`/`speed` via refs, reduced-motion static frame, cleanup
+- `types.ts`: `Dot`, `Halo`, `Point2D`; `paths.ts`: `lerp3`, `quad`; `colors.ts`: `DEFAULT_DOT_RGB`, `ORB_FG_VAR`, `FG_FALLBACK_VAR`, `toColorPrefix`, `parseColor`, `makeInk`, `inkFromColor`, `Ink`; `random.ts`: `mulberry32`; `lib/math.ts`: `clamp`
 
 ### Animation Rules
 
@@ -168,7 +168,7 @@ Canvas primitives use shared math from `packages/orbs/src/canvas/`:
 - ALWAYS sort dots by `z` before rendering (back-to-front).
 - NEVER draw dots outside the sphere boundary.
 - Loop seamlessly with `cycle = t % duration`.
-- Use easing for all motion — linear motion feels mechanical.
+- Use easing for all motion: linear motion feels mechanical.
 - Monochrome only: `rgba(201, 209, 217, alpha)` for dots. NEVER add colors.
 - NEVER use `ctx.filter`, SVG filters, or WebGL.
 
@@ -179,8 +179,8 @@ Every Canvas primitive:
 - Is a `'use client'` React component in `packages/orbs/src/loading/`.
 - Accepts `size`, `speed`, `paused`, and `aria-label` props.
 - Computes geometry on the component body, defines `render(ctx, elapsed, reduced, colorPrefix, ink)`, then calls `useOrbAnimation({ size, speed, paused, render })` for the loop.
-- Passes the returned `canvasRef` to `CanvasContainer` — never a raw `<canvas>`.
-- Never touches the loop, DPR, or reduced-motion handling itself — the hook owns all of it.
+- Passes the returned `canvasRef` to `CanvasContainer`: never a raw `<canvas>`.
+- Never touches the loop, DPR, or reduced-motion handling itself: the hook owns all of it.
 - Exports from `packages/orbs/src/loading/index.ts` and the root barrel.
 
 ### Theming
@@ -188,7 +188,7 @@ Every Canvas primitive:
 - Orbs resolve color at mount and on every theme flip, in priority order: `color` prop → `--orb-fg` → `--fg-default` on any ancestor → `DEFAULT_DOT_RGB`.
 - The `useOrbAnimation` hook observes `data-theme`/`class` on `<html>`; app code may also use `useOrbInk()` (`hooks/use-orb-ink.ts`) which returns `{ color, ink }` derived from `--fg-default` and its luminance.
 - The hook passes `colorPrefix` and `ink` to `render(ctx, elapsed, reduced, colorPrefix, ink)`; orbs build `colorPrefix + ink(alpha).toFixed(3) + ")"`. `ink` lifts dim layers in light themes so near-black stays visible on white.
-- Alpha is always orb-controlled — a `color` prop's own alpha is ignored.
+- Alpha is always orb-controlled: a `color` prop's own alpha is ignored.
 - An explicit `color` prop is static by design and does not follow theme flips.
 - The demo app wires `--orb-fg: var(--fg-default)` in `app/globals.css` (both root and dark blocks); showcase orbs follow the toggle live.
 
@@ -238,7 +238,7 @@ NEVER:
 - Use inline styles (`style={{ ... }}`).
 - Use `any` type.
 - Add new dependencies without explicit approval.
-- Use `setInterval` for animation — always `requestAnimationFrame`.
+- Use `setInterval` for animation: always `requestAnimationFrame`.
 - Access `window` or `document` in server components. ALWAYS `'use client'` for browser APIs.
 - Leave dead code, commented experiments, or unused files.
 - Use `console.log` in production code.

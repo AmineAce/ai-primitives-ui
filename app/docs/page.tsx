@@ -63,6 +63,13 @@ const PROPS = [
     description:
       "Accessible label describing the operation. Omit to render decoratively.",
   },
+  {
+    name: "value",
+    type: "number",
+    defaultValue: "undefined",
+    description:
+      "ProgressOrb only: controlled 0–1 progress. When set, the orb tracks value instead of auto-looping.",
+  },
 ];
 
 const STREAMING_PROPS = [
@@ -141,7 +148,10 @@ export default function DocsPage() {
         <h2 className="doc-h2">Usage</h2>
         <p className="doc-p">
           Every primitive is a focused, typed React component. The Loading State
-          category ships as eight components today:{" "}
+          category ships as eleven components today:{" "}
+          <code className="doc-code">DownloadOrb</code>,{" "}
+          <code className="doc-code">ErrorOrb</code>,{" "}
+          <code className="doc-code">ProgressOrb</code>,{" "}
           <code className="doc-code">CloningOrb</code>,{" "}
           <code className="doc-code">SyncOrb</code>,{" "}
           <code className="doc-code">FetchingOrb</code>,{" "}
@@ -165,22 +175,22 @@ export default function DocsPage() {
           animated previews.
         </p>
         {(() => {
-          const groups: Record<string, typeof primitives> = {};
+          const groups: Record<string, (typeof primitives)[number][]> = {};
           for (const p of primitives) {
-            const key =
+            const label =
               p.category === "Loading State"
-                ? "Loading State · 8 orbs"
+                ? "Loading State"
                 : p.category === "Thinking"
-                  ? "Thinking · 2"
+                  ? "Thinking"
                   : p.category === "More"
                     ? "More"
-                    : "Streaming & Cards · 8";
-            (groups[key] ??= []).push(p);
+                    : "Streaming & Cards";
+            (groups[label] ??= []).push(p);
           }
           const order = [
-            "Loading State · 8 orbs",
-            "Thinking · 2",
-            "Streaming & Cards · 8",
+            "Loading State",
+            "Thinking",
+            "Streaming & Cards",
             "More",
           ];
           return order.map(
@@ -188,7 +198,7 @@ export default function DocsPage() {
               groups[g] && (
                 <div key={g} className="mt-8">
                   <h3 className="font-mono text-xs font-medium uppercase tracking-widest text-fg-subtle">
-                    {g}
+                    {g === "More" ? "More" : `${g} · ${groups[g].length}`}
                   </h3>
                   <div className="mt-3 overflow-x-auto">
                     <table className="w-full border-collapse">
@@ -324,9 +334,8 @@ export default function DocsPage() {
       <section id="performance" className="scroll-mt-28">
         <h2 className="doc-h2">Performance</h2>
         <p className="doc-p">
-          Orbs are tuned for 60fps with 14 concurrent canvases. v2.0.3 ships 6
-          phases of surgical fixes (0.2.0 → 2.0.3 to clear{" "}
-          <code className="doc-code">latest</code> 2.0.1): see{" "}
+          Orbs are tuned for 60fps with ~20 concurrent canvases. v2.0.4 ships 6
+          phases of surgical fixes (0.2.0 → 2.0.4): see{" "}
           <code className="doc-code">plans/perf-optimization-phases.md</code>{" "}
           and <code className="doc-code">audit/baseline.json</code>.
         </p>
@@ -337,8 +346,8 @@ export default function DocsPage() {
             <code className="doc-code">cos/sin</code> (80→2 trig/frame)
           </li>
           <li>
-            Pooled <code className="doc-code">Dot/Halo</code> + 21-bucket{" "}
-            <code className="doc-code">ink</code> LUT (880→21{" "}
+            Pooled <code className="doc-code">Dot/Halo</code> + 64-bucket{" "}
+            <code className="doc-code">ink</code> LUT (880→64{" "}
             <code className="doc-code">toFixed</code>/frame)
           </li>
           <li>
@@ -366,8 +375,10 @@ export default function DocsPage() {
       <section id="api-reference" className="scroll-mt-28">
         <h2 className="doc-h2">API Reference</h2>
         <p className="doc-p">
-          The eight Loading State components expose a shared props surface
-          today. The surface will grow as each category ships.
+          The 16 orb components (11 Loading State + 5 Thinking) expose a shared
+          props surface today. <code className="doc-code">ProgressOrb</code>{" "}
+          adds an optional <code className="doc-code">value</code> prop. The
+          surface will grow as each category ships.
         </p>
         <div className="mt-6 overflow-x-auto">
           <table className="w-full border-collapse">

@@ -39,10 +39,10 @@ Follow the pattern established in existing orb components (e.g. `components/prim
 
 Design the animation to communicate the primitive's verb visually. Use the shared utilities:
 
-- `project()` from `components/canvas/sphere.ts` — 3D sphere projection with depth scaling.
-- `spherePoint()` from `components/canvas/sphere.ts` — golden-angle sphere distribution.
-- `fitRadius(size)` from `components/canvas/sphere.ts` — ALWAYS use for the sphere radius so the orb fits the canvas as a full circle.
-- Easing functions from `components/canvas/easing.ts` — `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`.
+- `project()` from `components/canvas/sphere.ts`: 3D sphere projection with depth scaling.
+- `spherePoint()` from `components/canvas/sphere.ts`: golden-angle sphere distribution.
+- `fitRadius(size)` from `components/canvas/sphere.ts`: ALWAYS use for the sphere radius so the orb fits the canvas as a full circle.
+- Easing functions from `components/canvas/easing.ts`: `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`.
 
 Rules for the animation:
 
@@ -50,7 +50,7 @@ Rules for the animation:
 - Call `project()` for every dot. Sort by `z` (back-to-front) before rendering.
 - Dots with `z > 0` (behind the sphere plane) render at `alpha * 0.35`.
 - Loop seamlessly with `cycle = t % duration`.
-- Use easing for all motion — linear motion feels mechanical.
+- Use easing for all motion: linear motion feels mechanical.
 - Monochrome only: `rgba(201, 209, 217, alpha)` for dots, similar grayscale for strokes. NEVER add colors.
 - No `ctx.filter`, no SVG filters, no WebGL.
 
@@ -70,18 +70,18 @@ Open `lib/primitives.ts` and change the primitive's `status` from `'placeholder'
 
 Run `pnpm build`. Fix any TypeScript or lint errors.
 
-Open the landing page. The primitive card should show the live animation. Scroll it off-screen and back on — it should resume smoothly. Toggle the browser's `prefers-reduced-motion` setting — the component should render a static representative frame and skip the animation loop.
+Open the landing page. The primitive card should show the live animation. Scroll it off-screen and back on: it should resume smoothly. Toggle the browser's `prefers-reduced-motion` setting: the component should render a static representative frame and skip the animation loop.
 
 ## Constraints
 
 - NEVER use `any`.
 - NEVER use inline styles (`style={{ ... }}`).
 - NEVER add colors.
-- NEVER use `setInterval` for animation — always `requestAnimationFrame`.
+- NEVER use `setInterval` for animation: always `requestAnimationFrame`.
 - NEVER forget to cancel `requestAnimationFrame` on unmount.
 - NEVER draw dots outside the sphere boundary.
 - NEVER use `ctx.filter`, SVG filters, or WebGL.
 - ALWAYS sort dots by `z` before rendering.
 - ALWAYS accept `size`, `speed`, `paused`, and `aria-label` props.
-- ALWAYS use `CanvasContainer` — do not create raw `<canvas>` elements.
+- ALWAYS use `CanvasContainer`: do not create raw `<canvas>` elements.
 - ALWAYS handle `prefers-reduced-motion` by rendering a static frame when the media query matches.

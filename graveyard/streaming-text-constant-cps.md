@@ -1,11 +1,11 @@
-# StreamingText — constant-cps reveal (backup)
+# StreamingText: constant-cps reveal (backup)
 
 Archived 2026-08-19. Replaced by the eased-pacing version (reveal rate decelerates
 toward the end instead of the constant 35 cps metronome). This file is the exact
 `packages/orbs/src/streaming/StreamingText.tsx` before that change, verbatim.
 
 The only behavioral difference vs. the current build: `revealed` was computed
-linearly — `clamp(Math.floor(t * CPS), 0, text.length)` — and there was no
+linearly: `clamp(Math.floor(t * CPS), 0, text.length)`: and there was no
 `orb` prop.
 
 ```tsx

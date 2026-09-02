@@ -11,6 +11,51 @@ export interface Primitive {
 
 export const primitives: Primitive[] = [
   {
+    id: "download",
+    name: "Generating File",
+    description:
+      "A file assembles dot by dot, seals with a folded corner, and steadies for handoff.",
+    status: "ready",
+    category: "Loading State",
+  },
+  {
+    id: "failed",
+    name: "Failed",
+    description: "Digital glitch tears, then a `!` holds: honest failure.",
+    status: "ready",
+    category: "Loading State",
+  },
+  {
+    id: "progress",
+    name: "Progress",
+    description: "Ring sweeps around a still globe: 0→100% at a glance.",
+    status: "ready",
+    category: "Loading State",
+  },
+  {
+    id: "dna",
+    name: "DNA",
+    description:
+      "A double helix assembles base by base: curious, methodical, alive.",
+    status: "ready",
+    category: "Thinking",
+  },
+  {
+    id: "verify",
+    name: "Verify",
+    description:
+      "A vigilant scan sweeps and reinforces: protective, thorough, wary.",
+    status: "ready",
+    category: "Thinking",
+  },
+  {
+    id: "graph",
+    name: "Graph",
+    description: "Nodes find each other and link: a living network revealed.",
+    status: "ready",
+    category: "Thinking",
+  },
+  {
     id: "cloning",
     name: "Cloning",
     description: "Dots spiral onto an empty sphere, filling it layer by layer.",

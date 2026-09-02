@@ -144,7 +144,7 @@ export function SyncOrb({
     const morphBackStart = 3.0;
     const morphBackEnd = DURATION;
 
-    // diagonal orbital shimmer — 2x 45° wavefronts through panel
+    // diagonal orbital shimmer: 2x 45° wavefronts through panel
     const waveActive = cycle >= 0.4 && cycle < 1.5;
     let waveA = 0;
     let waveB = 0;

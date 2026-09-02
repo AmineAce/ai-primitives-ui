@@ -1,4 +1,4 @@
-# Baseline Notes — 2026-08-27
+# Baseline Notes: 2026-08-27
 
 ## Canvas counts (app/(demo)/page.tsx:8-18)
 
@@ -13,7 +13,7 @@
 
 ## Missing guard
 
-- `hooks/useInView.ts:1-46` exists but never imported for orbs — all loops run offscreen.
+- `hooks/useInView.ts:1-46` exists but never imported for orbs: all loops run offscreen.
 - `useReducedMotion.ts:8` initial `false` flashes motion; `useOrbAnimation.ts:58-62` uses `useSyncExternalStore` correctly for orbs, but `hero-orb`/`demo-showcase` custom canvases duplicate logic.
 
 ## Per-frame cost (all orbs)
@@ -33,8 +33,8 @@
 
 ## Hypotheses priority
 
-See `audit/baseline.json:hypotheses_Ranked` — P0 is GC + offscreen, P1 is measureText + bundle, P2 is DPR/theme.
+See `audit/baseline.json:hypotheses_Ranked`: P0 is GC + offscreen, P1 is measureText + bundle, P2 is DPR/theme.
 
 ## Next
 
-- Phase 1: memoize geometry + hoist trig + fix SyncOrb double speed — zero API change, lowest risk.
+- Phase 1: memoize geometry + hoist trig + fix SyncOrb double speed: zero API change, lowest risk.

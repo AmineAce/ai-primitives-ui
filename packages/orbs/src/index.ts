@@ -1,6 +1,12 @@
 "use client";
 
 export {
+  DownloadOrb,
+  DnaOrb,
+  VerifyOrb,
+  GraphOrb,
+  ErrorOrb,
+  ProgressOrb,
   CloningOrb,
   FetchingOrb,
   PullingOrb,
@@ -15,6 +21,12 @@ export {
 } from "./loading";
 export { StreamingText } from "./streaming";
 export type {
+  DownloadOrbProps,
+  DnaOrbProps,
+  VerifyOrbProps,
+  GraphOrbProps,
+  ErrorOrbProps,
+  ProgressOrbProps,
   CloningOrbProps,
   FetchingOrbProps,
   PullingOrbProps,

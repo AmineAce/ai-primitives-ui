@@ -78,7 +78,7 @@ if (await devServerRunning()) {
 }
 
 console.log(
-  `${bold("pnpm check")} — ${STEPS.map((s) => s.label).join(" · ")}\n`,
+  `${bold("pnpm check")}: ${STEPS.map((s) => s.label).join(" · ")}\n`,
 );
 
 const results = [];
@@ -94,7 +94,7 @@ for (const step of STEPS) {
   if (!ok) {
     const code = run.status ?? 1;
     console.log(
-      `\n${red("✖")} ${bold(step.label)} ${red("failed")} (exit ${code}) — see output above`,
+      `\n${red("✖")} ${bold(step.label)} ${red("failed")} (exit ${code}): see output above`,
     );
     console.log(`${dim(`rerun: ${commandOf(step)}`)}\n`);
     process.exit(code);

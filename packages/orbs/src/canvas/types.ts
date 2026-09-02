@@ -14,6 +14,7 @@ export interface Dot {
 export interface Halo {
   x: number;
   y: number;
+  z: number;
   r: number;
   alpha: number;
 }

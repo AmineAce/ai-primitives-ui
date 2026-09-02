@@ -207,6 +207,7 @@ export function PullingOrb({
         halos.push({
           x: p.x,
           y: p.y,
+          z: p.z,
           r: packetSize * p.scale * 2.4,
           alpha: 0.12 * (1 - snapP),
         });

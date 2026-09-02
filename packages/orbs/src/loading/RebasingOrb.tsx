@@ -323,6 +323,7 @@ export function RebasingOrb({
           halos.push({
             x: p.x,
             y: p.y,
+            z: p.z,
             r: commSize * 2.2,
             alpha: 0.16,
           });
@@ -331,6 +332,7 @@ export function RebasingOrb({
           halos.push({
             x: p.x,
             y: p.y,
+            z: p.z,
             r: commSize * 2.6,
             alpha: 0.25 * landFlash,
           });
@@ -363,6 +365,7 @@ export function RebasingOrb({
         halos.push({
           x: w.x,
           y: w.y,
+          z: -100,
           r: commSize * 2.4,
           alpha: 0.2,
         });

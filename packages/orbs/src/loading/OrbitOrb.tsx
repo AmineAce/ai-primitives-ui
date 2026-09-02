@@ -187,6 +187,7 @@ export function OrbitOrb({
       halos.push({
         x: head.x,
         y: head.y,
+        z: head.z,
         r: comet.headR * 2.2 * unit * head.scale,
         alpha: comet.headA * 0.22,
       });

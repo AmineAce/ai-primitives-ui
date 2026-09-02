@@ -20,6 +20,30 @@ function CanvasSkeleton() {
   return <div className="bg-border-muted size-16 animate-pulse rounded-full" />;
 }
 
+const DownloadOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.DownloadOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const DnaOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.DnaOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const VerifyOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.VerifyOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const GraphOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.GraphOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const ErrorOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.ErrorOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
+const ProgressOrb = dynamic(
+  () => import("@ai-primitives-ui/ui").then((m) => m.ProgressOrb),
+  { ssr: false, loading: CanvasSkeleton },
+);
 const CloningOrb = dynamic(
   () => import("@ai-primitives-ui/ui").then((m) => m.CloningOrb),
   { ssr: false, loading: CanvasSkeleton },
@@ -214,6 +238,12 @@ function ComingSoonOrb() {
 }
 
 const PRIMITIVE_COMPONENTS: Record<string, ComponentType> = {
+  download: DownloadOrb,
+  dna: DnaOrb,
+  verify: VerifyOrb,
+  graph: GraphOrb,
+  failed: ErrorOrb,
+  progress: ProgressOrb,
   cloning: CloningOrb,
   sync: SyncOrb,
   fetching: FetchingOrb,

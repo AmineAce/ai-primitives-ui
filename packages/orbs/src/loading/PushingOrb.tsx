@@ -156,6 +156,7 @@ export function PushingOrb({
       halos.push({
         x: p.x,
         y: p.y,
+        z: p.z,
         r: packetSize * p.scale * 2.6,
         alpha: 0.18 * (1 - clamp(sIn / 0.3, 0, 1)),
       });

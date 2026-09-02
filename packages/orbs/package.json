@@ -1,6 +1,6 @@
 {
   "name": "@ai-primitives-ui/ui",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "Framework-agnostic Canvas 2D loading orb primitives.",
   "license": "MIT",
   "private": false,
