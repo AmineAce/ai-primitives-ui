@@ -1,6 +1,6 @@
 {
   "name": "ai-primitives",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A dependency-free library of monochrome UI primitives for AI-native interfaces.",
   "license": "MIT",
   "private": true,
