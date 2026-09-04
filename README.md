@@ -15,7 +15,7 @@
 
 ## Why
 
-Most AI interfaces still rely on generic spinners and plain text. These primitives are purpose-built for the states that actually happen when working with models: thinking, streaming tokens, tool use, diffs, approvals, and long-running operations. Monochrome, Canvas 2D, zero dependencies.
+Most AI interfaces still rely on generic spinners and plain text. These primitives are purpose-built for the states that actually happen when working with models: thinking, streaming tokens, and long-running operations. Monochrome, Canvas 2D, zero dependencies.
 
 ## Preview
 
@@ -56,7 +56,7 @@ npx shadcn@latest add https://ai-primitives-ui.vercel.app/r/cloning-orb.json
 # pnpm dlx, yarn dlx, or bunx work identically — same package, same URL
 ```
 
-See **[Docs](https://ai-primitives-ui.vercel.app/docs/shadcn)** for the Tailwind preset, `@orbs/...` shorthand, and theming.
+See **[Docs](https://ai-primitives-ui.vercel.app/docs/installation)** for the Tailwind preset, `@orbs/...` shorthand, and theming.
 
 > [!NOTE]
 > Peer dependencies: `react ^18 || ^19` and `react-dom`. Zero runtime dependencies.
@@ -77,7 +77,7 @@ export function SyncIndicator() {
 }
 ```
 
-Every orb accepts `size?: number` (default `64`; `orbSizes` constants are plain numbers: `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96` — see `resolveOrbSize` for preset names), `speed` (`1`), `paused`, `color`, `aria-label`. `ProgressOrb` also accepts `value` `0–1` for controlled progress.
+Every orb accepts `size?: number` (default `64`; `orbSizes` constants are plain numbers: `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96` — see `resolveOrbSize` for preset names), `speed` (`1`), `paused`, `color`, `className`/`style`, `aria-label`. `ProgressOrb` also accepts `value` `0–1` for controlled progress.
 
 > [!TIP]
 > `size` is the canvas logical size. Backing store uses `Math.min(devicePixelRatio, 2)` and `fitRadius(size)` so the orb always fits as a full circle: never use raw `R`.
@@ -152,11 +152,9 @@ Try every ready primitive live: orbs expose `size / speed / paused`.
 
 **→ https://ai-primitives-ui.vercel.app/#playground**
 
-The Chat tab is a single-use demo (a `used` flag disables input after one message; Reset to retry).
-
 ## Docs
 
-Full docs at **https://ai-primitives-ui.vercel.app/docs**: primitives, `orbSizes`, playground, theming, accessibility, API tables.
+Full docs at **https://ai-primitives-ui.vercel.app/docs**: orbs, installation, and API tables.
 
 ## Development
 
@@ -176,7 +174,7 @@ Issues and PRs welcome. Run `pnpm check` before pushing: it covers format, lint,
 
 ## Changelog
 
-See **[CHANGELOG.md](./CHANGELOG.md)** — human-friendly release notes for every version (`2.1.0` → 6 new orbs).
+See **[CHANGELOG.md](./CHANGELOG.md)** — human-friendly release notes for every version (`2.2.0` → props, companions, slimmer docs).
 
 ## Links
 

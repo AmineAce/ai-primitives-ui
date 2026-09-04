@@ -4,24 +4,29 @@ All notable changes to **AI Primitives** are documented here. We follow [Keep a 
 
 > **How to read:** `Added` = new things you can use · `Fixed` = bugs you might have hit · `Changed` = docs/perf wording, no breaking API.
 
-## [Unreleased]
+## [2.2.0] — 2026-09-04
 
-**Site & tooling release. The published package is unchanged (`2.1.0`).**
+Backward-compatible: new props and helpers, slimmer docs. No breaking changes — just `pnpm add @ai-primitives-ui/ui@latest`.
 
 ### Added — what you can do now
 
-- **Real docs:** `/docs` is now file-based MDX (fumadocs) with a sidebar, per-page TOC, Shiki-highlighted code blocks with copy buttons, and **Cmd+K search that works on the static export**. `llms.txt` is generated automatically at build.
-- Docs source lives in `content/docs/**` — installation, orbs, shadcn preset, theming, accessibility, API reference.
+- **`className`/`style` on all 16 orbs** — forwarded to `CanvasContainer` as `style={{width,height,...style}}`, so `size-4 shrink-0` and friends work inside shadcn layouts.
+- **Companions:** `MiniOrb` (16px, collapses when `done`), `drawGlobe` + `GLOBE_POINTS` for dense UI.
+- **`orbSizes` / `resolveOrbSize`** (`xs 16 → 2xl 96`), `src/styles.css` theme bridge, `tailwind-preset` for shadcn hosts.
+- **Playground deep-links** — every orb links to `/?orb=<id>#playground`; showcase cards live at `/#orb-<id>`.
+- **Real docs:** `/docs` is now 4 file-based MDX pages (fumadocs) with sidebar, per-page TOC, Shiki code blocks with copy buttons, and **Cmd+K search that works on the static export**.
 
 ### Changed
 
+- Docs rebuilt from product truth: 14 pages → `index`, `installation`, `orbs`, `api-reference`. Counts agree everywhere (16 orbs + `StreamingText`).
+- npm README slimmed to a pointer — full docs live on the site, not in the package.
 - Next.js `14 → 16` (Turbopack builds), ESLint `9` with flat config; React 19 + Tailwind 4 were already in.
-- Docs UI tokens (`fd-*`) are remapped onto the monochrome `git-*` palette — the docs match the site, with fumadocs' colored accents neutralized.
-- The site theme toggle and the docs sidebar toggle now share one storage key — they can no longer disagree after a reload.
+- Docs UI tokens (`fd-*`) remapped onto the monochrome `git-*` palette; site and docs theme toggles share one storage key.
 
 ### Removed
 
-- **Demo-only DOM components are gone.** `ApprovalCard`, `ToolChips`, `TaskRows`, `Chat`, `RecommendationCard`, `ContextCards`, `DiffTable` (plus the orphaned `StageLock` and the unused `useInView` hook) were showcase-only code that never shipped in the package — keeping them blurred what this project is. This library ships 2D canvas orbs **only**: 17 ready primitives (16 orbs + `StreamingText`, plus `OrbitOrb` legacy and `MiniOrb`/`drawGlobe` companions) + 1 coming soon. For DOM needs, pair orbs with shadcn. The published package is unchanged, so nothing to do on your side.
+- **AI Elements adapters are gone.** `examples/ai-elements/` (vendored, never verified at runtime) is deleted — shadcn is the only integration story. Archived under `archive/docs-2026-09-04/`.
+- **Demo-only DOM components are gone.** `ApprovalCard`, `ToolChips`, `TaskRows`, `Chat`, `RecommendationCard`, `ContextCards`, `DiffTable` (plus the orphaned `StageLock` and the unused `useInView` hook) were showcase-only code that never shipped in the package. This library ships 2D canvas orbs **only**: 17 ready primitives (16 orbs + `StreamingText`, plus `OrbitOrb` legacy and `MiniOrb`/`drawGlobe` companions) + 1 coming soon. For DOM needs, pair orbs with shadcn.
 
 ### Fixed
 
@@ -89,6 +94,7 @@ _Migration:_ none. `size/speed/paused/color/aria-label` unchanged; only `Progres
 
 ---
 
+[2.2.0]: https://github.com/AmineAce/ai-primitives-ui/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/AmineAce/ai-primitives-ui/compare/2.0.4...2.1.0
 [2.0.4]: https://github.com/AmineAce/ai-primitives-ui/compare/2.0.3...2.0.4
 [2.0.3]: https://github.com/AmineAce/ai-primitives-ui/compare/2.0.2...2.0.3
