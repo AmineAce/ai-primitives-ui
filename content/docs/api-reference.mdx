@@ -1,0 +1,58 @@
+---
+title: API Reference
+description: Shared orb props, exceptions, helpers, accessibility.
+---
+
+## API Reference
+
+16 orbs share one surface. Exceptions are listed — everything else is portable.
+
+| Prop         | Type                  | Default                            | Description                                                |
+| ------------ | --------------------- | ---------------------------------- | ---------------------------------------------------------- |
+| `size`       | `number`              | `64`                               | Width/height px. `orbSizes.xl` is `64`.                    |
+| `speed`      | `number`              | `1`                                | Multiplier.                                                |
+| `paused`     | `boolean`             | `false`                            | Freeze phase.                                              |
+| `color`      | `string`              | `--orb-fg`                         | Overrides `--orb-fg`. Alpha ignored, static across themes. |
+| `className`  | `string`              | `undefined`                        | Forwarded to `CanvasContainer`.                            |
+| `style`      | `React.CSSProperties` | `undefined`                        | Merged as `{width,height,...style}` — your `style` wins.   |
+| `aria-label` | `string`              | per-orb default (e.g. `"Cloning"`) | Overrides the default; omit only with visible text nearby. |
+| `value`      | `number`              | `undefined`                        | ProgressOrb only: `0–1` controlled.                        |
+
+<Callout type="info" title="Exceptions">
+  `MiniOrb` takes no `speed`/`paused` (static dot when `done`). `StreamingText`
+  takes no `className`/`style`. `OrbitOrb` is legacy and undocumented.
+</Callout>
+
+### StreamingText
+
+| Prop         | Type                            | Default                                                            |
+| ------------ | ------------------------------- | ------------------------------------------------------------------ |
+| `text`       | `string`                        | `"Every thought gathers, turns, and settles into a clear answer."` |
+| `size`       | `number`                        | `320`                                                              |
+| `speed`      | `number`                        | `1`                                                                |
+| `paused`     | `boolean`                       | `false`                                                            |
+| `color`      | `string`                        | `undefined`                                                        |
+| `align`      | `"left" \| "center" \| "right"` | `"left"`                                                           |
+| `loop`       | `boolean`                       | `false`                                                            |
+| `orb`        | `boolean`                       | `true`                                                             |
+| `aria-label` | `string`                        | `undefined`                                                        |
+
+### Helpers
+
+| Symbol           | Signature                                           | Example                                                     |
+| ---------------- | --------------------------------------------------- | ----------------------------------------------------------- |
+| `orbSizes`       | `{xs:16,sm:24,md:32,lg:48,xl:64,"2xl":96} as const` | `<CloningOrb size={orbSizes.xl} />`                         |
+| `resolveOrbSize` | `(size?: number \| OrbSizePreset) => number`        | `resolveOrbSize("xl") // 64`                                |
+| `MiniOrb`        | `{done=false,size=16}`                              | `<MiniOrb done size={16} aria-label="Tool done" />`         |
+| `drawGlobe`      | `(ctx, color, opts: GlobeOpts) => void`             | `drawGlobe(ctx, "#e6edf3", {cx, cy, radius: 4, spin: 0.6})` |
+
+### Accessibility
+
+Canvas sets `role="img"` only when `aria-label` is present — otherwise no role. Pass a label when the orb carries meaning:
+
+```tsx title="Usage"
+import { PushingOrb } from "@ai-primitives-ui/ui";
+<PushingOrb size={64} aria-label="Pushing changes" />;
+```
+
+`prefers-reduced-motion` renders a static frame automatically. If decorative, omit the label and pair with visible text.

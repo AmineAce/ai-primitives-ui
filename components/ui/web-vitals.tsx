@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { onCLS, onINP, onLCP } from "web-vitals";
 
 function send(metric: { name: string; value: number; rating: string }) {
-  // eslint-disable-next-line no-console
   console.log(
     `[Web Vitals] ${metric.name}: ${metric.value} (${metric.rating})`,
   );

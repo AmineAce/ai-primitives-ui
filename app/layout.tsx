@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { RootProvider } from "fumadocs-ui/provider/next";
+import StaticSearchDialog from "@/components/search-dialog";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { WebVitals } from "@/components/ui/web-vitals";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/sections/navbar";
 import "./globals.css";
 
 const THEME_INIT_SCRIPT = `(function(){var K="ai-primitives-theme",t=null;try{t=localStorage.getItem(K);}catch(e){}if(t!=="light"&&t!=="dark"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark";}var r=document.documentElement;r.classList.remove("dark","light");r.classList.add(t);r.setAttribute("data-theme",t);})();`;
@@ -78,7 +79,7 @@ export default function RootLayout({
         className={cn(
           inter.variable,
           jetbrainsMono.variable,
-          "bg-background font-sans text-foreground antialiased",
+          "bg-background text-foreground font-sans antialiased",
         )}
       >
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
@@ -113,10 +114,18 @@ export default function RootLayout({
             }),
           }}
         />
-        <ThemeProvider>
-          <Navbar />
-          {children}
-        </ThemeProvider>
+        <RootProvider
+          theme={{
+            enabled: true,
+            defaultTheme: "system",
+            attribute: "class",
+            enableSystem: true,
+            disableTransitionOnChange: true,
+          }}
+          search={{ SearchDialog: StaticSearchDialog }}
+        >
+          <ThemeProvider>{children}</ThemeProvider>
+        </RootProvider>
       </body>
     </html>
   );

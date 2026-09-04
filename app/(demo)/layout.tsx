@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Navbar } from "@/components/sections/navbar";
 
 export const metadata: Metadata = {
   title: "AI Primitives",
@@ -25,5 +26,10 @@ export default function DemoLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="flex min-h-screen flex-col">{children}</main>;
+  return (
+    <main className="flex min-h-screen flex-col">
+      <Navbar />
+      {children}
+    </main>
+  );
 }

@@ -3,7 +3,7 @@ import { Pre } from "@/components/ui/pre";
 
 export function DemoUsage() {
   return (
-    <section className="border-t border-muted py-24">
+    <section className="border-muted border-t py-24">
       <Container>
         <h2 className="text-lg font-medium">Usage</h2>
 

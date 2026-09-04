@@ -23,9 +23,11 @@ Most AI interfaces still rely on generic spinners and plain text. These primitiv
   <img src="https://ai-primitives-ui.vercel.app/readme/preview.gif" width="720" alt="AI Primitives: 24 components preview" />
 </p>
 
+(preview predates 2.1.0 orbs — refresh queued)
+
 ## Features
 
-- **24 ready primitives**: Loading State (11), Thinking (5), Streaming & Cards (8) + 1 coming soon
+- **17 ready primitives**: 16 orbs + `StreamingText` (plus `OrbitOrb` legacy, `MiniOrb`/`drawGlobe` companions) + 1 coming soon
 - **Zero runtime deps**: peer `react 18/19` only, `sideEffects: false`
 - **Canvas 2D only**: no WebGL, SVG filters, or `ctx.filter`
 - **Monochrome**: GitHub Primer grayscale via CSS variables (`--orb-fg`)
@@ -41,9 +43,20 @@ Most AI interfaces still rely on generic spinners and plain text. These primitiv
 
 ```bash
 npm install @ai-primitives-ui/ui
-# pnpm
+# pnpm / yarn / bun
 pnpm add @ai-primitives-ui/ui
+yarn add @ai-primitives-ui/ui
+bun add @ai-primitives-ui/ui
 ```
+
+Or copy-paste a single orb via shadcn (no npm dep needed):
+
+```bash
+npx shadcn@latest add https://ai-primitives-ui.vercel.app/r/cloning-orb.json
+# pnpm dlx, yarn dlx, or bunx work identically — same package, same URL
+```
+
+See **[Docs](https://ai-primitives-ui.vercel.app/docs/shadcn)** for the Tailwind preset, `@orbs/...` shorthand, and theming.
 
 > [!NOTE]
 > Peer dependencies: `react ^18 || ^19` and `react-dom`. Zero runtime dependencies.
@@ -64,7 +77,7 @@ export function SyncIndicator() {
 }
 ```
 
-Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96`), `speed` (`1`), `paused`, `color`, `aria-label`. `ProgressOrb` also accepts `value` `0–1` for controlled progress.
+Every orb accepts `size?: number` (default `64`; `orbSizes` constants are plain numbers: `xs 16` `sm 24` `md 32` `lg 48` `xl 64` `2xl 96` — see `resolveOrbSize` for preset names), `speed` (`1`), `paused`, `color`, `aria-label`. `ProgressOrb` also accepts `value` `0–1` for controlled progress.
 
 > [!TIP]
 > `size` is the canvas logical size. Backing store uses `Math.min(devicePixelRatio, 2)` and `fitRadius(size)` so the orb always fits as a full circle: never use raw `R`.
@@ -74,7 +87,6 @@ Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48`
 ### Loading State · 11 orbs
 
 | Component | What it shows |
-$1
 | `DownloadOrb` | A file assembles dot by dot, seals with a folded corner, and steadies for handoff |
 | `ErrorOrb` | Digital glitch tears, then a `!` holds: honest failure |
 | `ProgressOrb` | Ring sweeps around a still globe: 0→100% at a glance |
@@ -90,25 +102,19 @@ $1
 ### Thinking · 5
 
 | Component | What it shows |
-$1
 | `DnaOrb` | A double helix assembles base by base: curious, methodical, alive |
 | `VerifyOrb` | A vigilant scan sweeps and reinforces: protective, thorough, wary |
 | `GraphOrb` | Nodes find each other and link: a living network revealed |
 | `CubeOrb` | Cube twists a few turns, then blooms into orb |
 | `ScanOrb` | Wavefront sweeps the surface, brightening dots |
 
-### Streaming & Cards · 8
+### Streaming Text · 1
 
-| Component            | What it shows                                     |
-| -------------------- | ------------------------------------------------- |
-| `StreamingText`      | Tokens appear in sequence as text streams         |
-| `ApprovalCard`       | Compact card to confirm or dismiss an action      |
-| `ToolChips`          | Chips surfacing which tools the model invoked     |
-| `TaskRows`           | Progress rows for multi-step agentic runs         |
-| `Chat`               | Message layout for streaming, multi-turn chat     |
-| `RecommendationCard` | Inline suggestions and follow-ups after an answer |
-| `ContextCards`       | Sources and references the model drew on          |
-| `DiffTable`          | Line-by-line code changes in a diff view          |
+**Ships in `@ai-primitives-ui/ui`:**
+
+| Component       | What it shows                             |
+| --------------- | ----------------------------------------- |
+| `StreamingText` | Tokens appear in sequence as text streams |
 
 ## Theming
 
@@ -125,12 +131,12 @@ $1
    ```
 
 > [!NOTE]
-> Orbs resolve color as `color prop → --orb-fg → --fg-default → DEFAULT_DOT_RGB`. An explicit `color` is static and does not follow theme flips.
+> Orbs resolve color as `color prop → --orb-fg → --foreground → --fg-default → DEFAULT_DOT_RGB`. An explicit `color` is static and does not follow theme flips.
 
 ## Performance
 
 > [!TIP]
-> Tuned for 60 fps with ~20 concurrent canvases. See `plans/perf-optimization-phases.md` and `audit/baseline.json`.
+> Tuned for 60 fps with ~20 concurrent canvases (DPR≤2, IO pause). See `archive/plans/perf-optimization-phases.md` and `archive/audit/baseline.json`.
 
 - **Frame GC**: `Dot/Halo` pools + 64-bucket `ink` LUT (`880 → 64` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
 - **Offscreen**: `IntersectionObserver` (`100px`) + `document.hidden` pauses `rAF`; `paused` skips `clearRect/project/sort`
@@ -138,13 +144,15 @@ $1
 - **Heavy hitters**: `StreamingText` final-lines cache, `Rebasing` `pointOnRail` alloc-free, `Merging` trail `6→4`
 - **Bundle**: `optimizePackageImports`, `dynamic(ssr:false)` showcase, `preconnect` + `lazy` for `picsum`
 
-Baseline (moto g power, Lighthouse 13.4): `FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` → `First Load 128→131 kB`.
+Baseline (moto g power, Lighthouse 13.4): `FCP 1.06s · LCP 2.57s · TBT 116ms · GC 36ms` → `First Load 128→131 kB`. Measured 2026-08-27, pre-Next-16 baseline — re-run pending.
 
 ## Playground
 
 Try every ready primitive live: orbs expose `size / speed / paused`.
 
 **→ https://ai-primitives-ui.vercel.app/#playground**
+
+The Chat tab is a single-use demo (a `used` flag disables input after one message; Reset to retry).
 
 ## Docs
 
@@ -154,7 +162,7 @@ Full docs at **https://ai-primitives-ui.vercel.app/docs**: primitives, `orbSizes
 
 ```bash
 pnpm install
-pnpm dev      # .next-dev on :3000, Next 14
+pnpm dev      # .next-dev on :3000, Next 16
 pnpm check    # format → lint → typecheck → test → gates → build
 ```
 
@@ -175,4 +183,5 @@ See **[CHANGELOG.md](./CHANGELOG.md)** — human-friendly release notes for ever
 - **Live** · https://ai-primitives-ui.vercel.app
 - **Docs** · https://ai-primitives-ui.vercel.app/docs
 - **npm** · https://www.npmjs.com/package/@ai-primitives-ui/ui
+- **GitHub** · https://github.com/AmineAce/ai-primitives-ui
 - **Changelog** · ./CHANGELOG.md

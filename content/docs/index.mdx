@@ -1,0 +1,38 @@
+---
+title: Introduction
+description: Monochrome Canvas 2D orbs for AI interfaces — zero deps.
+---
+
+## Introduction
+
+**AI Primitives** is a monochrome, Canvas 2D-only orb library for AI interfaces. No WebGL, no motion deps — just `requestAnimationFrame`.
+
+<Cards>
+  <Card
+    title="Orbs"
+    href="/docs/orbs"
+    description="16 orbs + StreamingText — one list, live in the playground."
+  />
+  <Card
+    title="Installation"
+    href="/docs/installation"
+    description="One command, one snippet, one theme bridge."
+  />
+  <Card
+    title="API Reference"
+    href="/docs/api-reference"
+    description="Shared props, exceptions, helpers."
+  />
+</Cards>
+
+## Quick Start
+
+```tsx title="CloningIndicator.tsx"
+import { CloningOrb } from "@ai-primitives-ui/ui";
+
+export function CloningIndicator() {
+  return <CloningOrb size={64} aria-label="Cloning repository" />;
+}
+```
+
+Try all 16 live at `/#playground` — no install needed. Then see [Installation](/docs/installation).

@@ -15,7 +15,7 @@
 
 ## Features
 
-- **24 ready primitives**: Loading State (11), Thinking (5), Streaming & Cards (8) + 1 coming soon
+- **17 ready primitives**: 16 orbs + `StreamingText` (plus `OrbitOrb` legacy, `MiniOrb`/`drawGlobe` companions) + 1 coming soon
 - **Zero runtime deps**: peer `react 18/19` only, `sideEffects: false`
 - **Canvas 2D only**: no WebGL, SVG filters, or `ctx.filter`
 - **Monochrome**: GitHub Primer grayscale via CSS variables (`--orb-fg`)
@@ -28,9 +28,20 @@
 
 ```bash
 npm install @ai-primitives-ui/ui
-# pnpm
+# pnpm / yarn / bun
 pnpm add @ai-primitives-ui/ui
+yarn add @ai-primitives-ui/ui
+bun add @ai-primitives-ui/ui
 ```
+
+Or copy-paste a single orb via shadcn (no npm dep needed):
+
+```bash
+npx shadcn@latest add https://ai-primitives-ui.vercel.app/r/cloning-orb.json
+# pnpm dlx, yarn dlx, or bunx work identically — same package, same URL
+```
+
+See **[Docs](https://ai-primitives-ui.vercel.app/docs/shadcn)** for the Tailwind preset, `@orbs/...` shorthand, and theming.
 
 > [!NOTE]
 > Peer dependencies: `react ^18 || ^19` and `react-dom`. Zero runtime dependencies.
@@ -61,7 +72,6 @@ Every orb accepts `size` (`number` or `orbSizes` `xs 16` `sm 24` `md 32` `lg 48`
 ### Loading State · 11 orbs
 
 | Component | What it shows |
-$1
 | `DownloadOrb` | A file assembles dot by dot, seals with a folded corner, and steadies for handoff |
 | `ErrorOrb` | Digital glitch tears, then a `!` holds: honest failure |
 | `ProgressOrb` | Ring sweeps around a still globe: 0→100% at a glance |
@@ -78,9 +88,9 @@ $1
 
 `DnaOrb` (DNA) · `VerifyOrb` (Verify) · `GraphOrb` (Graph) · `CubeOrb` (Thinking) · `ScanOrb` (Scan)
 
-### Streaming & Cards · 8
+### Streaming Text · 1
 
-`StreamingText` · `ApprovalCard` · `ToolChips` · `TaskRows` · `Chat` · `RecommendationCard` · `ContextCards` · `DiffTable`
+`StreamingText` — tokens appear in sequence as text streams. Ships in `@ai-primitives-ui/ui`.
 
 ## Theming
 
@@ -102,7 +112,7 @@ $1
 ## Performance
 
 > [!TIP]
-> Tuned for 60 fps with ~20 concurrent canvases. See `plans/perf-optimization-phases.md` and `audit/baseline.json`.
+> Tuned for 60 fps with ~20 concurrent canvases. See `archive/plans/perf-optimization-phases.md` and `archive/audit/baseline.json`.
 
 - **Frame GC**: `Dot/Halo` pools + 64-bucket `ink` LUT (`880 → 64` `toFixed`/frame), `projectWithTrig` hoists `cos/sin`
 - **Offscreen**: `IntersectionObserver` (`100px`) + `document.hidden` pauses `rAF`; `paused` skips `clearRect/project/sort`
@@ -118,6 +128,8 @@ Try every ready primitive live: orbs expose `size / speed / paused`.
 
 **→ https://ai-primitives-ui.vercel.app/#playground**
 
+The Chat tab is a single-use demo (a `used` flag disables input after one message; Reset to retry).
+
 ## Docs
 
 Full docs at **https://ai-primitives-ui.vercel.app/docs**: primitives, `orbSizes`, playground, theming, accessibility, API tables.
@@ -126,7 +138,7 @@ Full docs at **https://ai-primitives-ui.vercel.app/docs**: primitives, `orbSizes
 
 ```bash
 pnpm install
-pnpm dev      # .next-dev on :3000, Next 14
+pnpm dev      # .next-dev on :3000, Next 16
 pnpm check    # format → lint → typecheck → test → gates → build
 ```
 
@@ -139,4 +151,5 @@ See **[CHANGELOG.md](https://github.com/AmineAce/ai-primitives-ui/blob/main/CHAN
 - **Live** · https://ai-primitives-ui.vercel.app
 - **Docs** · https://ai-primitives-ui.vercel.app/docs
 - **npm** · https://www.npmjs.com/package/@ai-primitives-ui/ui
+- **GitHub** · https://github.com/AmineAce/ai-primitives-ui
 - **Changelog** · https://github.com/AmineAce/ai-primitives-ui/blob/main/CHANGELOG.md

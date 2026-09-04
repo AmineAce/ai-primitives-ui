@@ -1,0 +1,55 @@
+---
+title: Installation
+description: One command, one snippet, one theme bridge.
+---
+
+## Installation
+
+<Steps>
+<Step>
+### Add the package
+
+```package-install
+npm install @ai-primitives-ui/ui
+```
+
+Zero runtime deps — `peer react ^18 || ^19`. Works with Tailwind 4, shadcn, or no CSS at all (fallback `#c9d1d9`).
+
+</Step>
+<Step>
+### Render an orb
+
+```tsx title="Usage"
+import { CloningOrb } from "@ai-primitives-ui/ui";
+
+export function CloningIndicator() {
+  return <CloningOrb size={64} aria-label="Cloning repository" />;
+}
+```
+
+Every orb: `size`, `speed`, `paused`, `color`, `className`/`style`, `aria-label`. `ProgressOrb` adds `value={0..1}`.
+
+</Step>
+<Step>
+### Theme once
+
+```css title="globals.css"
+@import "tailwindcss";
+@import "@ai-primitives-ui/ui/src/styles.css";
+:root {
+  --orb-fg: var(--foreground, var(--fg-default));
+}
+```
+
+Resolution order: `color` prop → `--orb-fg` → `--foreground` → `--fg-default` → `#c9d1d9`. A `color` prop is static and ignores theme flips.
+
+</Step>
+</Steps>
+
+<Callout type="info" title="shadcn hosts">
+  Orbs are Tailwind-free and inherit `hsl(var(--foreground))` via the bridge
+  above. Optional preset: `import preset from
+  "@ai-primitives-ui/ui/tailwind-preset"`. Registry copy-paste lives at `/r`
+  (e.g. `npx shadcn@latest add
+  https://ai-primitives-ui.vercel.app/r/cloning-orb.json`).
+</Callout>

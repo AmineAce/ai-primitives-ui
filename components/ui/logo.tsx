@@ -8,7 +8,7 @@ export function Logo({ className, ...props }: LogoProps) {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
-      className={cn("size-5 text-foreground", className)}
+      className={cn("text-foreground size-5", className)}
       {...props}
     >
       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />

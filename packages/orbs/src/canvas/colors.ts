@@ -9,6 +9,7 @@ export type Ink = (a: number) => number;
 /* Light themes need dim layers lifted so near-black ink stays visible
    on white; bright ink on dark backgrounds renders as authored.
    Derived from ink luminance so consumers need no theme plumbing. */
+/** Build an alpha-mapping curve for an ink color (advanced/internal). */
 export function makeInk(rgb: RgbColor): Ink {
   const lum = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
   if (lum >= 0.5) return (a: number) => a;
@@ -17,6 +18,7 @@ export function makeInk(rgb: RgbColor): Ink {
 }
 
 /* Convenience: derive the ink curve directly from any CSS color string. */
+/** Build an ink curve from any CSS color string (advanced/internal). */
 export function inkFromColor(
   color: string,
   fallback: RgbColor = DEFAULT_DOT_RGB,
@@ -26,6 +28,7 @@ export function inkFromColor(
 
 export const DEFAULT_DOT_RGB: RgbColor = { r: 201, g: 209, b: 217 };
 export const ORB_FG_VAR = "--orb-fg";
+export const SHADCN_FG_VAR = "--foreground";
 export const FG_FALLBACK_VAR = "--fg-default";
 
 export function toColorPrefix(color: RgbColor): string {

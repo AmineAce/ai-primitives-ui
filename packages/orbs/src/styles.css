@@ -1,0 +1,14 @@
+:root {
+  --fg-default: #1f2328;
+  --orb-fg: var(--foreground, var(--fg-default));
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg-default: #f0f6fc;
+  }
+}
+.dark,
+[data-theme="dark"] {
+  --fg-default: #f0f6fc;
+  --orb-fg: var(--foreground, var(--fg-default));
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "canvas-container",
+  "title": "Canvas Container",
+  "description": "Presentational canvas wrapper for orbs.",
+  "files": [
+    {
+      "path": "packages/orbs/src/canvas/CanvasContainer.tsx",
+      "content": "\"use client\";\n\nimport { forwardRef, type CanvasHTMLAttributes } from \"react\";\n\nexport interface CanvasContainerProps extends Omit<\n  CanvasHTMLAttributes<HTMLCanvasElement>,\n  \"width\" | \"height\"\n> {\n  width: number;\n  height: number;\n  className?: string;\n  ariaLabel?: string;\n}\n\nexport const CanvasContainer = forwardRef<\n  HTMLCanvasElement,\n  CanvasContainerProps\n>(function CanvasContainer(\n  { width, height, className, ariaLabel, style, ...rest },\n  forwardedRef,\n) {\n  return (\n    <canvas\n      ref={forwardedRef}\n      width={width}\n      height={height}\n      role={ariaLabel ? \"img\" : undefined}\n      aria-label={ariaLabel}\n      style={{ width, height, ...(style as object) }}\n      className={className}\n      {...rest}\n    />\n  );\n});\n\nCanvasContainer.displayName = \"CanvasContainer\";\n",
+      "type": "registry:ui",
+      "target": "components/ui/canvas-container.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

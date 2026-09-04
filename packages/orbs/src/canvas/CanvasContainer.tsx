@@ -16,7 +16,7 @@ export const CanvasContainer = forwardRef<
   HTMLCanvasElement,
   CanvasContainerProps
 >(function CanvasContainer(
-  { width, height, className, ariaLabel, ...rest },
+  { width, height, className, ariaLabel, style, ...rest },
   forwardedRef,
 ) {
   return (
@@ -26,7 +26,7 @@ export const CanvasContainer = forwardRef<
       height={height}
       role={ariaLabel ? "img" : undefined}
       aria-label={ariaLabel}
-      style={{ width, height }}
+      style={{ width, height, ...(style as object) }}
       className={className}
       {...rest}
     />

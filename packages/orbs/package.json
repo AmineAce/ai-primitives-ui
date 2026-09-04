@@ -12,8 +12,9 @@
   "files": [
     "dist",
     "src",
-    "!src/**/*.test.ts",
-    "!src/test"
+    "tailwind-preset.cjs",
+    "tailwind-preset.d.cts",
+    "tailwind-preset.d.ts"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -29,7 +30,17 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
-    }
+    },
+    "./src/styles.css": "./src/styles.css",
+    "./tailwind-preset": {
+      "types": "./tailwind-preset.d.cts",
+      "default": "./tailwind-preset.cjs"
+    },
+    "./tailwind-preset.js": {
+      "types": "./tailwind-preset.d.cts",
+      "default": "./tailwind-preset.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -48,7 +59,7 @@
     "build": "tsup",
     "test": "vitest run",
     "test:watch": "vitest",
-    "gates": "pnpm build && publint && attw --pack"
+    "gates": "pnpm build && publint && attw --pack --exclude-entrypoints \"@ai-primitives-ui/ui/src/styles.css\" \"@ai-primitives-ui/ui/tailwind-preset\" \"@ai-primitives-ui/ui/tailwind-preset.js\""
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",

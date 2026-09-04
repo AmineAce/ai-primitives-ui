@@ -13,6 +13,8 @@ export interface DownloadOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -38,6 +40,8 @@ export function DownloadOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Generating file",
 }: DownloadOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -78,7 +82,7 @@ export function DownloadOrb({
       }
     }
     return { sphereDots: dots, fragTargets: targets, appearTimes: times };
-  }, [count, radius, cx, cy, w, h, fold]);
+  }, [count, radius, cx, cy, w, h, fold, unit]);
 
   const dotsPool = useMemo<Dot[]>(() => [], []);
   const halosPool = useMemo<Halo[]>(() => [], []);
@@ -455,6 +459,8 @@ export function DownloadOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

@@ -20,6 +20,8 @@ export interface MergingOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -48,6 +50,8 @@ export function MergingOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Merging",
 }: MergingOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -254,6 +258,8 @@ export function MergingOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

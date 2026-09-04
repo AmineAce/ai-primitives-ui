@@ -19,6 +19,8 @@ export interface RebasingOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -54,6 +56,8 @@ export function RebasingOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Rebasing",
 }: RebasingOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -407,6 +411,8 @@ export function RebasingOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

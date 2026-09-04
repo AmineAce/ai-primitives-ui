@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
 
 @layer base {
   /* ------------------------------------------------------------------
@@ -18,7 +19,7 @@
     --fg-muted: #656d76;
     --fg-subtle: #616a73;
     --fg-on-emphasis: #ffffff;
-    --orb-fg: var(--fg-default);
+    --orb-fg: var(--foreground, var(--fg-default));
     --dot-alpha: 18%;
   }
 
@@ -33,7 +34,7 @@
     --fg-muted: #8b949e;
     --fg-subtle: #8b949e;
     --fg-on-emphasis: #ffffff;
-    --orb-fg: var(--fg-default);
+    --orb-fg: var(--foreground, var(--fg-default));
     --dot-alpha: 10%;
   }
 
@@ -110,6 +111,71 @@
   }
 }
 
+/* Map fumadocs fd-* tokens onto the monochrome git palette and neutralize
+   its colored accents (diffs, callouts). Defined for both light and dark so
+   `.dark` from preset.css doesn't win. */
+:root {
+  --fd-sidebar-width: 260px !important;
+  --fd-toc-width: 220px;
+  --fd-layout-width: 1400px;
+  --color-fd-background: var(--bg-base);
+  --color-fd-foreground: var(--fg-default);
+  --color-fd-muted: var(--bg-elevated);
+  --color-fd-muted-foreground: var(--fg-muted);
+  --color-fd-popover: var(--bg-elevated);
+  --color-fd-popover-foreground: var(--fg-default);
+  --color-fd-card: var(--bg-elevated);
+  --color-fd-card-foreground: var(--fg-default);
+  --color-fd-border: var(--border-default);
+  --color-fd-primary: var(--fg-default);
+  --color-fd-primary-foreground: var(--bg-base);
+  --color-fd-secondary: var(--bg-elevated);
+  --color-fd-secondary-foreground: var(--fg-default);
+  --color-fd-accent: var(--bg-elevated);
+  --color-fd-accent-foreground: var(--fg-default);
+  --color-fd-ring: var(--fg-default);
+  --color-fd-info: var(--fg-muted);
+  --color-fd-warning: var(--fg-muted);
+  --color-fd-error: var(--fg-muted);
+  --color-fd-success: var(--fg-muted);
+  --color-fd-idea: var(--fg-muted);
+  --color-fd-diff-remove: color-mix(in srgb, var(--fg-default) 8%, transparent);
+  --color-fd-diff-remove-symbol: var(--fg-muted);
+  --color-fd-diff-add: color-mix(in srgb, var(--fg-default) 6%, transparent);
+  --color-fd-diff-add-symbol: var(--fg-default);
+}
+
+/* Premium concise sidebar: attached flush-left, tight density */
+#nd-sidebar {
+  font-size: 14px;
+}
+
+#nd-sidebar p {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dark,
+[data-theme="dark"] {
+  --color-fd-background: var(--bg-base);
+  --color-fd-foreground: var(--fg-default);
+  --color-fd-muted: var(--bg-elevated);
+  --color-fd-muted-foreground: var(--fg-muted);
+  --color-fd-popover: var(--bg-elevated);
+  --color-fd-popover-foreground: var(--fg-default);
+  --color-fd-card: var(--bg-elevated);
+  --color-fd-card-foreground: var(--fg-default);
+  --color-fd-border: var(--border-default);
+  --color-fd-primary: var(--fg-default);
+  --color-fd-primary-foreground: var(--bg-base);
+  --color-fd-secondary: var(--bg-elevated);
+  --color-fd-secondary-foreground: var(--fg-default);
+  --color-fd-accent: var(--bg-elevated);
+  --color-fd-accent-foreground: var(--fg-default);
+  --color-fd-ring: var(--fg-default);
+}
+
 @layer components {
   .doc-h2 {
     @apply mt-14 scroll-mt-28 text-2xl font-semibold tracking-tight;
@@ -120,19 +186,19 @@
   }
 
   .doc-p {
-    @apply mt-4 max-w-prose leading-relaxed text-secondary;
+    @apply text-secondary mt-4 max-w-prose leading-relaxed;
   }
 
   .doc-code {
-    @apply rounded-md border border-border bg-surface px-1.5 py-0.5 font-mono text-[13px] text-foreground;
+    @apply border-border bg-surface text-foreground rounded-md border px-1.5 py-0.5 font-mono text-[13px];
   }
 
   .doc-li {
-    @apply mt-2.5 flex items-start gap-3 text-secondary;
+    @apply text-secondary mt-2.5 flex items-start gap-3;
   }
 
   .doc-lead {
-    @apply mt-5 max-w-2xl text-lg leading-relaxed text-secondary;
+    @apply text-secondary mt-5 max-w-2xl text-lg leading-relaxed;
   }
 }
 

@@ -20,6 +20,8 @@ export interface CubeOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -79,6 +81,8 @@ export function CubeOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Thinking",
 }: CubeOrbProps) {
   const radius = fitRadius(size);
@@ -243,6 +247,8 @@ export function CubeOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

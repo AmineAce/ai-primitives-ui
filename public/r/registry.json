@@ -1,0 +1,419 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "orbs",
+  "homepage": "https://ai-primitives-ui.vercel.app",
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Utilities",
+      "description": "Shared canvas utilities for orbs.",
+      "files": [
+        {
+          "path": "packages/orbs/src/lib/math.ts",
+          "type": "registry:lib",
+          "target": "lib/math.ts"
+        }
+      ]
+    },
+    {
+      "name": "colors",
+      "type": "registry:lib",
+      "title": "Colors",
+      "description": "Color parsing and ink helpers for canvas orbs.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/colors.ts",
+          "type": "registry:lib",
+          "target": "lib/colors.ts"
+        }
+      ]
+    },
+    {
+      "name": "sphere",
+      "type": "registry:lib",
+      "title": "Sphere",
+      "description": "Sphere projection and dot distribution.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/sphere.ts",
+          "type": "registry:lib",
+          "target": "lib/sphere.ts"
+        }
+      ]
+    },
+    {
+      "name": "easing",
+      "type": "registry:lib",
+      "title": "Easing",
+      "description": "Easing helpers for orb motion.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/easing.ts",
+          "type": "registry:lib",
+          "target": "lib/easing.ts"
+        }
+      ]
+    },
+    {
+      "name": "canvas-container",
+      "type": "registry:ui",
+      "title": "Canvas Container",
+      "description": "Presentational canvas wrapper for orbs.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/CanvasContainer.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/canvas-container.tsx"
+        }
+      ]
+    },
+    {
+      "name": "use-orb-animation",
+      "type": "registry:hook",
+      "title": "useOrbAnimation",
+      "description": "Canvas 2D loop hook with DPR cap, reduced-motion, and visibility pause.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/useOrbAnimation.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-orb-animation.ts"
+        }
+      ],
+      "registryDependencies": ["colors", "sphere"]
+    },
+    {
+      "name": "cloning-orb",
+      "type": "registry:ui",
+      "title": "Cloning Orb",
+      "description": "Dots spiral onto a sphere, filling layer by layer.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/CloningOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/cloning-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "sync-orb",
+      "type": "registry:ui",
+      "title": "Sync Orb",
+      "description": "Square 8×8 → waves → supernova into globe + flash.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/SyncOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sync-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "fetching-orb",
+      "type": "registry:ui",
+      "title": "Fetching Orb",
+      "description": "Packets pulse outward, snap onto surface, peel back.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/FetchingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/fetching-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "pulling-orb",
+      "type": "registry:ui",
+      "title": "Pulling Orb",
+      "description": "Fetch + merge: remote dots flow in and integrate.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/PullingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pulling-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "pushing-orb",
+      "type": "registry:ui",
+      "title": "Pushing Orb",
+      "description": "Local commits detach and launch outward.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/PushingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pushing-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "merging-orb",
+      "type": "registry:ui",
+      "title": "Merging Orb",
+      "description": "Two branches converge at a junction and continue as one.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/MergingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/merging-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "rebasing-orb",
+      "type": "registry:ui",
+      "title": "Rebasing Orb",
+      "description": "Orbs replay onto three rings, filling together.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/RebasingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/rebasing-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "stashing-orb",
+      "type": "registry:ui",
+      "title": "Stashing Orb",
+      "description": "Scattered dots converge into glowing core, flash shut.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/StashingOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/stashing-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "download-orb",
+      "type": "registry:ui",
+      "title": "Download Orb",
+      "description": "File assembles dot by dot, seals with folded corner.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/DownloadOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/download-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "error-orb",
+      "type": "registry:ui",
+      "title": "Error Orb",
+      "description": "Digital glitch tears, then a ! holds: honest failure.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/ErrorOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/error-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "progress-orb",
+      "type": "registry:ui",
+      "title": "Progress Orb",
+      "description": "Ring sweeps around a still globe: 0→100% at a glance. Supports value 0–1.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/ProgressOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/progress-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "dna-orb",
+      "type": "registry:ui",
+      "title": "DNA Orb",
+      "description": "Double helix assembles base by base, wave-lit.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/DnaOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/dna-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "verify-orb",
+      "type": "registry:ui",
+      "title": "Verify Orb",
+      "description": "Vigilant scan sweeps and reinforces.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/VerifyOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/verify-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "graph-orb",
+      "type": "registry:ui",
+      "title": "Graph Orb",
+      "description": "Nodes find each other and link: a living network revealed.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/GraphOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/graph-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "cube-orb",
+      "type": "registry:ui",
+      "title": "Cube Orb",
+      "description": "Cube twists a few turns, then blooms into orb.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/CubeOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/cube-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "scan-orb",
+      "type": "registry:ui",
+      "title": "Scan Orb",
+      "description": "Wavefront sweeps the surface, brightening dots.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/ScanOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/scan-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "orbit-orb",
+      "type": "registry:ui",
+      "title": "Orbit Orb",
+      "description": "Satellites orbit the sphere with trailing paths.",
+      "files": [
+        {
+          "path": "packages/orbs/src/loading/OrbitOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/orbit-orb.tsx"
+        }
+      ],
+      "registryDependencies": [
+        "use-orb-animation",
+        "sphere",
+        "canvas-container"
+      ]
+    },
+    {
+      "name": "mini-orb",
+      "type": "registry:ui",
+      "title": "Mini Orb",
+      "description": "16px companion orb for tool chips and task rows — breathing satellites, collapses when done.",
+      "files": [
+        {
+          "path": "packages/orbs/src/companion/MiniOrb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/mini-orb.tsx"
+        }
+      ],
+      "registryDependencies": ["use-orb-animation", "canvas-container"]
+    },
+    {
+      "name": "task-globe",
+      "type": "registry:lib",
+      "title": "Task Globe",
+      "description": "Globe helper for task rows and chat orbs — GLOBE_POINTS + drawGlobe.",
+      "files": [
+        {
+          "path": "packages/orbs/src/companion/TaskGlobe.tsx",
+          "type": "registry:lib",
+          "target": "lib/task-globe.ts"
+        }
+      ]
+    }
+  ]
+}

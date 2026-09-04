@@ -18,6 +18,8 @@ export interface CloningOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -57,6 +59,8 @@ export function CloningOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Cloning",
 }: CloningOrbProps) {
   const count = Math.max(8, Math.round((BASE_COUNT * size) / 64));
@@ -190,6 +194,8 @@ export function CloningOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

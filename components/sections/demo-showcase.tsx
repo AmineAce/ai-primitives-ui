@@ -8,13 +8,6 @@ import { primitives } from "@/lib/primitives";
 import { cn } from "@/lib/utils";
 import { useOrbInk } from "@/hooks/use-orb-ink";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { DemoApprovalCard } from "@/components/ui/approval-card";
-import { DemoToolChips } from "@/components/ui/tool-chips";
-import { DemoTaskRows } from "@/components/ui/task-rows";
-import { DemoChat } from "@/components/ui/chat";
-import { DemoRecommendationCard } from "@/components/ui/recommendation-card";
-import { DemoContextCards } from "@/components/ui/context-cards";
-import { DemoDiffTable } from "@/components/ui/diff-table";
 
 function CanvasSkeleton() {
   return <div className="bg-border-muted size-16 animate-pulse rounded-full" />;
@@ -255,18 +248,11 @@ const PRIMITIVE_COMPONENTS: Record<string, ComponentType> = {
   thinking: CubeOrb,
   scan: ScanOrb,
   "streaming-text": LoopStreamingText,
-  "approval-card": DemoApprovalCard,
-  "tool-chips": DemoToolChips,
-  "task-rows": DemoTaskRows,
-  chat: DemoChat,
-  "recommendation-card": DemoRecommendationCard,
-  "context-cards": DemoContextCards,
-  "diff-table": DemoDiffTable,
 };
 
 export function DemoShowcase() {
   return (
-    <section className="border-t border-muted py-24">
+    <section className="border-muted border-t py-24">
       <Container>
         <h2 className="text-lg font-medium">Showcase</h2>
 
@@ -279,20 +265,21 @@ export function DemoShowcase() {
             return (
               <div
                 key={primitive.id}
+                id={`orb-${primitive.id}`}
                 className={cn(
-                  "flex min-h-[200px] flex-col items-center justify-center gap-3 rounded-xl border bg-elevated p-8 text-center",
+                  "bg-elevated flex min-h-[200px] scroll-mt-24 flex-col items-center justify-center gap-3 rounded-xl border p-8 text-center",
                   primitive.span === 2 && "md:col-span-2",
                 )}
               >
                 {isLive ? <LiveComponent /> : <ComingSoonOrb />}
-                <h3 className="font-mono text-sm text-fg-default">
+                <h3 className="text-fg-default font-mono text-sm">
                   {primitive.name}
                 </h3>
-                <p className="text-xs leading-relaxed text-fg-subtle">
+                <p className="text-fg-subtle text-xs leading-relaxed">
                   {primitive.description}
                 </p>
                 {!isLive && (
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-fg-subtle">
+                  <span className="text-fg-subtle font-mono text-[10px] tracking-widest uppercase">
                     Coming soon
                   </span>
                 )}

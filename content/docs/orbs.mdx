@@ -1,0 +1,51 @@
+---
+title: Orbs
+description: 16 orbs + StreamingText — the full product on one page.
+---
+
+## Orbs
+
+16 orbs plus `StreamingText`. All Canvas 2D, monochrome, `prefers-reduced-motion` aware. Names link to the live playground.
+
+### Loading State — 11 orbs
+
+| Component                                  | What it shows                                             | Use for              |
+| ------------------------------------------ | --------------------------------------------------------- | -------------------- |
+| [`DownloadOrb`](/?orb=download#playground) | File assembles dot by dot, seals with folded corner       | `Generating report…` |
+| [`ErrorOrb`](/?orb=failed#playground)      | Digital glitch tears, then `!` holds                      | Agent failure        |
+| [`ProgressOrb`](/?orb=progress#playground) | Ring sweeps 0→100% + center `%` (supports `value={0..1}`) | Upload / generation  |
+| [`CloningOrb`](/?orb=cloning#playground)   | Dots spiral onto sphere                                   | `git clone`          |
+| [`SyncOrb`](/?orb=sync#playground)         | Square 8×8 → supernova 3-ring                             | Sync                 |
+| [`FetchingOrb`](/?orb=fetching#playground) | Packets pulse, snap, peel back                            | `fetch`              |
+| [`PullingOrb`](/?orb=pulling#playground)   | Fetch + merge                                             | `pull`               |
+| [`PushingOrb`](/?orb=pushing#playground)   | Local commits launch                                      | `push`               |
+| [`MergingOrb`](/?orb=merging#playground)   | Two branches converge                                     | `merge`              |
+| [`RebasingOrb`](/?orb=rebasing#playground) | Replay onto three rings                                   | `rebase`             |
+| [`StashingOrb`](/?orb=stashing#playground) | Dots converge, flash, reapply                             | `stash`              |
+
+### Thinking — 5 orbs
+
+| Component                              | What it shows                              | Use for           |
+| -------------------------------------- | ------------------------------------------ | ----------------- |
+| [`DnaOrb`](/?orb=dna#playground)       | Double helix builds base by base, wave-lit | `Sequencing`      |
+| [`VerifyOrb`](/?orb=verify#playground) | Scan sweeps top→bottom and back            | `Verifying`       |
+| [`GraphOrb`](/?orb=graph#playground)   | Network lights wave by wave                | `Mapping network` |
+| [`CubeOrb`](/?orb=thinking#playground) | Cube twists then blooms into orb           | `Thinking`        |
+| [`ScanOrb`](/?orb=scan#playground)     | Wavefront brightens dots                   | `Scan`            |
+
+<Callout type="info" title="Naming note">
+  The registry id `thinking` renders `CubeOrb` — one id, one component. See
+  `lib/primitives.ts`. Rendered orbs also live at `/#orb-<id>` (e.g.
+  `/#orb-dna`).
+</Callout>
+
+```tsx title="Thinking"
+import { DnaOrb } from "@ai-primitives-ui/ui";
+<DnaOrb size={32} aria-label="Sequencing" />;
+```
+
+### Plus
+
+- [`StreamingText`](/?orb=streaming-text#playground) — tokens appear in sequence as text generates. Props in [API Reference](/docs/api-reference).
+- `MiniOrb` + `drawGlobe` — 16px companions for dense UI (tool chips, avatars). Props in [API Reference](/docs/api-reference).
+- `OrbitOrb` — legacy export, undocumented. Don't use in new code.

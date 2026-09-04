@@ -17,6 +17,8 @@ export interface OrbitOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -56,11 +58,14 @@ const COMETS: Comet[] = [
   },
 ];
 
+/** @deprecated Legacy orb — exported for backwards compatibility, undocumented, excluded from showcase/playground. Prefer CubeOrb. */
 export function OrbitOrb({
   size = 64,
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Thinking",
 }: OrbitOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -217,6 +222,8 @@ export function OrbitOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

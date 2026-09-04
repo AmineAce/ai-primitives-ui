@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import {
   applyTheme,
   getStoredTheme,
@@ -9,6 +10,7 @@ import {
   setStoredTheme,
   ThemeContext,
   THEME_ATTRIBUTE,
+  THEME_STORAGE_KEY,
   type Theme,
 } from "@/lib/theme";
 
@@ -18,10 +20,11 @@ export interface ThemeProviderProps {
   defaultTheme?: Theme;
 }
 
-export function ThemeProvider({
+function ThemeContextProvider({
   children,
   defaultTheme = "dark",
 }: ThemeProviderProps) {
+  const nextThemes = useTheme();
   const [theme, setThemeState] = useState<Theme | null>(() => getStoredTheme());
   const [resolvedTheme, setResolvedTheme] = useState<Theme>(defaultTheme);
 
@@ -61,16 +64,35 @@ export function ThemeProvider({
     return () => media.removeEventListener("change", onChange);
   }, []);
 
-  const setTheme = useCallback((next: Theme) => {
-    setStoredTheme(next);
-    applyTheme(next);
-    setThemeState(next);
-    setResolvedTheme(next);
-  }, []);
+  const setTheme = useCallback(
+    (next: Theme) => {
+      setStoredTheme(next);
+      applyTheme(next);
+      setThemeState(next);
+      setResolvedTheme(next);
+      // Keep next-themes (fumadocs docs toggle) on the same key and state.
+      nextThemes.setTheme(next);
+    },
+    [nextThemes],
+  );
 
   return (
     <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
+  );
+}
+
+export function ThemeProvider(props: ThemeProviderProps) {
+  return (
+    <NextThemesProvider
+      attribute="class"
+      storageKey={THEME_STORAGE_KEY}
+      defaultTheme={props.defaultTheme ?? "dark"}
+      enableSystem
+      disableTransitionOnChange
+    >
+      <ThemeContextProvider {...props} />
+    </NextThemesProvider>
   );
 }

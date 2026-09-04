@@ -19,6 +19,8 @@ export interface PullingOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -45,6 +47,8 @@ export function PullingOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Pulling",
 }: PullingOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -290,6 +294,8 @@ export function PullingOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

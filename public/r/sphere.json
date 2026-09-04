@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sphere",
+  "title": "Sphere",
+  "description": "Sphere projection and dot distribution.",
+  "files": [
+    {
+      "path": "packages/orbs/src/canvas/sphere.ts",
+      "content": "export const R = 48;\n\nexport function fitRadius(size: number): number {\n  return Math.min(R * (size / 64), size * 0.42);\n}\n\nexport interface Point3D {\n  x: number;\n  y: number;\n  z: number;\n}\n\nexport interface ProjectedPoint {\n  x: number;\n  y: number;\n  z: number;\n  scale: number;\n}\n\nexport function project(\n  p: Point3D,\n  cx: number,\n  cy: number,\n  tiltX: number,\n  tiltY: number,\n): ProjectedPoint {\n  const cosX = Math.cos(tiltX);\n  const sinX = Math.sin(tiltX);\n  const cosY = Math.cos(tiltY);\n  const sinY = Math.sin(tiltY);\n  return projectWithTrig(p, cx, cy, cosX, sinX, cosY, sinY);\n}\n\nexport function projectWithTrig(\n  p: Point3D,\n  cx: number,\n  cy: number,\n  cosX: number,\n  sinX: number,\n  cosY: number,\n  sinY: number,\n): ProjectedPoint {\n  const rotatedY1 = p.y * cosX - p.z * sinX;\n  const rotatedZ1 = p.y * sinX + p.z * cosX;\n  const x2 = p.x * cosY + rotatedZ1 * sinY;\n  const z2 = -p.x * sinY + rotatedZ1 * cosY;\n  const scale = 1 / (1 + z2 * 0.0035);\n  return { x: cx + x2 * scale, y: cy - rotatedY1 * scale, z: z2, scale };\n}\n\nexport function spherePoint(theta: number, phi: number, r: number): Point3D {\n  return {\n    x: r * Math.sin(phi) * Math.cos(theta),\n    y: r * Math.cos(phi),\n    z: r * Math.sin(phi) * Math.sin(theta),\n  };\n}\n\nexport function makeSphereDots(count: number, radius: number): Point3D[] {\n  const goldenAngle = Math.PI * (3 - Math.sqrt(5));\n  const step = count > 1 ? 1 / (count - 1) : 0;\n  const dots: Point3D[] = [];\n\n  for (let i = 0; i < count; i++) {\n    const y = 1 - i * step * 2;\n    const radiusAtY = Math.sqrt(1 - y * y);\n    const theta = goldenAngle * i;\n    dots.push({\n      x: radius * radiusAtY * Math.cos(theta),\n      y: radius * y,\n      z: radius * radiusAtY * Math.sin(theta),\n    });\n  }\n\n  return dots;\n}\n",
+      "type": "registry:lib",
+      "target": "lib/sphere.ts"
+    }
+  ],
+  "type": "registry:lib"
+}

@@ -20,11 +20,11 @@ export function DemoHero() {
           <HeroOrb />
         </div>
 
-        <p className="mt-6 font-mono text-xs tracking-widest text-fg-subtle">
+        <p className="text-fg-subtle mt-6 font-mono text-xs tracking-widest">
           canvas 2d · monochrome · zero runtime dependencies
         </p>
 
-        <h1 className="mt-4 font-mono text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+        <h1 className="mt-4 font-mono text-4xl leading-tight font-semibold tracking-tight md:text-6xl">
           UI primitives for
           <br />
           AI-native interfaces
@@ -45,7 +45,7 @@ export function DemoHero() {
           </Link>
         </div>
 
-        <p className="mt-8 font-mono text-xs text-fg-subtle">
+        <p className="text-fg-subtle mt-8 font-mono text-xs">
           {readyCount} primitives · 0 runtime dependencies · MIT
           {comingCount > 0 ? " · More coming soon" : ""}
         </p>
@@ -55,7 +55,7 @@ export function DemoHero() {
         aria-hidden="true"
         className="bg-border-muted relative mx-auto mb-6 hidden h-14 w-px md:block"
       >
-        <span className="animate-scroll-dot absolute left-1/2 top-0 -ml-px size-1 rounded-full bg-fg" />
+        <span className="animate-scroll-dot bg-fg absolute top-0 left-1/2 -ml-px size-1 rounded-full" />
       </div>
     </section>
   );

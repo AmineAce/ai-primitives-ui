@@ -35,7 +35,7 @@ export function Navbar() {
         "sticky top-0 z-50 w-full transition-colors",
         isScrolled
           ? "bg-transparent py-2"
-          : "border-b border-border bg-background",
+          : "border-border bg-background border-b",
       )}
     >
       <Container
@@ -64,7 +64,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm text-secondary transition-colors hover:bg-surface hover:text-foreground",
+                  "text-secondary hover:bg-surface hover:text-foreground rounded-md px-3 py-2 text-sm transition-colors",
                   active && "bg-surface text-foreground",
                 )}
               >
@@ -77,7 +77,7 @@ export function Navbar() {
             target="_blank"
             rel="noreferrer"
             aria-label="AI Primitives on GitHub"
-            className="inline-flex size-9 items-center justify-center rounded-md text-fg-muted transition-colors hover:bg-surface hover:text-foreground"
+            className="text-fg-muted hover:bg-surface hover:text-foreground inline-flex size-9 items-center justify-center rounded-md transition-colors"
           >
             <Github className="size-4" />
           </a>

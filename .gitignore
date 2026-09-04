@@ -1,9 +1,11 @@
 node_modules/
 .next/
 .next-dev/
+.source/
 out/
 dist/
 *.tsbuildinfo
-.DS_Storeignore
+.DS_Store
 .audit-backup/
+archive/
 .empryo

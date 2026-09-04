@@ -23,6 +23,8 @@ export interface SyncOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -35,6 +37,8 @@ export function SyncOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Sync",
 }: SyncOrbProps) {
   const radius = fitRadius(size);
@@ -374,6 +378,8 @@ export function SyncOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

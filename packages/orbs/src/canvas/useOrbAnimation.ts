@@ -7,6 +7,7 @@ import {
   makeInk,
   ORB_FG_VAR,
   parseColor,
+  SHADCN_FG_VAR,
   toColorPrefix,
   type Ink,
   type RgbColor,
@@ -157,9 +158,18 @@ export function useOrbAnimation({
         rgb = parseColor(color) ?? DEFAULT_DOT_RGB;
       } else if (canvas) {
         const cs = window.getComputedStyle(canvas);
-        const value =
+        const raw =
           cs.getPropertyValue(ORB_FG_VAR).trim() ||
+          cs.getPropertyValue(SHADCN_FG_VAR).trim() ||
           cs.getPropertyValue(FG_FALLBACK_VAR).trim();
+        const value =
+          raw &&
+          raw.includes(" ") &&
+          !raw.includes("hsl") &&
+          !raw.startsWith("#") &&
+          !raw.startsWith("rgb")
+            ? `hsl(${raw})`
+            : raw;
         rgb = parseColor(value) ?? DEFAULT_DOT_RGB;
       }
       colorRef.current = toColorPrefix(rgb);

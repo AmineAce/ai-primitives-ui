@@ -1,9 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { cn } from "cn";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export { cn };
 
 export function capitalize(value: string) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : value;

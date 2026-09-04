@@ -1,12 +1,12 @@
 # AI Primitives
 
-> A dependency-free library of monochrome UI primitives for AI-native interfaces · loading states, thinking traces, streaming text, approval cards, tool chips, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur.
+> A dependency-free library of monochrome UI primitives for AI-native interfaces · loading states, thinking traces, streaming text, and more. Motion is drawn with the plain HTML5 Canvas 2D API: no WebGL, no SVG filters, no blur.
 
-## Primitives · 25 listed, 24 ready + 1 coming soon
+## Primitives · 18 listed (17 ready: 16 orbs + StreamingText ship in `@ai-primitives-ui/ui`) + 1 coming soon
 
-- Loading State · 11: DownloadOrb (Generating File), ErrorOrb (Failed), ProgressOrb (Progress), CloningOrb, SyncOrb, FetchingOrb, PullingOrb, PushingOrb, MergingOrb, RebasingOrb, StashingOrb · Canvas 2D, monochrome, `size` `orbSizes xs 16 → 2xl 96`, `speed`, `paused`, `aria-label` · `ProgressOrb` also accepts `value` 0–1
-- Thinking · 5: DnaOrb (DNA), VerifyOrb (Verify), GraphOrb (Graph), CubeOrb (Thinking), ScanOrb (Scan)
-- Streaming & Cards · 8: StreamingText, ApprovalCard, ToolChips, TaskRows, Chat, RecommendationCard, ContextCards, DiffTable
+- Loading State · 11 (ship): DownloadOrb (Generating File), ErrorOrb (Failed), ProgressOrb (Progress), CloningOrb, SyncOrb, FetchingOrb, PullingOrb, PushingOrb, MergingOrb, RebasingOrb, StashingOrb · Canvas 2D, monochrome, `size` `orbSizes xs 16 → 2xl 96`, `speed`, `paused`, `color`, `className`/`style`, `aria-label` · `ProgressOrb` also accepts `value` 0–1
+- Thinking · 5 (ship): DnaOrb (DNA), VerifyOrb (Verify), GraphOrb (Graph), CubeOrb (Thinking), ScanOrb (Scan)
+- StreamingText (ships) + MiniOrb/drawGlobe companions (ship, not in registry count)
 - More: coming soon
 
 SyncOrb: square 8×8 flat → diagonal shimmer → supernova suck → globe with 3-ring flash (each plane), clipped flash inside sphere, perfect loop 3.6s.
@@ -30,7 +30,7 @@ import { CloningOrb, SyncOrb } from "@ai-primitives-ui/ui";
 - Live: https://ai-primitives-ui.vercel.app
 - Docs: https://ai-primitives-ui.vercel.app/docs
 - GitHub: https://github.com/AmineAce/ai-primitives-ui
-- Playground: https://ai-primitives-ui.vercel.app/#playground · 24 ready live, orbSizes, one-shot Chat test
+- Playground: https://ai-primitives-ui.vercel.app/#playground · 17 ready live, orbSizes, one-shot Chat test
 
 ## License
 

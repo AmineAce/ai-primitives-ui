@@ -27,7 +27,7 @@ export function Pre({ className, children, ...props }: PreProps) {
     <div className="relative">
       <pre
         className={cn(
-          "overflow-x-auto rounded-lg border bg-elevated p-4 pr-12 font-mono text-sm text-fg",
+          "bg-elevated text-fg overflow-x-auto rounded-lg border p-4 pr-12 font-mono text-sm",
           className,
         )}
         {...props}
@@ -38,7 +38,7 @@ export function Pre({ className, children, ...props }: PreProps) {
         type="button"
         onClick={onCopy}
         aria-label={copied ? "Copied" : "Copy code"}
-        className="hover:border-strong absolute right-2 top-2 inline-flex size-7 items-center justify-center rounded-md border border-transparent bg-background text-fg-muted transition-colors hover:text-fg"
+        className="hover:border-strong bg-background text-fg-muted hover:text-fg absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md border border-transparent transition-colors"
       >
         {copied ? (
           <Check className="size-3.5" />

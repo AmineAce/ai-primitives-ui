@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "task-globe",
+  "title": "Task Globe",
+  "description": "Globe helper for task rows and chat orbs — GLOBE_POINTS + drawGlobe.",
+  "files": [
+    {
+      "path": "packages/orbs/src/companion/TaskGlobe.tsx",
+      "content": "\"use client\";\n\nconst TWO_PI = Math.PI * 2;\nconst TILT = 0.35;\n\ninterface Point3D {\n  x: number;\n  y: number;\n  z: number;\n}\n\ninterface Dot {\n  x: number;\n  y: number;\n  r: number;\n  a: number;\n}\n\nconst GLOBE_RINGS = [\n  { y: -0.55, count: 5 },\n  { y: 0, count: 7 },\n  { y: 0.55, count: 5 },\n];\n\n/** Shared 17-point globe skeleton used by `drawGlobe`. */\nexport const GLOBE_POINTS: Point3D[] = [];\nfor (const ring of GLOBE_RINGS) {\n  const rr = Math.sqrt(1 - ring.y * ring.y);\n  for (let j = 0; j < ring.count; j++) {\n    const theta = (j * TWO_PI) / ring.count;\n    GLOBE_POINTS.push({\n      x: rr * Math.cos(theta),\n      y: ring.y,\n      z: rr * Math.sin(theta),\n    });\n  }\n}\n\nfunction drawDots(ctx: CanvasRenderingContext2D, color: string, dots: Dot[]) {\n  for (const d of dots) {\n    ctx.globalAlpha = d.a;\n    ctx.fillStyle = color;\n    ctx.beginPath();\n    ctx.arc(d.x, d.y, d.r, 0, TWO_PI);\n    ctx.fill();\n  }\n  ctx.globalAlpha = 1;\n}\n\nexport interface GlobeOpts {\n  cx: number;\n  cy: number;\n  radius: number;\n  spin: number;\n  spread: number;\n  alpha: number;\n  split?: number;\n}\n\n/** Paint the shared globe skeleton onto a 2D context. */\nexport function drawGlobe(\n  ctx: CanvasRenderingContext2D,\n  color: string,\n  o: GlobeOpts,\n) {\n  const cosY = Math.cos(o.spin);\n  const sinY = Math.sin(o.spin);\n  const cosX = Math.cos(TILT);\n  const sinX = Math.sin(TILT);\n  const dots: Dot[] = [];\n  for (const p of GLOBE_POINTS) {\n    const x = p.x * o.radius;\n    const y = p.y * o.radius;\n    const z = p.z * o.radius;\n    const x1 = x * cosY + z * sinY;\n    const z1 = -x * sinY + z * cosY;\n    const y2 = y * cosX - z1 * sinX;\n    const z2 = y * sinX + z1 * cosX;\n    let px = o.cx + x1 * o.spread;\n    let py = o.cy - y2 * o.spread;\n    if (o.split) {\n      const side = (px - o.cx) * 0.7071 - (py - o.cy) * 0.7071 >= 0 ? 1 : -1;\n      px += side * o.split * 0.7071;\n      py -= side * o.split * 0.7071;\n    }\n    dots.push({\n      x: px,\n      y: py,\n      r: 0.55,\n      a: o.alpha * (z2 > 0 ? 0.35 : 1),\n    });\n  }\n  drawDots(ctx, color, dots);\n}\n",
+      "type": "registry:lib",
+      "target": "lib/task-globe.ts"
+    }
+  ],
+  "type": "registry:lib"
+}

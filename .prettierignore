@@ -1,5 +1,8 @@
 node_modules
 .next
+.next-dev
 out
 dist
+.source
+public/r
 pnpm-lock.yaml

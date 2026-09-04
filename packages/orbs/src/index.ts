@@ -44,3 +44,5 @@ export { makeInk, inkFromColor } from "./canvas/colors";
 export type { Ink } from "./canvas/colors";
 export { orbSizes, resolveOrbSize } from "./lib/presets";
 export type { OrbSizePreset } from "./lib/presets";
+export { MiniOrb, drawGlobe, GLOBE_POINTS } from "./companion";
+export type { MiniOrbProps, GlobeOpts } from "./companion";

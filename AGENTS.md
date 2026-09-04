@@ -9,7 +9,7 @@ This file provides guidance to AI agents when working with code in this reposito
 - `pnpm install`: Install dependencies
 - `pnpm dev`: Start Next.js dev server on :3000 (clears `.next` for a clean manifest; no orb lib build)
 - `pnpm build`: Build for production. ALWAYS run this after finishing work.
-- `pnpm lint`: Check linting and type-checking
+- `pnpm lint`: Lint with ESLint (flat config in `eslint.config.mjs`)
 - `pnpm format`: Reformat the repo with Prettier (Tailwind-aware)
 - `pnpm format:check`: Verify formatting without rewriting
 - `pnpm test`: Run the orb library unit tests (vitest)
@@ -25,7 +25,7 @@ This file provides guidance to AI agents when working with code in this reposito
 
 - ALWAYS run `pnpm check` before declaring work complete: it covers formatting, lint, orb typecheck + tests, publish gates, and the production build in one fast-fail pass.
 - Dev/prod split on the package `exports` map: `next dev` resolves `src/` via the `development` condition (instant HMR: the app never reads stale dist while iterating). `pnpm build` and consumers resolve `dist/`, and the package `gates` script rebuilds `dist/` from source before validating: so a stale `dist/` can never pass a gate in production. In the worst case a direct `next build` would type-check against a stale artifact, so stick to `pnpm build`.
-- Dev workflow: `predev` runs `scripts/guard-dev.mjs` (aborts if anything is on :3000, then clears `.next-dev`) and the webpack dev cache is disabled in `next.config.js`, so HMR and hard reloads are safe: stale chunk 404s are impossible.
+- Dev workflow: `predev` runs `scripts/guard-dev.mjs` (aborts if anything is on :3000, then clears `.next-dev`). Dev runs on Turbopack with its cache scoped to `.next-dev`, so HMR and hard reloads are safe: stale chunk 404s are impossible.
 
 ## Next.js Dev / Build Isolation (mandatory)
 
@@ -43,7 +43,7 @@ This file provides guidance to AI agents when working with code in this reposito
 
 | Layer           | Technology                        |
 | --------------- | --------------------------------- |
-| Framework       | Next.js 14 (App Router)           |
+| Framework       | Next.js 16 (App Router)           |
 | Language        | TypeScript (strict)               |
 | Styling         | Tailwind CSS                      |
 | Rendering       | HTML5 Canvas 2D API               |
@@ -88,23 +88,29 @@ packages/
 app/
   (demo)/
     page.tsx              # Landing page
-    layout.tsx            # Demo layout
+    layout.tsx            # Demo layout (renders the site Navbar)
   docs/
-    page.tsx              # Documentation
-    layout.tsx            # Docs layout (sidebar)
+    layout.tsx            # DocsLayout (fumadocs sidebar)
+    [[...slug]]/page.tsx  # Docs pages from content/docs MDX
+  api/
+    search/route.ts       # Static docs search index (flexsearch staticGET)
   loading.tsx
-  layout.tsx              # Root layout (fonts, metadata, theme)
-  globals.css             # CSS variables, Tailwind directives
+  layout.tsx              # Root layout (fonts, metadata, theme, RootProvider)
+  globals.css             # CSS variables, Tailwind directives, fd-* token mapping
 
 components/
   ui/                     # Button, Card, Text, Container, Divider, orb-mark
   sections/               # Page sections (demo-hero, demo-showcase, etc.)
-  docs/                   # Docs sidebar nav
+  search-dialog.tsx       # Static-export docs search dialog (Cmd+K)
 
 lib/
   primitives.ts           # Single source of truth: primitive registry
+  source.ts               # fumadocs source loader (content/docs → pages)
   theme.ts                # useTheme hook
   utils.ts                # cn(), helpers
+
+content/
+  docs/                   # MDX docs source: folders get meta.json (title, pages)
 
 public/
   og-image.png
@@ -221,6 +227,23 @@ export interface Primitive {
 5. Flip `status` to `'ready'` in `lib/primitives.ts`.
 6. Run `pnpm check`.
 
+## Docs (Fumadocs)
+
+- Docs live in `content/docs/**/*.mdx`; `.source/` is generated (gitignored) at build/dev time. Sidebar comes from per-folder `meta.json` (`title`, `pages`; `root: true` promotes a folder to a top-level tab).
+- `mdx-components.tsx` maps MDX defaults; `pre` → fumadocs `CodeBlock` (copy button, Shiki themes set in `source.config.ts`).
+- Search is static-export only: `app/api/search/route.ts` exports the flexsearch index (`staticGET`), `components/search-dialog.tsx` searches it client-side. The default fumadocs dialog queries a server per keystroke and cannot run under `output: "export"`.
+- fumadocs `fd-*` CSS tokens are remapped onto the monochrome `git-*` palette in `app/globals.css`; its colored accents (diff/callout) are neutralized there.
+
+## How to Add a Docs Page
+
+1. Create `content/docs/<page>.mdx` (frontmatter: `title`, `description`).
+2. List it in the folder's `meta.json` (or rely on default ordering).
+3. Run `pnpm build` and check the page under `/docs/<page>/`.
+
+## Registry
+
+`registry.json` + `public/r/*.json` are shadcn artifacts, rebuilt by hand — no watcher. After touching any orb source, run `pnpm registry:build` (`pnpm dlx shadcn@latest build`: `./registry.json` → `./public/r/`) and confirm `git status` shows the regenerated files. Rebuilds are byte-identical when sources are unchanged.
+
 ## How to Add a Landing Page Section
 
 1. Create `components/sections/demo-<section>.tsx`.
@@ -233,6 +256,7 @@ export interface Primitive {
 
 NEVER:
 
+- Add DOM components as primitives. This library ships 2D canvas orbs ONLY — a `lib/primitives.ts` entry must resolve to a Canvas 2D export from `@ai-primitives-ui/ui`, never to DOM/Tailwind UI. Ship DOM needs via shadcn, not via this package or registry. Violating this is a red flag: stop and re-scope.
 - Add colors. The palette is monochrome forever.
 - Use `!important` in CSS.
 - Use inline styles (`style={{ ... }}`).

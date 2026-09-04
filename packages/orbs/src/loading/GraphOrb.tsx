@@ -17,6 +17,8 @@ export interface GraphOrbProps {
   speed?: number;
   paused?: boolean;
   color?: string;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -120,6 +122,8 @@ export function GraphOrb({
   speed = 1,
   paused = false,
   color,
+  className,
+  style,
   "aria-label": ariaLabel = "Mapping network",
 }: GraphOrbProps) {
   const radius = fitRadius(size);
@@ -313,6 +317,8 @@ export function GraphOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

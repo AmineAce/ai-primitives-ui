@@ -14,6 +14,8 @@ export interface ProgressOrbProps {
   paused?: boolean;
   color?: string;
   value?: number;
+  className?: string;
+  style?: React.CSSProperties;
   "aria-label"?: string;
 }
 
@@ -25,6 +27,8 @@ export function ProgressOrb({
   paused = false,
   color,
   value,
+  className,
+  style,
   "aria-label": ariaLabel = "Progress",
 }: ProgressOrbProps) {
   const count = Math.max(8, Math.round((BASE_SPHERE * size) / 64));
@@ -269,6 +273,8 @@ export function ProgressOrb({
       width={size}
       height={size}
       ariaLabel={ariaLabel}
+      className={className}
+      style={style}
     />
   );
 }

@@ -13,21 +13,21 @@ Primitives are hand-tuned Canvas 2D animations representing discrete AI or Git o
 
 ## Prerequisites
 
-- `lib/primitives.ts` has an entry for this primitive with `status: 'placeholder'`.
-- `components/canvas/CanvasContainer.tsx` exists and handles DPR scaling.
-- `components/canvas/sphere.ts` exists with shared projection math.
-- `components/canvas/easing.ts` exists with shared easing functions.
+- `lib/primitives.ts` has an entry for this primitive with `status: 'placeholder'` and `source: 'npm'`.
+- `packages/orbs/src/canvas/CanvasContainer.tsx` exists and handles DPR scaling.
+- `packages/orbs/src/canvas/sphere.ts` exists with shared projection math.
+- `packages/orbs/src/canvas/easing.ts` exists with shared easing functions.
 
 ## Steps
 
 ### 1. Create the component file
 
-Create `components/primitives/<category>/<Name>Orb.tsx`.
+Create `packages/orbs/src/loading/<Name>Orb.tsx`.
 
-Follow the pattern established in existing orb components (e.g. `components/primitives/loading-state/CloningOrb.tsx` once it exists, or the prototype in the project history). The pattern is:
+Follow the pattern established in existing orb components (e.g. `packages/orbs/src/loading/CloningOrb.tsx`). The pattern is:
 
 - `'use client'` directive at the top.
-- Accept props: `size?: number` (default 64), `speed?: number` (default 1), `paused?: boolean` (default false), `aria-label?: string`.
+- Accept props: `size?: number` (default 64), `speed?: number` (default 1), `paused?: boolean` (default false), `color?: string`, `className?: string`, `style?: React.CSSProperties`, `value?: number` (ProgressOrb only), `aria-label?: string`.
 - Use `useRef<HTMLCanvasElement>` and `useEffect` for the animation loop.
 - Get the canvas context with `canvas.getContext('2d')`.
 - Handle DPR: read `window.devicePixelRatio`, cap at 2, set `canvas.width/height` to logical size × DPR, then `ctx.scale(dpr, dpr)`.
@@ -39,10 +39,10 @@ Follow the pattern established in existing orb components (e.g. `components/prim
 
 Design the animation to communicate the primitive's verb visually. Use the shared utilities:
 
-- `project()` from `components/canvas/sphere.ts`: 3D sphere projection with depth scaling.
-- `spherePoint()` from `components/canvas/sphere.ts`: golden-angle sphere distribution.
-- `fitRadius(size)` from `components/canvas/sphere.ts`: ALWAYS use for the sphere radius so the orb fits the canvas as a full circle.
-- Easing functions from `components/canvas/easing.ts`: `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`.
+- `project()` from `packages/orbs/src/canvas/sphere.ts`: 3D sphere projection with depth scaling.
+- `spherePoint()` from `packages/orbs/src/canvas/sphere.ts`: golden-angle sphere distribution.
+- `fitRadius(size)` from `packages/orbs/src/canvas/sphere.ts`: ALWAYS use for the sphere radius so the orb fits the canvas as a full circle.
+- Easing functions from `packages/orbs/src/canvas/easing.ts`: `easeOutCubic`, `easeInOutSine`, `easeOutBack`, `easeOutExpo`.
 
 Rules for the animation:
 
@@ -56,11 +56,11 @@ Rules for the animation:
 
 ### 3. Export from the category barrel
 
-Open `components/primitives/<category>/index.ts` and export the new component.
+Open `packages/orbs/src/loading/index.ts` and export the new component, then re-export it and its props type from the root barrel `packages/orbs/src/index.ts`.
 
 ### 4. Wire into the showcase
 
-Open `components/sections/demo-showcase.tsx`. Find the card for this primitive and replace the placeholder with the live component. Import from the category barrel.
+Open `components/sections/demo-showcase.tsx`. Find the card for this primitive and replace the placeholder with the live component. Import from `@ai-primitives-ui/ui`.
 
 ### 5. Flip the status
 
@@ -68,7 +68,7 @@ Open `lib/primitives.ts` and change the primitive's `status` from `'placeholder'
 
 ### 6. Verify
 
-Run `pnpm build`. Fix any TypeScript or lint errors.
+Run `pnpm check`. Fix any TypeScript or lint errors.
 
 Open the landing page. The primitive card should show the live animation. Scroll it off-screen and back on: it should resume smoothly. Toggle the browser's `prefers-reduced-motion` setting: the component should render a static representative frame and skip the animation loop.
 
@@ -82,6 +82,6 @@ Open the landing page. The primitive card should show the live animation. Scroll
 - NEVER draw dots outside the sphere boundary.
 - NEVER use `ctx.filter`, SVG filters, or WebGL.
 - ALWAYS sort dots by `z` before rendering.
-- ALWAYS accept `size`, `speed`, `paused`, and `aria-label` props.
+- ALWAYS accept `size`, `speed`, `paused`, `color`, `className`, `style`, and `aria-label` props.
 - ALWAYS use `CanvasContainer`: do not create raw `<canvas>` elements.
 - ALWAYS handle `prefers-reduced-motion` by rendering a static frame when the media query matches.

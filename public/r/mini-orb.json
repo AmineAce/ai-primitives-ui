@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mini-orb",
+  "title": "Mini Orb",
+  "description": "16px companion orb for tool chips and task rows — breathing satellites, collapses when done.",
+  "registryDependencies": [
+    "use-orb-animation",
+    "canvas-container"
+  ],
+  "files": [
+    {
+      "path": "packages/orbs/src/companion/MiniOrb.tsx",
+      "content": "\"use client\";\n\nimport { useMemo } from \"react\";\nimport { CanvasContainer } from \"../canvas/CanvasContainer\";\nimport { useOrbAnimation } from \"../canvas/useOrbAnimation\";\n\nexport interface MiniOrbProps {\n  done?: boolean;\n  size?: number;\n  color?: string;\n  className?: string;\n  style?: React.CSSProperties;\n  \"aria-label\"?: string;\n}\n\nconst TWO_PI = Math.PI * 2;\n\nexport function MiniOrb({\n  done = false,\n  size = 16,\n  color,\n  className,\n  style,\n  \"aria-label\": ariaLabel,\n}: MiniOrbProps) {\n  const cx = size / 2;\n  const cy = size / 2;\n\n  const render = (\n    ctx: CanvasRenderingContext2D,\n    t: number,\n    reduced: boolean,\n    colorPrefix: string,\n    ink: (a: number) => number,\n  ) => {\n    ctx.clearRect(0, 0, size, size);\n\n    const fills: string[] = [];\n    for (let i = 0; i <= 20; i++)\n      fills[i] = colorPrefix + ink(i / 20).toFixed(3) + \")\";\n    const fillFor = (a: number) =>\n      fills[Math.round(Math.max(0, Math.min(1, a)) * 20)];\n\n    const dot = (x: number, y: number, r: number, a: number) => {\n      if (a <= 0.003) return;\n      ctx.fillStyle = fillFor(a);\n      ctx.beginPath();\n      ctx.arc(x, y, r, 0, TWO_PI);\n      ctx.fill();\n    };\n\n    const SPIN1 = 0.0038;\n    const SPIN2 = 0.0027;\n    const breath = (tt: number) => Math.sin((tt / 1500) * TWO_PI) * 0.35;\n\n    if (reduced) {\n      if (done) {\n        dot(cx, cy, 1.9, 0.95);\n        return;\n      }\n      const rx = 5.4;\n      const ry = 3.1;\n      dot(cx + Math.cos(0) * rx, cy - Math.sin(0) * ry, 0.9, 0.4);\n      dot(cx + Math.cos(1.1) * rx, cy - Math.sin(1.1) * ry, 0.9, 0.95);\n      dot(cx, cy, 0.85, 0.75);\n      return;\n    }\n\n    if (done) {\n      dot(cx, cy, 1.9, 0.95);\n      return;\n    }\n\n    const rx = 5.4 + breath(t);\n    const ry = 3.1 + breath(t) * 0.5;\n    const a1 = t * SPIN1;\n    const a2 = -t * SPIN2 + 1.1;\n    const s1 = {\n      x: cx + Math.cos(a1) * rx,\n      y: cy - Math.sin(a1) * ry,\n      back: Math.sin(a1) < 0,\n    };\n    const s2 = {\n      x: cx + Math.cos(a2) * rx,\n      y: cy - Math.sin(a2) * ry,\n      back: Math.sin(a2) < 0,\n    };\n    const sats = [s1, s2].sort((a, b) => Number(a.back) - Number(b.back));\n\n    for (const s of sats) {\n      dot(s.x, s.y, s.back ? 0.7 : 0.9, s.back ? 0.4 : 0.95);\n    }\n    dot(cx, cy, 0.85 + breath(t) * 0.2, 0.75);\n  };\n\n  const { canvasRef } = useOrbAnimation({\n    size,\n    speed: 1,\n    paused: false,\n    color,\n    render,\n  });\n\n  return (\n    <CanvasContainer\n      ref={canvasRef}\n      width={size}\n      height={size}\n      ariaLabel={ariaLabel}\n      className={className}\n      style={style}\n    />\n  );\n}\n",
+      "type": "registry:ui",
+      "target": "components/ui/mini-orb.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}
