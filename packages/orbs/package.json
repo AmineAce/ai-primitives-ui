@@ -3,7 +3,6 @@
   "version": "2.2.0",
   "description": "Framework-agnostic Canvas 2D loading orb primitives.",
   "license": "MIT",
-  "private": false,
   "type": "module",
   "engines": {
     "node": ">=18"
