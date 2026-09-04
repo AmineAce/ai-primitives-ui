@@ -1,14 +1,14 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-  "name": "utils",
-  "title": "Utilities",
-  "description": "Shared canvas utilities for orbs.",
+  "name": "math",
+  "title": "Math",
+  "description": "clamp() helper for orb math.",
   "files": [
     {
       "path": "packages/orbs/src/lib/math.ts",
       "content": "export function clamp(value: number, min: number, max: number) {\n  return Math.min(Math.max(value, min), max);\n}\n",
       "type": "registry:lib",
-      "target": "lib/math.ts"
+      "target": "components/orbs/lib/math.ts"
     }
   ],
   "type": "registry:lib"

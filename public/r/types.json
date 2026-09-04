@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "types",
+  "title": "Types",
+  "description": "Dot/Halo/Point2D canvas types.",
+  "files": [
+    {
+      "path": "packages/orbs/src/canvas/types.ts",
+      "content": "export interface Point2D {\n  x: number;\n  y: number;\n}\n\nexport interface Dot {\n  x: number;\n  y: number;\n  r: number;\n  z: number;\n  alpha: number;\n}\n\nexport interface Halo {\n  x: number;\n  y: number;\n  z: number;\n  r: number;\n  alpha: number;\n}\n",
+      "type": "registry:lib",
+      "target": "components/orbs/canvas/types.ts"
+    }
+  ],
+  "type": "registry:lib"
+}

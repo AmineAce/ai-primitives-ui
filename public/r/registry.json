@@ -4,15 +4,15 @@
   "homepage": "https://ai-primitives-ui.vercel.app",
   "items": [
     {
-      "name": "utils",
+      "name": "math",
       "type": "registry:lib",
-      "title": "Utilities",
-      "description": "Shared canvas utilities for orbs.",
+      "title": "Math",
+      "description": "clamp() helper for orb math.",
       "files": [
         {
           "path": "packages/orbs/src/lib/math.ts",
           "type": "registry:lib",
-          "target": "lib/math.ts"
+          "target": "components/orbs/lib/math.ts"
         }
       ]
     },
@@ -25,7 +25,7 @@
         {
           "path": "packages/orbs/src/canvas/colors.ts",
           "type": "registry:lib",
-          "target": "lib/colors.ts"
+          "target": "components/orbs/canvas/colors.ts"
         }
       ]
     },
@@ -38,7 +38,7 @@
         {
           "path": "packages/orbs/src/canvas/sphere.ts",
           "type": "registry:lib",
-          "target": "lib/sphere.ts"
+          "target": "components/orbs/canvas/sphere.ts"
         }
       ]
     },
@@ -51,7 +51,7 @@
         {
           "path": "packages/orbs/src/canvas/easing.ts",
           "type": "registry:lib",
-          "target": "lib/easing.ts"
+          "target": "components/orbs/canvas/easing.ts"
         }
       ]
     },
@@ -64,7 +64,7 @@
         {
           "path": "packages/orbs/src/canvas/CanvasContainer.tsx",
           "type": "registry:ui",
-          "target": "components/ui/canvas-container.tsx"
+          "target": "components/orbs/canvas/CanvasContainer.tsx"
         }
       ]
     },
@@ -77,10 +77,13 @@
         {
           "path": "packages/orbs/src/canvas/useOrbAnimation.ts",
           "type": "registry:hook",
-          "target": "hooks/use-orb-animation.ts"
+          "target": "components/orbs/canvas/useOrbAnimation.ts"
         }
       ],
-      "registryDependencies": ["colors", "sphere"]
+      "registryDependencies": [
+        "https://ai-primitives-ui.vercel.app/r/colors.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json"
+      ]
     },
     {
       "name": "cloning-orb",
@@ -91,31 +94,41 @@
         {
           "path": "packages/orbs/src/loading/CloningOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/cloning-orb.tsx"
+          "target": "components/orbs/loading/CloningOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
       "name": "sync-orb",
       "type": "registry:ui",
       "title": "Sync Orb",
-      "description": "Square 8×8 → waves → supernova into globe + flash.",
+      "description": "Square 8\u00d78 \u2192 waves \u2192 supernova into globe + flash.",
       "files": [
         {
           "path": "packages/orbs/src/loading/SyncOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/sync-orb.tsx"
+          "target": "components/orbs/loading/SyncOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -127,13 +140,18 @@
         {
           "path": "packages/orbs/src/loading/FetchingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/fetching-orb.tsx"
+          "target": "components/orbs/loading/FetchingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -145,13 +163,18 @@
         {
           "path": "packages/orbs/src/loading/PullingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/pulling-orb.tsx"
+          "target": "components/orbs/loading/PullingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -163,13 +186,18 @@
         {
           "path": "packages/orbs/src/loading/PushingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/pushing-orb.tsx"
+          "target": "components/orbs/loading/PushingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -181,13 +209,18 @@
         {
           "path": "packages/orbs/src/loading/MergingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/merging-orb.tsx"
+          "target": "components/orbs/loading/MergingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -199,13 +232,18 @@
         {
           "path": "packages/orbs/src/loading/RebasingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/rebasing-orb.tsx"
+          "target": "components/orbs/loading/RebasingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -217,13 +255,18 @@
         {
           "path": "packages/orbs/src/loading/StashingOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/stashing-orb.tsx"
+          "target": "components/orbs/loading/StashingOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -235,13 +278,18 @@
         {
           "path": "packages/orbs/src/loading/DownloadOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/download-orb.tsx"
+          "target": "components/orbs/loading/DownloadOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -253,31 +301,41 @@
         {
           "path": "packages/orbs/src/loading/ErrorOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/error-orb.tsx"
+          "target": "components/orbs/loading/ErrorOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
       "name": "progress-orb",
       "type": "registry:ui",
       "title": "Progress Orb",
-      "description": "Ring sweeps around a still globe: 0→100% at a glance. Supports value 0–1.",
+      "description": "Ring sweeps around a still globe: 0\u2192100% at a glance. Supports value 0\u20131.",
       "files": [
         {
           "path": "packages/orbs/src/loading/ProgressOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/progress-orb.tsx"
+          "target": "components/orbs/loading/ProgressOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -289,13 +347,18 @@
         {
           "path": "packages/orbs/src/loading/DnaOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/dna-orb.tsx"
+          "target": "components/orbs/loading/DnaOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -307,13 +370,18 @@
         {
           "path": "packages/orbs/src/loading/VerifyOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/verify-orb.tsx"
+          "target": "components/orbs/loading/VerifyOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -325,13 +393,18 @@
         {
           "path": "packages/orbs/src/loading/GraphOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/graph-orb.tsx"
+          "target": "components/orbs/loading/GraphOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -343,13 +416,18 @@
         {
           "path": "packages/orbs/src/loading/CubeOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/cube-orb.tsx"
+          "target": "components/orbs/loading/CubeOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -361,13 +439,18 @@
         {
           "path": "packages/orbs/src/loading/ScanOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/scan-orb.tsx"
+          "target": "components/orbs/loading/ScanOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
@@ -379,39 +462,92 @@
         {
           "path": "packages/orbs/src/loading/OrbitOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/orbit-orb.tsx"
+          "target": "components/orbs/loading/OrbitOrb.tsx"
         }
       ],
       "registryDependencies": [
-        "use-orb-animation",
-        "sphere",
-        "canvas-container"
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
       ]
     },
     {
       "name": "mini-orb",
       "type": "registry:ui",
       "title": "Mini Orb",
-      "description": "16px companion orb for tool chips and task rows — breathing satellites, collapses when done.",
+      "description": "16px companion orb for tool chips and task rows \u2014 breathing satellites, collapses when done.",
       "files": [
         {
           "path": "packages/orbs/src/companion/MiniOrb.tsx",
           "type": "registry:ui",
-          "target": "components/ui/mini-orb.tsx"
+          "target": "components/orbs/loading/MiniOrb.tsx"
         }
       ],
-      "registryDependencies": ["use-orb-animation", "canvas-container"]
+      "registryDependencies": [
+        "https://ai-primitives-ui.vercel.app/r/use-orb-animation.json",
+        "https://ai-primitives-ui.vercel.app/r/sphere.json",
+        "https://ai-primitives-ui.vercel.app/r/canvas-container.json",
+        "https://ai-primitives-ui.vercel.app/r/easing.json",
+        "https://ai-primitives-ui.vercel.app/r/paths.json",
+        "https://ai-primitives-ui.vercel.app/r/random.json",
+        "https://ai-primitives-ui.vercel.app/r/types.json",
+        "https://ai-primitives-ui.vercel.app/r/math.json"
+      ]
     },
     {
       "name": "task-globe",
       "type": "registry:lib",
       "title": "Task Globe",
-      "description": "Globe helper for task rows and chat orbs — GLOBE_POINTS + drawGlobe.",
+      "description": "Globe helper for task rows and chat orbs \u2014 GLOBE_POINTS + drawGlobe.",
       "files": [
         {
           "path": "packages/orbs/src/companion/TaskGlobe.tsx",
           "type": "registry:lib",
           "target": "lib/task-globe.ts"
+        }
+      ]
+    },
+    {
+      "name": "paths",
+      "type": "registry:lib",
+      "title": "Paths",
+      "description": "lerp3/quad helpers for orb motion.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/paths.ts",
+          "type": "registry:lib",
+          "target": "components/orbs/canvas/paths.ts"
+        }
+      ]
+    },
+    {
+      "name": "random",
+      "type": "registry:lib",
+      "title": "Random",
+      "description": "mulberry32 seeded RNG.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/random.ts",
+          "type": "registry:lib",
+          "target": "components/orbs/canvas/random.ts"
+        }
+      ]
+    },
+    {
+      "name": "types",
+      "type": "registry:lib",
+      "title": "Types",
+      "description": "Dot/Halo/Point2D canvas types.",
+      "files": [
+        {
+          "path": "packages/orbs/src/canvas/types.ts",
+          "type": "registry:lib",
+          "target": "components/orbs/canvas/types.ts"
         }
       ]
     }

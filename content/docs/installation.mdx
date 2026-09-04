@@ -49,7 +49,13 @@ Resolution order: `color` prop → `--orb-fg` → `--foreground` → `--fg-defau
 <Callout type="info" title="shadcn hosts">
   Orbs are Tailwind-free and inherit `hsl(var(--foreground))` via the bridge
   above. Optional preset: `import preset from
-  "@ai-primitives-ui/ui/tailwind-preset"`. Registry copy-paste lives at `/r`
-  (e.g. `npx shadcn@latest add
-  https://ai-primitives-ui.vercel.app/r/cloning-orb.json`).
+  "@ai-primitives-ui/ui/tailwind-preset"`. Registry copy-paste (verified:
+  one command typechecks clean):
+
+`npx shadcn@latest add https://ai-primitives-ui.vercel.app/r/cloning-orb.json`
+
+then `import { CloningOrb } from "@/components/orbs/loading/CloningOrb"`.
+Files mirror the package layout under `components/orbs/`, so all 28 items
+resolve with no extra installs.
+
 </Callout>
